@@ -1,0 +1,78 @@
+/* ============================================================
+   Sevyn8 — Design Tokens  ·  v4  ·  "Spectrum Intelligence"
+   Single source of truth. Reference by name; change values, not names.
+   Rules: Ion is the only hue on chrome & CTAs · Cyan = live/active only ·
+   Magenta = highlights & data-viz only · the spectrum gradient is LOGO-ONLY ·
+   support dark (ink) and light (paper) from the same tokens ·
+   never set body text in a brand hue.
+   ============================================================ */
+:root {
+  /* ---- brand ---- */
+  --ion: #414BF5;        /* hero · chrome · links · primary actions */
+  --ion-hover: #2F38D6;
+  --cyan: #19D3E0;       /* live · active · edge signal */
+  --magenta: #E63DCB;    /* highlight · data-viz only */
+  --spectrum: linear-gradient(135deg, #19D3E0 0%, #414BF5 50%, #E63DCB 100%); /* logo-only */
+
+  /* ---- brand ramps (50 -> 900) ---- */
+  --ion-50:#EEF0FE; --ion-100:#DDE0FD; --ion-200:#BAC0FB; --ion-300:#8E97F8; --ion-400:#6470F6;
+  --ion-500:#414BF5; --ion-600:#2F38D6; --ion-700:#232BAA; --ion-800:#1B2080; --ion-900:#141659;
+  --cyan-50:#E5FBFC; --cyan-100:#C9F5F8; --cyan-200:#97ECF1; --cyan-300:#5FE0E9; --cyan-400:#2FD7E3;
+  --cyan-500:#19D3E0; --cyan-600:#10A9B4; --cyan-700:#0E848C; --cyan-800:#0C666C; --cyan-900:#0A4A4F;
+  --magenta-50:#FDEAF9; --magenta-100:#FAD0F2; --magenta-200:#F5A6E6; --magenta-300:#EF74D7; --magenta-400:#EA4FCE;
+  --magenta-500:#E63DCB; --magenta-600:#BE1FA6; --magenta-700:#971681; --magenta-800:#711161; --magenta-900:#4E0C43;
+
+  /* ---- neutrals · cool-tinted ---- */
+  --white:#FFFFFF;
+  --paper:#F4F6FA;   /* light surface */
+  --n-100:#E7EAF1;
+  --n-200:#D2D7E2;
+  --n-300:#AEB5C6;
+  --n-400:#7E8699;
+  --slate:#5A6275;
+  --n-600:#3C4354;
+  --n-700:#272D3B;
+  --n-800:#181C28;
+  --ink:#0B0D14;     /* dark surface · primary text on light */
+
+  /* ---- semantic · UI states ---- */
+  --success:#2BD97A;
+  --warning:#FFB020;
+  --danger:#FF4D5E;
+  --info:#4DA3FF;    /* distinct from brand cyan on purpose */
+
+  /* ---- typography ---- */
+  --font-sans:'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono:'IBM Plex Mono', 'SFMono-Regular', monospace;
+  --text-display:3.5rem;  /* 56px */
+  --text-h1:2.5rem;       /* 40px */
+  --text-h2:1.75rem;      /* 28px */
+  --text-h3:1.25rem;      /* 20px */
+  --text-body-lg:1.1875rem; /* 19px */
+  --text-body:1rem;       /* 16px */
+  --text-sm:0.875rem;     /* 14px */
+  --text-label:0.75rem;   /* 12px */
+  --tracking-tight:-0.03em;
+  --tracking-label:0.14em;
+  --leading-tight:1.05;
+  --leading-body:1.6;
+  --weight-regular:400;
+  --weight-medium:500;
+  --weight-semibold:600;
+
+  /* ---- space · 4px base ---- */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px;
+  --space-6:32px; --space-7:48px; --space-8:64px; --space-9:96px;
+
+  /* ---- radius ---- */
+  --radius-sm:8px; --radius-md:14px; --radius-lg:20px; --radius-pill:999px;
+
+  /* ---- elevation ---- */
+  --e1:0 1px 2px rgba(11,13,20,.06);
+  --e2:0 4px 16px rgba(11,13,20,.08);
+  --e3:0 12px 40px rgba(11,13,20,.12);
+}
+
+/* Optional: light-mode tokens (default above is surface-neutral). */
+:root[data-theme="light"] { --bg:var(--paper); --fg:var(--ink); --surface:var(--white); }
+:root[data-theme="dark"]  { --bg:var(--ink);   --fg:var(--paper); --surface:#101320; }

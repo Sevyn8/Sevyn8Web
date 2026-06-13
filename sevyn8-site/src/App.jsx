@@ -506,224 +506,310 @@ function ContactPg(){var t2=useState("enterprise"),ty=t2[0],is2={fontFamily:"inh
 
 var mono={fontFamily:"'IBM Plex Mono',monospace"};
 var cR={ion:"65,75,245",cy:"25,211,224",mg:"230,61,203",neu:"90,98,117"}; // canvas rgb forms
-function CompoundCanvas(){
-  var ref=useRef(null),c2=useState(1),count=c2[0];
+var RMQ="(prefers-reduced-motion: reduce)";
+function HeroDevice(){
+  var ref=useRef(null);
   useEffect(function(){
     var c=ref.current;if(!c)return;var ctx=c.getContext("2d");
-    var reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var W,H,dpr,raf,origin={x:0,y:0},fleet=[],waves=[],last=-1e9,started=performance.now();
-    function layout(){
-      dpr=Math.min(window.devicePixelRatio||1,2);W=c.offsetWidth;H=c.offsetHeight;
-      c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
-      origin={x:W*0.5,y:H*0.5};fleet=[];var base=Math.min(W,H);
-      var rings=[{r:base*0.26,n:6,ph:0.2},{r:base*0.40,n:9,ph:0.55}];
-      rings.forEach(function(rd){for(var i=0;i<rd.n;i++){var a=(i/rd.n)*Math.PI*2+rd.ph;var sx=W>H?1.35:1;fleet.push({x:origin.x+Math.cos(a)*rd.r*sx,y:origin.y+Math.sin(a)*rd.r,dist:0,bright:0})}});
-      fleet.forEach(function(f){f.dist=Math.hypot(f.x-origin.x,f.y-origin.y)});
-    }
+    var reduced=window.matchMedia(RMQ).matches;
+    var W,H,dpr,raf,dev={x:0,y:0,w:96,h:120},inputs=[],outs=[],started=performance.now(),lastOut=-1e9;
+    var srcLabels=["cam","esl","iot","thermal"];
+    function roundRect(g,a,b,w,h,r){g.beginPath();g.moveTo(a+r,b);g.arcTo(a+w,b,a+w,b+h,r);g.arcTo(a+w,b+h,a,b+h,r);g.arcTo(a,b+h,a,b,r);g.arcTo(a,b,a+w,b,r);g.closePath()}
+    function layout(){dpr=Math.min(window.devicePixelRatio||1,2);W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);dev.x=W*0.46;dev.y=H*0.5}
     layout();var onR=function(){layout()};window.addEventListener("resize",onR);
-    function node(x,y,r,rgb,a){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle="rgba("+rgb+","+a+")";ctx.fill()}
+    var srcY=function(i){return H*(0.24+i*0.17)};
     function frame(now){
       var t=now-started;ctx.clearRect(0,0,W,H);
-      fleet.forEach(function(f){ctx.strokeStyle="rgba("+cR.neu+",0.10)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(f.x,f.y);ctx.stroke()});
-      if(t-last>2700){last=t;waves.push({t0:now,dur:1700});c2[1](function(k){return k+7})}
-      var maxD=Math.max.apply(null,fleet.map(function(f){return f.dist}));
-      waves=waves.filter(function(w){return now-w.t0<w.dur+400});
-      waves.forEach(function(w){
-        var pr=(now-w.t0)/w.dur;var rad=pr*(maxD+30);
-        if(pr<=1){ctx.beginPath();ctx.arc(origin.x,origin.y,rad,0,Math.PI*2);ctx.strokeStyle="rgba("+cR.mg+","+((1-pr)*0.5)+")";ctx.lineWidth=1.4;ctx.stroke()}
-        fleet.forEach(function(f){if(rad>=f.dist&&rad<f.dist+24)f.bright=Math.min(1,f.bright+0.14)});
-      });
-      fleet.forEach(function(f){f.bright*=0.965;var lit=f.bright;if(lit>0.02){node(f.x,f.y,9+lit*5,cR.ion,0.10+lit*0.18)}node(f.x,f.y,3.4,cR.neu,0.5);node(f.x,f.y,3.4,cR.ion,lit*0.95)});
-      var pulse=(Math.sin(now*0.0022)+1)/2;
-      ctx.beginPath();ctx.arc(origin.x,origin.y,30+pulse*9,0,Math.PI*2);ctx.strokeStyle="rgba("+cR.cy+","+(0.35+pulse*0.3)+")";ctx.lineWidth=1.4;ctx.stroke();
-      ctx.shadowColor="rgba("+cR.ion+",0.5)";ctx.shadowBlur=26;node(origin.x,origin.y,15,cR.ion,1);ctx.shadowBlur=0;
-      node(origin.x,origin.y,15,"255,255,255",0.12);
-      var oa=now*0.0016;node(origin.x+Math.cos(oa)*30,origin.y+Math.sin(oa)*30,2.4,cR.cy,0.9);
+      for(var i=0;i<4;i++){var sy=srcY(i),sx=W*0.06;
+        ctx.strokeStyle="rgba("+cR.neu+",0.12)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dev.x-dev.w/2,dev.y);ctx.stroke();
+        ctx.fillStyle=MT;ctx.font="10px 'IBM Plex Mono',monospace";ctx.fillText(srcLabels[i],sx-4,sy-8);
+        ctx.beginPath();ctx.arc(sx,sy,3,0,7);ctx.fillStyle="rgba("+cR.neu+",.7)";ctx.fill();
+        if(!reduced&&Math.random()<0.04)inputs.push({i:i,p:0});
+      }
+      inputs=inputs.filter(function(d){return d.p<1});
+      inputs.forEach(function(d){d.p+=0.018;var sy=srcY(d.i),sx=W*0.06;var x=sx+(dev.x-dev.w/2-sx)*d.p,y=sy+(dev.y-sy)*d.p;ctx.beginPath();ctx.arc(x,y,2.4,0,7);ctx.fillStyle="rgba("+cR.cy+","+(0.85*(1-d.p*0.4))+")";ctx.fill()});
+      var pulse=(Math.sin(now*0.0023)+1)/2;
+      ctx.shadowColor="rgba("+cR.ion+",.35)";ctx.shadowBlur=30;roundRect(ctx,dev.x-dev.w/2,dev.y-dev.h/2,dev.w,dev.h,12);ctx.fillStyle=B2;ctx.fill();ctx.shadowBlur=0;
+      ctx.strokeStyle="rgba("+cR.cy+","+(0.4+pulse*0.3)+")";ctx.lineWidth=1.4;ctx.stroke();
+      ctx.fillStyle=TX;ctx.font="600 11px 'IBM Plex Sans',sans-serif";ctx.textAlign="center";ctx.fillText("CORTEX",dev.x,dev.y-dev.h/2+20);
+      ["HAL","AI","Decide"].forEach(function(l,k){var ly=dev.y-14+k*22;ctx.strokeStyle="rgba("+cR.ion+","+(k===2?.6:.3)+")";roundRect(ctx,dev.x-32,ly-8,64,16,4);ctx.stroke();ctx.fillStyle=k===2?T:MT;ctx.font="9px 'IBM Plex Mono',monospace";ctx.fillText(l,dev.x,ly+3)});
+      ctx.textAlign="left";
+      ctx.beginPath();ctx.arc(dev.x,dev.y,dev.h/2+10+pulse*6,0,7);ctx.strokeStyle="rgba("+cR.cy+","+(0.3*(1-pulse))+")";ctx.lineWidth=1.2;ctx.stroke();
+      if(!reduced&&t-lastOut>1900){lastOut=t;outs.push({p:0})}
+      outs=outs.filter(function(o){return o.p<1});
+      outs.forEach(function(o){o.p+=0.02;var x=dev.x+dev.w/2+(W*0.92-(dev.x+dev.w/2))*o.p;ctx.beginPath();ctx.arc(x,dev.y,3,0,7);ctx.fillStyle="rgba("+cR.ion+","+(0.9*(1-o.p*0.3))+")";ctx.fill()});
+      ctx.strokeStyle="rgba("+cR.neu+",.12)";ctx.beginPath();ctx.moveTo(dev.x+dev.w/2,dev.y);ctx.lineTo(W*0.92,dev.y);ctx.stroke();
+      ctx.fillStyle=T;ctx.font="10px 'IBM Plex Mono',monospace";ctx.fillText("decision",W*0.84,dev.y-8);
       raf=requestAnimationFrame(frame);
     }
-    if(reduced){ctx.clearRect(0,0,W,H);fleet.forEach(function(f){ctx.strokeStyle="rgba("+cR.neu+",0.10)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(f.x,f.y);ctx.stroke();node(f.x,f.y,3.4,cR.ion,0.6)});node(origin.x,origin.y,15,cR.ion,1)}
-    else{raf=requestAnimationFrame(frame)}
+    if(reduced){layout();frame(performance.now());cancelAnimationFrame(raf)}else raf=requestAnimationFrame(frame);
     return function(){cancelAnimationFrame(raf);window.removeEventListener("resize",onR)};
   },[]);
   return (<div style={{position:"relative",width:"100%",height:"100%"}}>
     <canvas ref={ref} style={{width:"100%",height:"100%",display:"block"}} />
-    <div style={{position:"absolute",left:0,top:14,...mono,fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:MT}}><span style={{color:CY}}>●</span> one device · live inference</div>
-    <div style={{position:"absolute",right:0,bottom:12,textAlign:"right"}}>
+    <div style={{position:"absolute",left:0,top:12,...mono,fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:MT}}><span style={{color:CY}}>●</span> on-device · &lt; 100ms</div>
+  </div>);
+}
+var TIERS=[
+{y:372,foundation:true,a:{name:"HAL",tag:"one API"},b:{name:"SoC-agnostic",tag:"ARM · x86"}},
+{y:296,name:"Universal data ingestion",tag:"any sensor, fused"},
+{y:220,name:"Quantised AI on endpoints",tag:"< 100ms · offline"},
+{y:144,name:"Industry vocabulary",tag:"speaks each domain"},
+{y:68,name:"Fleet learning",tag:"every device, OTA",fleet:true}
+];
+var CAPTIONS=[
+"Runs on any hardware — HAL abstracts the board, so ARM or x86 is a supply decision, not a rewrite.",
+"Every sensor in — cameras, thermal, IoT, RFID, ESL — fused on the device into one situation.",
+"Quantised models decide on the endpoint itself. Under 100ms, fully offline, no cloud round-trip.",
+"Industry vocabulary turns raw detections into domain meaning — shrinkage, cold-chain breach, PPE.",
+"Fleet learning sends every outcome back to every device over the air.",
+"Privacy and auth wrap all of it — nothing leaves the device. And the loop compounds: every deployment makes every other one smarter."
+];
+function SevenCapSection(){
+  var s2=useState(0),step=s2[0];
+  useEffect(function(){
+    if(window.matchMedia(RMQ).matches){s2[1](5);return}
+    var id=setInterval(function(){s2[1](function(s){return (s+1)%6})},950);return function(){clearInterval(id)};
+  },[]);
+  var rm=window.matchMedia&&window.matchMedia(RMQ).matches;
+  var loop=step===5,litThru=loop?4:step,pulseY=TIERS[Math.min(step,4)].y;
+  return (<section style={{borderTop:"1px solid "+BD,background:B2}}>
+    <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
+      <div className="cx-grid2">
+        <div>
+          <Tg>Seven capabilities · one system</Tg>
+          <h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 16px"}}>Seven capabilities.<br/>No competitor holds<br/>all of them.</h2>
+          <p style={{fontSize:16.5,lineHeight:1.7,color:N3,maxWidth:440,margin:"0 0 26px"}}>Edge AI needs every one of these at once, wired together. Chip firms own silicon, ODMs own manufacturing, software shops own models — Cortex holds the whole stack, and an eighth that makes it compound.</p>
+          <div style={{borderLeft:"2px solid "+(loop?MG:CY),paddingLeft:16,minHeight:82,transition:"border-color .4s"}}>
+            <div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:loop?MG:CY,marginBottom:7}}>{loop?"The envelope + the loop":("0"+(step+1)+" · "+(TIERS[step].foundation?"Foundation":TIERS[step].name))}</div>
+            <p style={{fontSize:15,lineHeight:1.6,color:TX,margin:0}}>{CAPTIONS[step]}</p>
+          </div>
+        </div>
+        <svg viewBox="0 0 440 440" style={{width:"100%",height:"auto",display:"block"}}>
+          <rect x="18" y="26" width="404" height="392" rx="16" fill="none" stroke={"rgba("+cR.ion+","+(loop?0.55:0.28)+")"} strokeWidth="1.3" strokeDasharray="2 5" style={{transition:"stroke .4s"}} />
+          <g transform="translate(34,26)"><rect x="0" y="-9" width="190" height="18" rx="9" fill={B2} /><text x="8" y="4" fill={loop?T:MT} style={{...mono,transition:"fill .4s"}} fontSize="10" letterSpacing="1.5">PRIVACY &amp; AUTH · EMBEDDED</text></g>
+          <line x1="220" y1="372" x2="220" y2="68" stroke={B3} strokeWidth="1.4" />
+          <line x1="220" y1="372" x2="220" y2={pulseY} stroke={"rgba("+cR.cy+",.5)"} strokeWidth="1.6" style={{transition:"all .6s"}} />
+          <path d="M220,68 C402,96 402,344 220,372" fill="none" stroke={MG} strokeWidth="1.6" strokeDasharray="520" strokeDashoffset={loop?0:520} opacity={loop?0.9:0} style={{transition:loop?"stroke-dashoffset 1.6s ease, opacity .3s":"opacity .4s"}} />
+          <text x="392" y="226" fill={MG} fontSize="22" textAnchor="middle" opacity={loop?1:0.18} style={{transition:"opacity .4s",animation:(loop&&!rm)?"scdinf 1.6s ease-in-out infinite":"none"}}>∞</text>
+          {TIERS.map(function(t,i){
+            var lit=i<=litThru,col=t.fleet&&loop?MG:CY;
+            var stroke=lit?("rgba("+(t.fleet&&loop?cR.mg:cR.cy)+",.55)"):BD;
+            var glow=lit?(loop?("0 0 18px rgba("+cR.ion+",.18)"):("0 0 16px rgba("+cR.cy+",.12)")):"none";
+            if(t.foundation)return (<g key={i} style={{transition:"all .5s"}}>
+              {[t.a,t.b].map(function(nd,k){return <g key={k} transform={"translate("+(k===0?86:232)+", "+(t.y-18)+")"}>
+                <rect width="122" height="36" rx="8" fill={B2} stroke={stroke} strokeWidth="1.3" style={{filter:glow!=="none"?("drop-shadow("+glow+")"):"none",transition:"stroke .4s"}} />
+                <text x="12" y="16" fill={lit?TX:N3} fontSize="12.5" fontWeight="600" style={{transition:"fill .4s"}}>{nd.name}</text>
+                <text x="12" y="29" fill={MT} style={{...mono}} fontSize="9">{nd.tag}</text>
+              </g>})}
+            </g>);
+            return (<g key={i} transform={"translate(80, "+(t.y-19)+")"} style={{transition:"all .5s"}}>
+              <rect width="280" height="38" rx="9" fill={B2} stroke={stroke} strokeWidth="1.3" style={{filter:glow!=="none"?("drop-shadow("+glow+")"):"none",transition:"stroke .4s"}} />
+              <circle cx="20" cy="19" r="4" fill={lit?col:B3} style={{transition:"fill .4s"}} />
+              <text x="38" y="17" fill={lit?TX:N3} fontSize="13.5" fontWeight="600" style={{transition:"fill .4s"}}>{t.name}</text>
+              <text x="38" y="30" fill={MT} style={{...mono}} fontSize="9.5">{t.tag}</text>
+            </g>);
+          })}
+          {!loop&&<g style={{transform:"translateY("+pulseY+"px)",transition:"transform .6s cubic-bezier(.4,0,.2,1)"}}>
+            <circle cx="220" cy="0" r="5" fill={CY} />
+            <circle cx="220" cy="0" r="5" fill="none" stroke={CY}><animate attributeName="r" from="5" to="13" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".7" to="0" dur="1.2s" repeatCount="indefinite" /></circle>
+          </g>}
+        </svg>
+      </div>
+    </div>
+  </section>);
+}
+var STORES=["STORE 04","STORE 09","STORE 12","STORE 18","STORE 23","STORE 27"];
+var EVENTS=[
+{k:"known",c:CY,label:"known · regular",figs:[96],box:0},
+{k:"footfall",c:CY,label:"footfall +1",figs:[70],box:0},
+{k:"staff",c:CY,label:"staff",figs:[110],box:0},
+{k:"dwell",c:MG,label:"dwell 4m+ · flag",figs:[92],box:0},
+{k:"conceal",c:MG,label:"concealment",figs:[88],box:0},
+{k:"queue",c:T,label:"queue>4 · open ctr 5",figs:[60,84,108,132],box:-2},
+{k:"shelf",c:T,label:"shelf gap",shelf:true}
+];
+var ecrgb=function(c){return c===CY?cR.cy:c===MG?cR.mg:cR.ion};
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function pad2(n){return n<10?"0"+n:""+n}
+function Person(p){var col=p.bright?"#9AA3B5":MT;return <g><circle cx={p.x} cy={p.by-30} r="5" fill={col} /><path d={"M"+(p.x-6)+","+p.by+" L"+(p.x-5)+","+(p.by-20)+" Q"+p.x+","+(p.by-26)+" "+(p.x+5)+","+(p.by-20)+" L"+(p.x+6)+","+p.by} fill={col} /></g>}
+function Bracket(p){var x=p.x,y=p.y,w=p.w,h=p.h,c=p.c,L=7;
+  var pts=["M"+x+","+(y+L)+" L"+x+","+y+" L"+(x+L)+","+y,"M"+(x+w-L)+","+y+" L"+(x+w)+","+y+" L"+(x+w)+","+(y+L),"M"+(x+w)+","+(y+h-L)+" L"+(x+w)+","+(y+h)+" L"+(x+w-L)+","+(y+h),"M"+(x+L)+","+(y+h)+" L"+x+","+(y+h)+" L"+x+","+(y+h-L)];
+  return <g>{pts.map(function(d,i){return <path key={i} d={d} fill="none" stroke={c} strokeWidth="1.6" strokeLinecap="square" />})}</g>}
+function Feed(p){
+  var store=p.store,ev=p.ev,ver=p.ver,live=p.live,clock=p.clock;
+  var rm=window.matchMedia&&window.matchMedia(RMQ).matches;
+  var W=200,H=140,by=122;
+  return (<div style={{position:"relative",borderRadius:10,overflow:"hidden",border:"1px solid "+(live?("rgba("+cR.cy+",.3)"):BD),background:"#0E1119",transition:"border-color .5s"}}>
+    <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:"auto",display:"block"}}>
+      {[40,60,80,100].map(function(y){return <line key={y} x1="0" x2={W} y1={y} y2={y} stroke="rgba(255,255,255,0.012)" strokeWidth="2" />})}
+      <line x1="0" y1={by} x2={W} y2={by} stroke={B3} strokeWidth="1" />
+      <g key={ver} style={{animation:"feedin .5s ease"}}>
+        {ev.shelf?(<>
+          <rect x="50" y="58" width="100" height="40" rx="3" fill="none" stroke={DM} strokeWidth="1" />
+          {[58,74,106,122,138].map(function(sx){return <rect key={sx} x={sx} y="64" width="10" height="28" rx="2" fill={MT} opacity="0.6" />})}
+          <Bracket x={86} y={60} w={18} h={36} c={ev.c} />
+        </>):(<>
+          {ev.figs.map(function(fx,i){return <Person key={i} x={fx} by={by} bright={i===(ev.box<0?-1:ev.box)} />})}
+          {ev.box===-2?<Bracket x={ev.figs[0]-12} y={by-42} w={ev.figs[ev.figs.length-1]-ev.figs[0]+24} h={46} c={ev.c} />:<Bracket x={ev.figs[ev.box]-12} y={by-42} w={24} h={46} c={ev.c} />}
+        </>)}
+        <g transform={"translate("+(ev.shelf?60:Math.min(ev.figs[0]-12,116))+", "+(by-56)+")"}>
+          <rect width={ev.label.length*5.4+12} height="15" rx="3" fill="rgba(8,10,16,.85)" stroke={"rgba("+ecrgb(ev.c)+",.6)"} />
+          <text x="6" y="11" fill={ev.c} style={{...mono}} fontSize="9">{ev.label}</text>
+        </g>
+      </g>
+      <text x="8" y="16" fill={MT} style={{...mono}} fontSize="8.5" letterSpacing="1">{store}</text>
+      <text x={W-8} y="16" textAnchor="end" fill={MT} style={{...mono}} fontSize="8.5">{clock}</text>
+    </svg>
+    <div style={{position:"absolute",left:8,bottom:8,display:"flex",alignItems:"center",gap:5}}>
+      <span style={{width:6,height:6,borderRadius:"50%",background:live?CY:DM,animation:(live&&!rm)?"livedot 1.3s ease-in-out infinite":"none"}} />
+      <span style={{...mono,fontSize:8.5,letterSpacing:"1.5px",color:live?CY:MT}}>{live?"LIVE":"IDLE"}</span>
+    </div>
+  </div>);
+}
+function RetailWall(){
+  var init=STORES.map(function(s,i){return {store:s,ev:EVENTS[i%EVENTS.length],ver:i,live:i<3}});
+  var t2=useState(init),tiles=t2[0],l2=useState([{s:"STORE 12",e:EVENTS[4]}]),log=l2[0],c2=useState(1284),count=c2[0];
+  var verRef=useRef(STORES.length);
+  useEffect(function(){
+    if(window.matchMedia(RMQ).matches)return;
+    var id=setInterval(function(){
+      t2[1](function(prev){
+        var next=prev.map(function(t){return {...t,live:false}});
+        var idxs=[];while(idxs.length<2){var r=Math.floor(Math.random()*next.length);if(idxs.indexOf(r)<0)idxs.push(r)}
+        idxs.forEach(function(r){var ev=pick(EVENTS);next[r]={...next[r],ev:ev,ver:++verRef.current,live:true};l2[1](function(L){return [{s:next[r].store,e:ev}].concat(L).slice(0,6)})});
+        return next;
+      });
+      c2[1](function(c){return c+Math.floor(2+Math.random()*5)});
+    },1700);
+    return function(){clearInterval(id)};
+  },[]);
+  var sec=new Date().getSeconds();var clock=function(s){return "09:"+pad2((sec+s)%60)};
+  return (<section id="how" style={{borderTop:"1px solid "+BD,background:BG}}>
+    <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
+      <Rv><Tg c={CY}>Cortex in the wild · Retail</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Every camera, seeing.<br/>Every store, deciding.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 26px"}}>Cortex runs on the device in every store at once — recognising footfall, flagging concealment, catching shelf gaps, opening counters. Detections become decisions in under 100ms, and every store inherits what the others learn.</p></Rv>
+      <Rv d={0.08}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:12}}>
+          <div style={{...mono,fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:MT}}><span style={{color:CY}}>●</span> 6 stores live · 1 fleet</div>
+          <div style={{...mono,fontSize:11,color:MT}}>decisions today <span style={{...hd,fontSize:18,color:TX,marginLeft:6}}>{count.toLocaleString()}</span> <span style={{color:MG}}>↑</span></div>
+        </div>
+        <div className="rw-grid">
+          {tiles.map(function(t,i){return <Feed key={i} store={t.store} ev={t.ev} ver={t.ver} live={t.live} clock={clock(i*7)} />})}
+        </div>
+        <div style={{marginTop:22,paddingTop:18,borderTop:"1px solid "+BD}}>
+          <div style={{...mono,fontSize:10.5,textTransform:"uppercase",letterSpacing:".14em",color:MT,marginBottom:12}}>Decisions across the fleet</div>
+          <div style={{display:"flex",gap:22,flexWrap:"wrap"}}>
+            {log.map(function(e,i){return <div key={i} style={{display:"flex",alignItems:"center",gap:8,opacity:i===0?1:Math.max(0.2,0.45-i*0.05),transition:"opacity .5s"}}>
+              <span style={{width:7,height:7,borderRadius:"50%",background:e.e.c,flexShrink:0}} />
+              <span style={{...mono,fontSize:12,color:MT}}>{e.s}</span>
+              <span style={{fontSize:13,color:i===0?TX:MT}}>{e.e.label}</span>
+            </div>})}
+          </div>
+        </div>
+      </Rv>
+    </div>
+  </section>);
+}
+function CompoundCanvas(){
+  var ref=useRef(null),c2=useState(1),count=c2[0];
+  useEffect(function(){
+    var c=ref.current;if(!c)return;var ctx=c.getContext("2d");
+    var reduced=window.matchMedia(RMQ).matches;
+    var W,H,dpr,raf,origin={x:0,y:0},fleet=[],waves=[],last=-1e9,started=performance.now();
+    function layout(){dpr=Math.min(window.devicePixelRatio||1,2);W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);origin={x:W*0.5,y:H*0.5};fleet=[];
+      var base=Math.min(W,H),rings=[{r:base*0.26,n:6,ph:0.2},{r:base*0.4,n:9,ph:0.55}];
+      rings.forEach(function(rd){for(var i=0;i<rd.n;i++){var a=(i/rd.n)*Math.PI*2+rd.ph,sx=W>H?1.35:1;fleet.push({x:origin.x+Math.cos(a)*rd.r*sx,y:origin.y+Math.sin(a)*rd.r,dist:0,bright:0})}});
+      fleet.forEach(function(f){f.dist=Math.hypot(f.x-origin.x,f.y-origin.y)});
+    }
+    layout();var onR=function(){layout()};window.addEventListener("resize",onR);
+    function node(x,y,r,rgb,a){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle="rgba("+rgb+","+a+")";ctx.fill()}
+    function frame(now){var t=now-started;ctx.clearRect(0,0,W,H);
+      fleet.forEach(function(f){ctx.strokeStyle="rgba("+cR.neu+",0.10)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(f.x,f.y);ctx.stroke()});
+      if(t-last>2700){last=t;waves.push({t0:now,dur:1700});c2[1](function(k){return k+7})}
+      var maxD=Math.max.apply(null,fleet.map(function(f){return f.dist}));
+      waves=waves.filter(function(w){return now-w.t0<w.dur+400});
+      waves.forEach(function(w){var p=(now-w.t0)/w.dur,rad=p*(maxD+30);if(p<=1){ctx.beginPath();ctx.arc(origin.x,origin.y,rad,0,7);ctx.strokeStyle="rgba("+cR.mg+","+((1-p)*0.5)+")";ctx.lineWidth=1.4;ctx.stroke()}fleet.forEach(function(f){if(rad>=f.dist&&rad<f.dist+24)f.bright=Math.min(1,f.bright+0.14)})});
+      fleet.forEach(function(f){f.bright*=0.965;var lit=f.bright;if(lit>0.02)node(f.x,f.y,9+lit*5,cR.ion,0.1+lit*0.18);node(f.x,f.y,3.4,cR.neu,0.5);node(f.x,f.y,3.4,cR.ion,lit*0.95)});
+      var pulse=(Math.sin(now*0.0022)+1)/2;
+      ctx.beginPath();ctx.arc(origin.x,origin.y,30+pulse*9,0,7);ctx.strokeStyle="rgba("+cR.cy+","+(0.35+pulse*0.3)+")";ctx.lineWidth=1.4;ctx.stroke();
+      ctx.shadowColor="rgba("+cR.ion+",0.5)";ctx.shadowBlur=26;node(origin.x,origin.y,15,cR.ion,1);ctx.shadowBlur=0;
+      var oa=now*0.0016;node(origin.x+Math.cos(oa)*30,origin.y+Math.sin(oa)*30,2.4,cR.cy,0.9);
+      raf=requestAnimationFrame(frame);
+    }
+    if(reduced){ctx.clearRect(0,0,W,H);fleet.forEach(function(f){ctx.strokeStyle="rgba("+cR.neu+",0.10)";ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(f.x,f.y);ctx.stroke();node(f.x,f.y,3.4,cR.ion,0.6)});node(origin.x,origin.y,15,cR.ion,1)}
+    else raf=requestAnimationFrame(frame);
+    return function(){cancelAnimationFrame(raf);window.removeEventListener("resize",onR)};
+  },[]);
+  return (<div style={{position:"relative",width:"100%",height:"100%"}}>
+    <canvas ref={ref} style={{width:"100%",height:"100%",display:"block"}} />
+    <div style={{position:"absolute",left:0,top:12,...mono,fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:MT}}><span style={{color:CY}}>●</span> one device · live</div>
+    <div style={{position:"absolute",right:0,bottom:10,textAlign:"right"}}>
       <div style={{...mono,fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:MT}}>fleet intelligence</div>
-      <div style={{...hd,fontSize:30,fontWeight:600,color:TX,fontVariantNumeric:"tabular-nums"}}>{count.toLocaleString()}<span style={{fontSize:15,color:MG,marginLeft:6}}>↑</span></div>
-      <div style={{...mono,fontSize:10.5,color:MT}}>observations compounded</div>
+      <div style={{...hd,fontSize:28,fontWeight:600,color:TX}}>{count.toLocaleString()}<span style={{fontSize:14,color:MG,marginLeft:6}}>↑</span></div>
     </div>
   </div>);
 }
 function CompoundCurve(){
-  var n2=useState(40),n=n2[0],h2=useState(false),hover=h2[0];var W=640,H=230,pad=8;
+  var n2=useState(40),n=n2[0],h2=useState(false),hover=h2[0];var W=640,H=210,pad=8;
   useEffect(function(){
     if(hover)return;
-    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){n2[1](500);return}
+    if(window.matchMedia(RMQ).matches){n2[1](500);return}
     var id=setInterval(function(){n2[1](function(v){return v>=500?1:v+4})},40);return function(){clearInterval(id)};
   },[hover]);
   var acc=function(d){return 84+14*(1-Math.exp(-d/150))+Math.log10(d+1)*0.4};
   var x=function(d){return pad+(d/500)*(W-pad*2)};
-  var y=function(v){return H-pad-((v-83)/(100-83))*(H-pad*2-20)};
+  var y=function(v){return H-pad-((v-83)/(100-83))*(H-pad*2-18)};
   var path="";for(var d=1;d<=n;d+=4)path+=(d===1?"M":"L")+x(d).toFixed(1)+" "+y(acc(d)).toFixed(1)+" ";
-  var cx=x(n),cy=y(acc(n)),val=acc(n);
+  var cx=x(n),cyv=y(acc(n)),val=acc(n);
   var onMove=function(e){var r=e.currentTarget.getBoundingClientRect();var px=(e.clientX-r.left)/r.width*W;n2[1](Math.max(1,Math.min(500,Math.round((px-pad)/(W-pad*2)*500))))};
   return (<div style={{width:"100%"}}>
     <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:"auto",display:"block",cursor:"crosshair"}} onMouseEnter={function(){h2[1](true)}} onMouseLeave={function(){h2[1](false)}} onMouseMove={function(e){if(hover)onMove(e)}}>
       {[88,92,96,100].map(function(g){return <g key={g}><line x1={pad} x2={W-pad} y1={y(g)} y2={y(g)} stroke={BD} strokeWidth="1" /><text x={pad} y={y(g)-4} fill={MT} style={{...mono}} fontSize="9">{g}%</text></g>})}
       <path d={path} fill="none" stroke={MG} strokeWidth="2" strokeLinecap="round" />
       <line x1={cx} x2={cx} y1={y(val)} y2={H-pad} stroke={"rgba("+cR.mg+",0.25)"} strokeWidth="1" />
-      <circle cx={cx} cy={cy} r="5" fill={MG} />
-      <circle cx={cx} cy={cy} r="10" fill="none" stroke={"rgba("+cR.mg+",0.4)"} strokeWidth="1" />
+      <circle cx={cx} cy={cyv} r="5" fill={MG} /><circle cx={cx} cy={cyv} r="10" fill="none" stroke={"rgba("+cR.mg+",0.4)"} strokeWidth="1" />
     </svg>
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginTop:10}}>
+    <div style={{display:"flex",justifyContent:"space-between",marginTop:10}}>
       <span style={{...mono,fontSize:12,color:MT}}>deployment <span style={{color:TX}}>#{n}</span></span>
       <span style={{...mono,fontSize:12,color:MT}}>fleet accuracy <span style={{color:MG,fontWeight:500}}>{val.toFixed(1)}%</span></span>
     </div>
   </div>);
 }
-var RBEATS=[
-{cam:0,c:CY,title:"Footfall & identity",desc:"Cameras read every entry on the device. Known shoppers are recognised; counts are exact, not estimated.",log:{t:"09:14",c:CY,x:"Footfall +1 · shopper recognised"}},
-{cam:1,c:MG,title:"Dwell & concealment",desc:"Camera and shelf-edge fuse. Repeated reach, no basket, four minutes — flagged the moment it happens.",log:{t:"09:21",c:MG,x:"Aisle 2 · concealment flag"}},
-{cam:1,c:T,title:"Planogram compliance",desc:"ESL and camera disagree on a shelf. The gap reaches staff in minutes, not at the evening walk.",log:{t:"09:30",c:T,x:"Aisle 1 · planogram gap"}},
-{cam:2,c:T,title:"Queue management",desc:"Checkout dwell crosses threshold. Cortex calls a new counter before anyone walks out.",log:{t:"09:42",c:T,x:"Queue > 4 · open counter 5"}},
-{cam:-1,c:T,title:"Every store, smarter",desc:"What one store learns, the rest inherit over the air. Store #40 ships knowing what store #1 caught.",log:{t:"sync",c:T,x:"Pattern shared · 39 stores"}}
-];
-var CAMS=[{x:48,y:40},{x:230,y:28},{x:404,y:44}];
-var crgb=function(c){return c===CY?cR.cy:c===MG?cR.mg:cR.ion};
-function RetailScene(){
-  var b2s=useState(0),beat=b2s[0],l2=useState([RBEATS[0].log]),log=l2[0];
-  useEffect(function(){
-    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-    var id=setInterval(function(){b2s[1](function(b){var nb=(b+1)%5;l2[1](function(L){return [RBEATS[nb].log].concat(L).slice(0,5)});return nb})},3400);
-    return function(){clearInterval(id)};
-  },[]);
-  var B=RBEATS[beat];
-  var Cam=function(i){var c=CAMS[i];var on=B.cam===i;return (<g key={i}>
-    {on&&<polygon points={(c.x-24)+","+(c.y+60)+" "+(c.x+24)+","+(c.y+60)+" "+c.x+","+(c.y+14)} fill={"rgba("+crgb(B.c)+",0.13)"} className="cx-fov" />}
-    <circle cx={c.x} cy={c.y} r="6" fill={on?B.c:B3} stroke={on?B.c:DM} strokeWidth="1.2" />
-    {on&&<circle cx={c.x} cy={c.y} r="6" fill="none" stroke={B.c}><animate attributeName="r" from="6" to="15" dur="1.4s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.7" to="0" dur="1.4s" repeatCount="indefinite" /></circle>}
-  </g>)};
-  return (<div className="cx-scene">
-    <svg viewBox="0 0 460 320" style={{width:"100%",height:"auto",display:"block"}}>
-      <rect x="6" y="6" width="448" height="308" rx="14" fill="none" stroke={B3} strokeWidth="1.2" />
-      <text x="14" y="166" fill={MT} style={{...mono}} fontSize="10">IN →</text>
-      {[110,196,282].map(function(ax){return <g key={ax}>
-        <rect x={ax} y="78" width="34" height="150" rx="6" fill={B2} stroke={BD} />
-        {[96,120,144,168,192].map(function(ty){return <line key={ty} x1={ax+34} y1={ty} x2={ax+39} y2={ty} stroke={MT} strokeWidth="1.4" />})}
-      </g>})}
-      {[340,372,404].map(function(cx2){return <rect key={cx2} x={cx2} y="244" width="22" height="42" rx="4" fill="none" stroke={BD} />})}
-      <text x="340" y="304" fill={MT} style={{...mono}} fontSize="9">CHECKOUT</text>
-      {CAMS.map(function(_,i){return Cam(i)})}
-      <g key={beat}>
-        {beat===0&&(<>
-          <circle r="5" fill={CY}><animateMotion dur="2.8s" fill="freeze" path="M16,168 L150,168 L196,150" /></circle>
-          <text x="200" y="60" fill={CY} style={{...mono}} fontSize="12" fontWeight="500">+1<animate attributeName="opacity" from="0" to="1" dur="0.6s" fill="freeze" /></text>
-        </>)}
-        {beat===1&&(<>
-          <circle cx="213" cy="150" r="6" fill={MG} />
-          <circle cx="213" cy="150" r="16" fill="none" stroke={"rgba("+cR.mg+",.35)"} strokeWidth="3" strokeDasharray="100" strokeDashoffset="100" transform="rotate(-90 213 150)"><animate attributeName="stroke-dashoffset" from="100" to="0" dur="2.6s" fill="freeze" /></circle>
-          <g transform="translate(238,120)"><circle r="9" fill={"rgba("+cR.mg+",.18)"} stroke={MG} /><text y="4" textAnchor="middle" fill={MG} fontSize="12" fontWeight="700">!</text><animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.5s" fill="freeze" /></g>
-        </>)}
-        {beat===2&&(<>
-          <rect x="114" y="120" width="26" height="16" rx="2" fill={B3}><animate attributeName="opacity" from="1" to="0.12" dur="1.6s" fill="freeze" /></rect>
-          <g><line x1="230" y1="44" x2="150" y2="128" stroke={"rgba("+cR.ion+",.5)"} strokeWidth="1" /><g transform="translate(150,128)"><rect x="-2" y="-2" width="4" height="4" fill={T} /></g></g>
-          <g transform="translate(150,150)"><rect x="0" y="0" width="86" height="22" rx="5" fill={BG} stroke={"rgba("+cR.ion+",.5)"} /><text x="10" y="15" fill={T} style={{...mono}} fontSize="11">SHELF GAP</text><animate attributeName="opacity" from="0" to="1" begin="1.4s" dur="0.5s" fill="freeze" /></g>
-        </>)}
-        {beat===3&&(<>
-          {[0,1,2,3].map(function(q){return <circle key={q} cx={326-q*13} cy="265" r="5" fill={N3}><animate attributeName="opacity" from="0" to="0.85" begin={(q*0.4)+"s"} dur="0.4s" fill="freeze" /></circle>})}
-          <g transform="translate(300,200)"><rect x="0" y="0" width="132" height="24" rx="5" fill={BG} stroke={"rgba("+cR.ion+",.5)"} /><text x="11" y="16" fill={T} style={{...mono}} fontSize="11">OPEN COUNTER 5</text><animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.5s" fill="freeze" /></g>
-        </>)}
-        {beat===4&&(<>
-          <circle cx="230" cy="160" r="20" fill="none" stroke={"rgba("+cR.ion+",.6)"}><animate attributeName="r" from="20" to="210" dur="2.4s" /><animate attributeName="opacity" from="0.6" to="0" dur="2.4s" /></circle>
-          {[0,1,2,3,4,5,6,7].map(function(s){var gx=70+(s%4)*110,gy=110+Math.floor(s/4)*90;return <g key={s} transform={"translate("+gx+","+gy+")"}><rect x="-16" y="-12" width="32" height="24" rx="4" fill={BG} stroke={T}><animate attributeName="opacity" from="0.15" to="0.9" begin={(0.3+s*0.18)+"s"} dur="0.5s" fill="freeze" /></rect></g>})}
-          <text x="230" y="300" textAnchor="middle" fill={T} style={{...mono}} fontSize="11">→ 39 stores</text>
-        </>)}
-      </g>
-    </svg>
-    <div>
-      <div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".16em",color:B.c,marginBottom:8}}>{("0"+(beat+1)).slice(-2)} · live</div>
-      <div style={{...hd,fontSize:21,fontWeight:600,color:TX,marginBottom:10,letterSpacing:"-.01em"}}>{B.title}</div>
-      <p style={{fontSize:15,lineHeight:1.65,color:MT,margin:"0 0 26px",minHeight:72}}>{B.desc}</p>
-      <div style={{...mono,fontSize:10.5,textTransform:"uppercase",letterSpacing:".14em",color:MT,marginBottom:12}}>Decisions, on-device</div>
-      <div style={{display:"flex",flexDirection:"column",gap:9}}>
-        {log.map(function(e,i){return <div key={log.length-i+e.x} style={{display:"flex",alignItems:"center",gap:11,opacity:i===0?1:0.4-i*0.06,transition:"opacity .5s"}}>
-          <span style={{...mono,fontSize:11,color:MT,minWidth:38}}>{e.t}</span>
-          <span style={{width:7,height:7,borderRadius:"50%",background:e.c,flexShrink:0}} />
-          <span style={{fontSize:13.5,color:i===0?TX:MT}}>{e.x}</span>
-        </div>})}
-      </div>
-    </div>
-  </div>);
-}
-var CAPS=[
-{n:"Hardware-agnostic via HAL",t:"One API, any board",d:"A Hardware Abstraction Layer normalises across boards. New hardware is a supply decision, not an engineering rewrite."},
-{n:"SoC-agnostic",t:"ARM & x86",d:"Runs across ARM and x86 silicon families — Jetson, Hailo, and beyond. Never locked to one vendor's roadmap or pricing."},
-{n:"Universal data ingestion",t:"Any sensor",d:"Cameras, thermal, IoT, RFID, ESL — every feed flows into one pipeline and fuses into a single, coherent situation."},
-{n:"Industry vocabulary",t:"Speaks your domain",d:"The same platform understands shrinkage, cold-chain breach, PPE compliance, or fall detection — each industry in its own language."},
-{n:"Fleet learning",t:"Compounds",m:true,d:"Every deployment's outcomes feed back to every device over the air. The whole fleet gets smarter with scale."},
-{n:"Quantised AI on endpoints",t:"Under 100ms · offline",d:"INT8-quantised models run natively on the device. Under 100ms, low-power, and fully offline — no cloud round-trip."},
-{n:"Privacy & auth embedded",t:"By architecture",d:"Nothing leaves the device, and identity and access are built in. Privacy and authentication are the foundation, not add-ons."}
-];
 function CortexPage(p){
   var go=p.go;
   var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
-  useEffect(function(){document.title="Sevyn8 | Cortex — every deployment makes the next one smarter";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Cortex is the edge-AI platform behind every Sevyn8 deployment. On-device inference under 100ms, fully offline — and every deployment makes the whole fleet smarter.")},[]);
+  useEffect(function(){document.title="Sevyn8 | Cortex — intelligence on every device, on any hardware";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Cortex is the edge-AI platform behind every Sevyn8 deployment — on-device inference under 100ms, fully offline, on any silicon. One platform across retail, cold chain, logistics, and smart home; every deployment makes the fleet smarter.")},[]);
   return (<div style={{paddingTop:80}}>
-    <section style={{maxWidth:MW,margin:"0 auto",padding:"60px 40px 96px"}}>
+    <section style={{maxWidth:MW,margin:"0 auto",padding:"56px 40px 92px"}}>
       <div className="cx-grid2">
         <div>
           <Tg>The edge-AI platform</Tg>
-          <h1 style={{...hd,fontSize:60,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}>Every deployment<br/>makes the next one<br/><span style={{color:T}}>smarter.</span></h1>
-          <p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>Cortex is the edge-AI platform behind every Sevyn8 deployment. Inference runs on the device in under 100ms, fully offline.</p>
-          <p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>What one device learns, the whole fleet inherits — so intelligence compounds with scale instead of plateauing.</p>
+          <h1 style={{...hd,fontSize:56,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}>Intelligence on<br/>every device.<br/><span style={{color:T}}>On any hardware.</span></h1>
+          <p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>Cortex is the edge-AI platform behind every Sevyn8 deployment. It turns cameras, sensors, and devices into on-device intelligence — deciding in under 100ms, fully offline, on whatever silicon you already run.</p>
+          <p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>One platform across retail, cold chain, logistics, and smart home. Privacy by architecture — nothing leaves the device.</p>
           <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
             <button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button>
-            <button style={b2} onClick={function(){scrollTo("how")}}>See how it works</button>
+            <button style={b2} onClick={function(){scrollTo("how")}}>See it in action</button>
           </div>
         </div>
-        <div className="cx-hero-anim" style={{height:460,position:"relative"}}><CompoundCanvas /></div>
+        <div className="cx-hero-anim" style={{height:420,position:"relative"}}><HeroDevice /></div>
       </div>
     </section>
-    <section id="how" style={{borderTop:"1px solid "+BD,background:B2}}>
-      <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
-        <Rv><Tg c={CY}>Cortex in the wild · Retail</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Detect. Understand. Decide.<br/>On the floor, in real time.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 44px"}}>One store, one platform. Cameras, ESLs, and sensors fuse into decisions on the device — footfall, dwell, planogram, queues — then every store inherits what the others learn.</p></Rv>
-        <Rv d={0.1}><RetailScene /></Rv>
-      </div>
-    </section>
-    <section style={{maxWidth:MW,margin:"0 auto",padding:"96px 40px"}}>
-      <div className="cx-grid2">
-        <div><Rv><Tg c={MG}>The compounding effect</Tg><h2 style={{...hd,fontSize:40,fontWeight:600,lineHeight:1.08,margin:"0 0 18px"}}>The 500th deployment is<br/>smarter than the 1st.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:460,margin:"0 0 16px"}}>Every observation across the fleet feeds system-wide learning, delivered back to every device over the air.</p><p style={{fontSize:16,lineHeight:1.7,color:MT,maxWidth:460,margin:0}}>The first deployment ships smart. The 500th ships smarter — and it quietly improves the first one too. This is the part a competitor can't copy by shipping faster hardware.</p></Rv></div>
-        <Rv d={0.1}><div style={{padding:24,borderRadius:14,background:B2,border:"1px solid "+BD}}><CompoundCurve /></div></Rv>
-      </div>
-    </section>
+    <SevenCapSection />
+    <RetailWall />
     <section style={{borderTop:"1px solid "+BD,background:B2}}>
-      <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
-        <Rv><Tg>Seven capabilities · one platform</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Seven capabilities.<br/>No competitor holds all of them.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 44px"}}>Edge AI needs all seven at once. Chip firms own silicon but can't build products. ODMs manufacture but can't write AI. Software startups have models but no hardware DNA. Cortex holds the full set — and an eighth that makes them compound.</p></Rv>
-        <div className="cx-layers">
-          {CAPS.map(function(l,i){return <Rv key={l.n} d={i*0.05}>
-            <div style={{padding:"24px 26px",borderRadius:12,background:BG,border:"1px solid "+BD,borderLeft:"3px solid "+(l.m?MG:T),height:"100%"}}>
-              <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:12,marginBottom:8}}>
-                <span style={{fontSize:18,fontWeight:600,color:TX}}><span style={{...mono,fontSize:12,color:MT,marginRight:10}}>{String(i+1).padStart(2,"0")}</span>{l.n}</span>
-                <span style={{...mono,fontSize:11,color:l.m?MG:T,textTransform:"uppercase",letterSpacing:".08em",whiteSpace:"nowrap"}}>{l.t}</span>
-              </div>
-              <p style={{fontSize:14.5,lineHeight:1.65,color:MT,margin:"0 0 0 32px"}}>{l.d}</p>
-            </div>
-          </Rv>})}
-          <Rv d={0.4}>
-            <div style={{padding:"24px 26px",borderRadius:12,background:BG,border:"1px solid rgba(65,75,245,.35)",borderLeft:"3px solid "+T,height:"100%",display:"flex",flexDirection:"column",justifyContent:"center",position:"relative",overflow:"hidden"}}>
-              <div style={{...hd,fontSize:40,fontWeight:600,color:T,lineHeight:1,marginBottom:10}}>∞</div>
-              <div style={{...hd,fontSize:22,fontWeight:600,color:TX,marginBottom:6}}>The eighth: it compounds.</div>
-              <p style={{...mono,fontSize:12,color:MT,margin:0,letterSpacing:".04em"}}>sevyn = the full stack · 8 = infinity</p>
-            </div>
-          </Rv>
+      <div style={{maxWidth:MW,margin:"0 auto",padding:"92px 40px"}}>
+        <div className="cx-grid2">
+          <div><Rv><Tg c={MG}>The compounding effect</Tg><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 18px",lineHeight:1.08}}>Every deployment makes<br/>the next one smarter.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:460,margin:"0 0 16px"}}>What one device learns, the whole fleet inherits over the air. Intelligence compounds with scale instead of plateauing.</p><p style={{fontSize:16,lineHeight:1.7,color:MT,maxWidth:460,margin:0}}>The 1st deployment ships smart. The 500th ships smarter — and improves the 1st too. The part a competitor can't copy by shipping faster hardware.</p></Rv></div>
+          <Rv d={0.1}><div className="cx-hero-anim" style={{height:360,position:"relative"}}><CompoundCanvas /></div></Rv>
         </div>
+        <Rv d={0.15}><div style={{marginTop:40,padding:24,borderRadius:14,background:BG,border:"1px solid "+BD}}><CompoundCurve /></div></Rv>
       </div>
     </section>
     <section style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:40}}>
         {[["< 100ms","On-device inference","Decisions happen where the data is — no latency, no cloud round-trip."],["0","Frames to the cloud","Fully offline by architecture. Privacy isn't a setting; it's the design."],["1 API","Across all silicon","HAL abstracts the hardware. Switch SoC without rewriting the platform."]].map(function(row,i){return <Rv key={row[1]} d={i*0.08}>
-          <div style={{...hd,fontSize:46,fontWeight:600,color:TX,marginBottom:6,fontVariantNumeric:"tabular-nums"}}>{row[0]}</div>
+          <div style={{...hd,fontSize:46,fontWeight:600,color:TX,marginBottom:6}}>{row[0]}</div>
           <div style={{...mono,fontSize:12,textTransform:"uppercase",letterSpacing:".12em",color:T,marginBottom:12}}>{row[1]}</div>
           <p style={{fontSize:15,lineHeight:1.7,color:MT,margin:0,maxWidth:300}}>{row[2]}</p>
         </Rv>})}
@@ -731,11 +817,8 @@ function CortexPage(p){
     </section>
     <section id="cta" style={{borderTop:"1px solid "+BD,background:B2}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"100px 40px",textAlign:"center"}}>
-        <Rv><h2 style={{...hd,fontSize:46,fontWeight:600,margin:"0 0 18px"}}>See Cortex run on your hardware.</h2><p style={{fontSize:18,lineHeight:1.6,color:N3,maxWidth:560,margin:"0 auto 36px"}}>New devices or existing infrastructure — same platform, same AI. Measurable results in 60 days.</p>
-        <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
-          <button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button>
-          <button style={b2} onClick={function(){go("contact")}}>Talk to the team</button>
-        </div></Rv>
+        <Rv><h2 style={{...hd,fontSize:46,fontWeight:600,lineHeight:1.05,margin:"0 0 18px"}}>See Cortex run on your hardware.</h2><p style={{fontSize:18,lineHeight:1.6,color:N3,maxWidth:560,margin:"0 auto 36px"}}>New devices or existing infrastructure — same platform, same AI. Measurable results in 60 days.</p>
+        <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){go("contact")}}>Talk to the team</button></div></Rv>
       </div>
     </section>
   </div>);
@@ -792,7 +875,7 @@ export default function App(){
   var go=useCallback(function(p){p2[1](p);window.scrollTo({top:0,behavior:"instant"})},[]);
   var C;if(pg==="home")C=<Home go={go}/>;else if(pg==="platform")C=<PlatPg go={go}/>;else if(pg==="cortex2")C=<CortexPage go={go}/>;else if(pg==="box")C=<BoxPg go={go}/>;else if(pg==="partners")C=<PartPg go={go}/>;else if(pg==="about")C=<AboutPg />;else if(pg==="contact")C=<ContactPg />;else if(pg.indexOf("sol-")===0){var s=SOL.find(function(x){return "sol-"+x.id===pg});C=s?<SolPg s={s} go={go}/>:<Home go={go}/>}else C=<Home go={go}/>;
   return <div style={{minHeight:"100vh",background:BG,fontFamily:"'IBM Plex Sans',system-ui,sans-serif",WebkitFontSmoothing:"antialiased",color:TX,fontSize:16,lineHeight:1.65}}>
-    <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}.cx-layers{display:grid;grid-template-columns:1fr 1fr;gap:14px}.cx-scene{display:grid;grid-template-columns:1.45fr 1fr;gap:36px;align-items:center}@keyframes cxfov{0%,100%{opacity:.18}50%{opacity:.5}}.cx-fov{animation:cxfov 1.7s ease-in-out infinite}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:36px}.cx-layers{grid-template-columns:1fr}.cx-hero-anim{height:340px !important}.cx-scene{grid-template-columns:1fr;gap:28px}}@media (prefers-reduced-motion:reduce){.cx-fov{animation:none}}"}} />
+    <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}.rw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@keyframes scdinf{0%,100%{opacity:.5}50%{opacity:1}}@keyframes feedin{from{opacity:0}to{opacity:1}}@keyframes livedot{0%,100%{opacity:.4}50%{opacity:1}}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:34px}.cx-hero-anim{height:340px !important}.rw-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.rw-grid{grid-template-columns:1fr}}"}} />
     <Nav pg={pg} go={go}/><main key={pg}>{C}</main><Ft />
   </div>;
 }

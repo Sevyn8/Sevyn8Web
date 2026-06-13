@@ -3,11 +3,13 @@ import {useState, useEffect, useRef, useCallback} from "react";
 // values mirror brand-assets/tokens.json (v4); tokens.css is canonical
 var T="#414BF5", ION_H="#2F38D6", CY="#19D3E0", MG="#E63DCB", I3="#8E97F8", I7="#232BAA", SL="#5A6275", WN="#FFB020";
 var BG="#0B0D14", B2="#181C28", B3="#272D3B", TX="#E7EAF1", MT="#5A6275", DM="#3C4354", BD="rgba(140,160,200,0.07)";
+var MW=1280; // page container max-width
 var hd={fontFamily:"'IBM Plex Sans',system-ui,sans-serif",letterSpacing:"-.03em"};
 var bn={display:"inline-flex",alignItems:"center",gap:6,padding:"12px 24px",background:T,color:"#fff",fontWeight:600,fontSize:14,border:"none",borderRadius:6,cursor:"pointer",fontFamily:"inherit"};
 var b2={display:"inline-flex",alignItems:"center",gap:6,padding:"12px 24px",background:"transparent",color:TX,fontWeight:500,fontSize:14,border:"1px solid rgba(140,160,200,.15)",borderRadius:6,cursor:"pointer",fontFamily:"inherit"};
-function Sc(p){return <section style={{borderTop:p.bt?"1px solid "+BD:"none",background:p.bg||"transparent"}}><div style={{maxWidth:960,margin:"0 auto",padding:"72px 40px"}}>{p.children}</div></section>}
+function Sc(p){return <section style={{borderTop:p.bt?"1px solid "+BD:"none",background:p.bg||"transparent"}}><div style={{maxWidth:MW,margin:"0 auto",padding:"96px 40px"}}>{p.children}</div></section>}
 function Tg(p){return <div style={{fontSize:11,textTransform:"uppercase",letterSpacing:3,color:p.c||T,marginBottom:12,fontWeight:500,fontFamily:"'IBM Plex Mono',monospace"}}>{p.children}</div>}
+function Brand(p){var s=p.size;return <div style={{display:"flex",alignItems:"center",gap:10}}><img src={p.animated?"/sevyn8-mark-animated.svg":"/sevyn8-mark.svg"} alt="" style={{height:s,width:"auto",display:"block"}} /><span style={{fontFamily:"'IBM Plex Sans',system-ui,sans-serif",fontWeight:600,color:TX,letterSpacing:"-.01em",fontSize:s*.6}}>Sevyn8</span></div>}
 function Rv(p){var r=useRef(null),v=useState(false);useEffect(function(){var el=r.current;if(!el)return;var o=new IntersectionObserver(function(e){if(e[0].isIntersecting){v[1](true);o.disconnect()}},{threshold:0.08});o.observe(el);return function(){o.disconnect()}},[]);return <div ref={r} style={{opacity:v[0]?1:0,transform:v[0]?"none":"translateY(24px)",transition:"all .7s cubic-bezier(.22,1,.36,1) "+(p.d||0)+"s"}}>{p.children}</div>}
 
 var SOL=[
@@ -159,7 +161,7 @@ function Home(p){
   var go=p.go,l2=useState(false),ld=l2[0];
   useEffect(function(){setTimeout(function(){l2[1](true)},150)},[]);
   return (<div>
-    <section style={{minHeight:"100vh",display:"flex",alignItems:"center",padding:"100px 40px 60px",maxWidth:1200,margin:"0 auto"}}>
+    <section style={{minHeight:"100vh",display:"flex",alignItems:"center",padding:"100px 40px 60px",maxWidth:MW,margin:"0 auto"}}>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",width:"100%"}}>
         <div style={{opacity:ld?1:0,transform:ld?"none":"translateY(24px)",transition:"all 1s cubic-bezier(.16,1,.3,1) .3s"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",border:"1px solid "+T+"28",borderRadius:16,marginBottom:28}}><div style={{width:7,height:7,borderRadius:"50%",background:T,boxShadow:"0 0 10px "+T}} /><span style={{fontSize:13,color:T,fontWeight:500}}>AI at Edge Platform</span></div>
@@ -172,14 +174,14 @@ function Home(p){
       </div>
     </section>
 
-    <section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:1100,margin:"0 auto",padding:"56px 40px"}}><Rv><div style={{textAlign:"center",marginBottom:40}}><Tg>What changes</Tg><h2 style={{...hd,fontSize:34,fontWeight:700}}>Before Sevyn8 vs. After</h2></div></Rv>
+    <section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:MW,margin:"0 auto",padding:"56px 40px"}}><Rv><div style={{textAlign:"center",marginBottom:40}}><Tg>What changes</Tg><h2 style={{...hd,fontSize:34,fontWeight:700}}>Before Sevyn8 vs. After</h2></div></Rv>
       <Outcomes go={go} />
     </div></section>
 
     <Sc bt><Rv><Tg>Two paths. One platform.</Tg><h2 style={{...hd,fontSize:34,fontWeight:700,marginBottom:10}}>New deployment or existing infrastructure. Same intelligence.</h2><p style={{fontSize:17,color:MT,marginBottom:40}}>Deploy purpose-built intelligent devices with AI on-board — or add a Sevyn8 box to the sensors you already have. Both paths run the same platform.</p></Rv>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:32}}>
         <Rv d={0}><div style={{padding:32,borderRadius:14,border:"1.5px solid "+T+"40",background:T+"06"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}><div style={{width:40,height:40,borderRadius:8,background:T+"18",border:"1.5px solid "+T+"40",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:800,color:T}}>S8</div><div style={{fontSize:11,textTransform:"uppercase",letterSpacing:2,color:T,fontWeight:600}}>New deployment</div></div>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}><img src="/sevyn8-mark.svg" alt="" style={{height:34,width:"auto",display:"block"}} /><div style={{fontSize:11,textTransform:"uppercase",letterSpacing:2,color:T,fontWeight:600}}>New deployment</div></div>
           <h3 style={{fontSize:20,fontWeight:700,marginBottom:10}}>Intelligent devices with AI built in</h3>
           <p style={{fontSize:15,color:MT,lineHeight:1.75,marginBottom:16}}>Purpose-built cameras, sensors, and gateways with on-board NPU. Sevyn8 platform embedded at factory. AI runs natively on the device — no separate box needed.</p>
           <div style={{display:"flex",flexWrap:"wrap",gap:6}}>{["On-board NPU/CPU","AI at the device","OEM white-label","Factory embedded"].map(function(t){return <span key={t} style={{fontSize:11,padding:"4px 10px",borderRadius:4,border:"1px solid "+T+"25",color:T,background:T+"08"}}>{t}</span>})}</div>
@@ -236,9 +238,9 @@ function Home(p){
       </div>
     </Sc>
 
-    <section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:1100,margin:"0 auto",padding:"40px",display:"flex",alignItems:"center",justifyContent:"center",gap:48,flexWrap:"wrap"}}><span style={{fontSize:12,textTransform:"uppercase",letterSpacing:2,color:DM}}>Deployed at</span>{["Global ESL Leader","Premium Fashion Retailer"].map(function(n,i){return <div key={i} style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:CY}} /><span style={{fontSize:14,fontWeight:600,color:MT}}>{n}</span></div>})}</div></section>
+    <section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:MW,margin:"0 auto",padding:"40px",display:"flex",alignItems:"center",justifyContent:"center",gap:48,flexWrap:"wrap"}}><span style={{fontSize:12,textTransform:"uppercase",letterSpacing:2,color:DM}}>Deployed at</span>{["Global ESL Leader","Premium Fashion Retailer"].map(function(n,i){return <div key={i} style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:CY}} /><span style={{fontSize:14,fontWeight:600,color:MT}}>{n}</span></div>})}</div></section>
 
-    <Sc><Rv><div style={{textAlign:"center"}}><h2 style={{...hd,fontSize:34,fontWeight:700,marginBottom:14}}>New devices or existing infrastructure. See it work in 60 days.</h2><p style={{fontSize:17,color:MT,marginBottom:30,maxWidth:480,margin:"0 auto 30px"}}>Deploy purpose-built intelligent devices or make your existing infrastructure smarter. Same platform, same AI, same results. 60-day POC.</p><div style={{display:"flex",gap:12,justifyContent:"center"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){go("platform")}}>Explore Cortex</button></div></div></Rv></Sc>
+    <Sc><Rv><div style={{textAlign:"center"}}><h2 style={{...hd,fontSize:34,fontWeight:700,marginBottom:14}}>New devices or existing infrastructure. See it work in 60 days.</h2><p style={{fontSize:17,color:MT,marginBottom:30,maxWidth:680,margin:"0 auto 30px"}}>Deploy purpose-built intelligent devices or make your existing infrastructure smarter. Same platform, same AI, same results. 60-day POC.</p><div style={{display:"flex",gap:12,justifyContent:"center"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){go("platform")}}>Explore Cortex</button></div></div></Rv></Sc>
   </div>)}
 
 function PlatPg(p){
@@ -301,7 +303,7 @@ function PlatPg(p){
 
     <Sc bg={B2} bt><Rv><div style={{textAlign:"center"}}>
       <h2 style={{...hd,fontSize:28,fontWeight:700,marginBottom:14}}>See Cortex run on your data.</h2>
-      <p style={{fontSize:16,color:MT,marginBottom:24,maxWidth:460,margin:"0 auto 24px"}}>60-day proof of concept. Your site, your signals, your KPIs. We bring the platform.</p>
+      <p style={{fontSize:16,color:MT,marginBottom:24,maxWidth:680,margin:"0 auto 24px"}}>60-day proof of concept. Your site, your signals, your KPIs. We bring the platform.</p>
       <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
         <button style={bn} onClick={function(){p.go("contact")}}>Book a 60-day POC</button>
         <button style={b2} onClick={function(){p.go("box")}}>See the Edge AI Box {"→"}</button>
@@ -406,7 +408,7 @@ function BoxPg(p){
 
     <Sc bt><Rv><div style={{textAlign:"center"}}>
       <h2 style={{...hd,fontSize:28,fontWeight:700,marginBottom:14}}>Evaluate on your site.</h2>
-      <p style={{fontSize:16,color:MT,marginBottom:24,maxWidth:460,margin:"0 auto 24px"}}>Request a Nano or Pro evaluation unit. 60-day POC. Your cameras, your KPIs.</p>
+      <p style={{fontSize:16,color:MT,marginBottom:24,maxWidth:680,margin:"0 auto 24px"}}>Request a Nano or Pro evaluation unit. 60-day POC. Your cameras, your KPIs.</p>
       <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
         <button style={bn} onClick={function(){p.go("contact")}}>Request evaluation unit</button>
         <button style={b2} onClick={function(){p.go("platform")}}>Explore Cortex {"\u2192"}</button>
@@ -419,7 +421,7 @@ function SolPg(p){var s=p.s,sc2=useState(0),sci=sc2[0];
   useEffect(function(){if(!s.scn)return;var id=setInterval(function(){sc2[1](function(v){return(v+1)%s.scn.length})},6000);return function(){clearInterval(id)}},[s.scn]);
   return <div style={{paddingTop:80}}>
   <Sc><Rv><div style={{fontSize:14,color:MT,marginBottom:16}}><span style={{color:T,cursor:"pointer"}} onClick={function(){p.go("home")}}>Solutions</span> / {s.n}</div><h1 style={{...hd,fontSize:44,fontWeight:700,lineHeight:1.08,maxWidth:640,marginBottom:22}}>{s.h}</h1><p style={{fontSize:18,color:MT,lineHeight:1.85,maxWidth:580}}>{s.d}</p></Rv></Sc>
-  {s.st&&<section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:960,margin:"0 auto",padding:"40px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>{s.st.map(function(st,i){return <Rv key={i} d={i*.08}><div style={{padding:20,borderRadius:10,border:"1px solid "+BD,background:BG,textAlign:"center"}}><div style={{fontSize:28,fontWeight:700,...hd,color:T}}>{st.v}</div><div style={{fontSize:13,color:MT,marginTop:5}}>{st.l}</div></div></Rv>})}</div></section>}
+  {s.st&&<section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:MW,margin:"0 auto",padding:"40px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>{s.st.map(function(st,i){return <Rv key={i} d={i*.08}><div style={{padding:20,borderRadius:10,border:"1px solid "+BD,background:BG,textAlign:"center"}}><div style={{fontSize:28,fontWeight:700,...hd,color:T}}>{st.v}</div><div style={{fontSize:13,color:MT,marginTop:5}}>{st.l}</div></div></Rv>})}</div></section>}
 
   {s.scn&&<Sc bt><Rv><Tg>A day without vs. with</Tg><h2 style={{...hd,fontSize:32,fontWeight:700,marginBottom:28}}>Same moment. Different outcome.</h2></Rv>
     <div style={{display:"flex",gap:6,marginBottom:24}}>{s.scn.map(function(sc,i){return <div key={i} onClick={function(){sc2[1](i)}} style={{padding:"8px 16px",borderRadius:6,cursor:"pointer",background:sci===i?CY+"15":"transparent",border:"1px solid "+(sci===i?CY+"44":BD),fontSize:13,fontWeight:sci===i?600:500,color:sci===i?CY:DM,transition:"all .3s"}}>{sc.t}</div>})}</div>
@@ -512,9 +514,9 @@ function Nav(p){
     <div><div style={{fontSize:17,fontWeight:600,color:act?T:TX}}>{l}</div>{sub&&<div style={{fontSize:13,color:DM,marginTop:3,lineHeight:1.4}}>{sub}</div>}</div>
     <span style={{color:act?T:DM,fontSize:18,marginLeft:12}}>{"\u203A"}</span>
   </div>};
-  return <><nav style={{position:"fixed",top:0,left:0,right:0,zIndex:999,padding:"0 40px",background:s2[0]||mo[0]?"rgba(11,13,20,.96)":"transparent",backdropFilter:s2[0]||mo[0]?"blur(20px)":"none",borderBottom:s2[0]||mo[0]?"1px solid "+BD:"none",transition:"all .3s"}}>
-    <div style={{maxWidth:1200,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:60}}>
-      <div onClick={function(){goc("home")}} style={{cursor:"pointer",display:"flex",alignItems:"center"}}><img src="/sevyn8-lockup.svg" alt="Sevyn8" style={{height:30,display:"block"}} /></div>
+  return <><nav style={{position:"fixed",top:0,left:0,right:0,zIndex:999,padding:0,background:s2[0]||mo[0]?"rgba(11,13,20,.96)":"transparent",backdropFilter:s2[0]||mo[0]?"blur(20px)":"none",borderBottom:s2[0]||mo[0]?"1px solid "+BD:"none",transition:"all .3s"}}>
+    <div style={{maxWidth:MW,margin:"0 auto",padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between",height:60}}>
+      <div onClick={function(){goc("home")}} style={{cursor:"pointer"}}><Brand size={38} animated /></div>
       <div style={{display:"flex",alignItems:"center",gap:26}}>
         {nl("Cortex","platform")}{nl("Edge AI Box","box")}
         <div style={{position:"relative"}} onMouseEnter={function(){d2[1]("s")}} onMouseLeave={function(){d2[1](null)}}><span style={{fontSize:14,fontWeight:500,color:pg.startsWith("sol-")?T:MT,cursor:"pointer",padding:"8px 0"}}>Solutions &#9662;</span>{d2[0]==="s"&&<div style={{position:"absolute",top:"100%",left:"50%",transform:"translateX(-50%)",paddingTop:8,zIndex:100}}><div style={{background:B2,border:"1px solid "+BD,borderRadius:10,padding:6,minWidth:280,boxShadow:"0 16px 48px rgba(0,0,0,.5)"}}>{SOL.map(function(s){return <div key={s.id} onClick={function(){go("sol-"+s.id)}} style={{padding:"10px 16px",borderRadius:7,cursor:"pointer",fontSize:14,color:TX}}>{s.n}<br/><span style={{fontSize:12,color:DM}}>{s.ln}</span></div>})}</div></div>}</div>
@@ -543,7 +545,7 @@ function Nav(p){
   </>;
 }
 
-function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:20,height:20,borderRadius:4,background:"linear-gradient(135deg,"+CY+","+T+","+MG+")",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:800,color:BG}}>S8</div><span style={{fontWeight:800,letterSpacing:2}}>SEVYN8</span></div><span>2026 Sevyn8 Private Limited &middot; New Delhi &middot; DPIIT Recognised</span></div></footer>}
+function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} /><span>2026 Sevyn8 Private Limited &middot; New Delhi &middot; DPIIT Recognised</span></div></footer>}
 
 export default function App(){
   var p2=useState("home"),pg=p2[0];

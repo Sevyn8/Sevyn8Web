@@ -117,18 +117,20 @@ var CXARCH=[
 ];
 function CxFlywheel(){
   var motion=useMotion();var a2=useState(0),act=a2[0];
-  useEffect(function(){if(!motion){a2[1](-1);return}var id=setInterval(function(){a2[1](function(v){return (v+1)%4})},2400);return function(){clearInterval(id)}},[motion]);
-  var C=230,R=148;var P=function(d){var r=d*Math.PI/180;return [C+Math.cos(r)*R,C+Math.sin(r)*R]};
-  var nodes=[{a:-90,t:["More","deployments"],c:T},{a:0,t:["More real-","world data"],c:CY},{a:90,t:["Smarter models","fleet learning · OTA"],c:CY},{a:180,t:["Better","outcomes"],c:T}];
+  useEffect(function(){if(!motion){a2[1](0);return}var id=setInterval(function(){a2[1](function(v){return (v+1)%4})},2600);return function(){clearInterval(id)}},[motion]);
+  var C=230,R=150,rad=function(d){return d*Math.PI/180};
+  var P=function(d){return [C+Math.cos(rad(d))*R,C+Math.sin(rad(d))*R]};
+  var nodes=[{a:-90,t:["More","deployments"]},{a:0,t:["More","real-world data"]},{a:90,t:["Smarter models","fleet learning · OTA"]},{a:180,t:["Better","outcomes"]}];
+  var arcs=[[-68,-22],[22,68],[112,158],[202,248]];
   return (<svg viewBox="0 0 460 460" role="img" aria-label="The compounding flywheel" style={{width:"100%",height:"auto",display:"block",maxWidth:460,margin:"0 auto"}}>
-    <circle cx={C} cy={C} r={R} fill="none" stroke={"rgba("+cR.neu+",.18)"} strokeWidth="1.4" />
-    {[-45,45,135,225].map(function(m,i){var pp=P(m);return <g key={"c"+i} transform={"translate("+pp[0].toFixed(1)+","+pp[1].toFixed(1)+") rotate("+(m+90)+")"}><path d="M-5,-5 L1,0 L-5,5" fill="none" stroke={"rgba("+cR.ion+",.7)"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></g>})}
-    <text x={C} y={C-4} textAnchor="middle" fill={MG} fontSize="44" style={{...hd}}>∞</text>
+    <defs><marker id="fwarr" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3 L0,6 Z" fill={T} /></marker></defs>
+    {arcs.map(function(g,i){var s=P(g[0]),e=P(g[1]);return <path key={"a"+i} d={"M"+s[0].toFixed(1)+","+s[1].toFixed(1)+" A "+R+" "+R+" 0 0 1 "+e[0].toFixed(1)+","+e[1].toFixed(1)} fill="none" stroke={"rgba("+cR.ion+",.5)"} strokeWidth="2" markerEnd="url(#fwarr)" />})}
+    <text x={C} y={C-3} textAnchor="middle" fill={MG} fontSize="44" style={{...hd}}>∞</text>
     <text x={C} y={C+24} textAnchor="middle" fill={MT} style={{...mono}} fontSize="10" letterSpacing="2">THE FLYWHEEL</text>
-    {nodes.map(function(n,i){var pp=P(n.a);var on=act===i;var rgb=(n.c===CY?cR.cy:cR.ion);return <g key={i}>
-      <circle cx={pp[0]} cy={pp[1]} r="50" fill={B2} stroke={on?n.c:BD} strokeWidth={on?2:1.3} style={{filter:on?"drop-shadow(0 0 16px rgba("+rgb+",.3))":"none",transition:"all .5s"}} />
-      <circle cx={pp[0]} cy={pp[1]-30} r="3.5" fill={on?n.c:MT} style={{transition:"fill .5s"}} />
-      {n.t.map(function(tt,k){return <text key={k} x={pp[0]} y={pp[1]-4+k*14} textAnchor="middle" fill={on?TX:N3} style={{...mono,transition:"fill .5s"}} fontSize={k===0?12:9.5}>{tt}</text>})}
+    {nodes.map(function(n,i){var p=P(n.a);var on=act===i;return <g key={i}>
+      <circle cx={p[0]} cy={p[1]} r="48" fill={B2} stroke={on?CY:BD} strokeWidth={on?2.2:1.3} style={{filter:on?"drop-shadow(0 0 16px rgba("+cR.cy+",.3))":"none",transition:"all .5s"}} />
+      <circle cx={p[0]} cy={p[1]-28} r="3.5" fill={on?CY:MT} style={{transition:"fill .5s"}} />
+      {n.t.map(function(tt,k){return <text key={k} x={p[0]} y={p[1]-6+k*14} textAnchor="middle" fill={on?TX:N3} style={{...mono,transition:"fill .5s"}} fontSize={k===0?12:9.5} fontWeight={k===0?600:400}>{tt}</text>})}
     </g>})}
   </svg>);
 }
@@ -238,8 +240,8 @@ function Home2Page(p){
   return (<div style={{paddingTop:80}}>
     <section style={{maxWidth:980,margin:"0 auto",padding:"70px 40px 40px",textAlign:"center"}}>
       <Rv><Tg>The Physical AI platform</Tg></Rv>
-      <Rv d={0.05}><h1 style={{...hd,fontSize:58,fontWeight:600,lineHeight:1.06,margin:"0 0 22px",letterSpacing:"-.035em"}}><span style={{color:T}}>Physical AI</span> for retail, cold chain, logistics, and the home.</h1></Rv>
-      <Rv d={0.1}><p style={{fontSize:20,lineHeight:1.6,color:N3,maxWidth:660,margin:"0 auto 26px"}}>On-device intelligence for every camera, sensor, and device — deciding in real time, fully offline, and getting smarter together.</p></Rv>
+      <Rv d={0.05}><h1 style={{...hd,fontSize:58,fontWeight:600,lineHeight:1.06,margin:"0 0 22px",letterSpacing:"-.035em"}}><span style={{color:T}}>Physical AI</span> that runs where your business happens.</h1></Rv>
+      <Rv d={0.1}><p style={{fontSize:20,lineHeight:1.6,color:N3,maxWidth:660,margin:"0 auto 26px"}}>On-device intelligence for retail, cold chain, logistics, and the home — turning what your cameras and sensors already see into decisions that grow revenue and cut operating cost, in real time.</p></Rv>
       <Rv d={0.13}><div style={{display:"flex",flexWrap:"wrap",gap:10,justifyContent:"center",margin:"0 0 30px"}}>{[["endpoints","Intelligent Endpoints"],["chipsets","Multiple Chipsets"],["edge","AI @ Edge"],["privacy","Built for Privacy"],["governance","Easy Governance"]].map(function(c){return <div key={c[1]} style={{display:"inline-flex",alignItems:"center",gap:8,padding:"9px 16px",borderRadius:999,border:"1px solid "+BD,background:"rgba(255,255,255,0.02)"}}><CapGlyph k={c[0]} /><span style={{fontSize:13.5,fontWeight:500,color:N3}}>{c[1]}</span></div>})}</div></Rv>
       <Rv d={0.16}><div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("work")}}>See how it works</button></div></Rv>
     </section>

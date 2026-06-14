@@ -115,25 +115,6 @@ var CXARCH=[
 {k:"Edge inference",v:"INT8-quantised vision and sensor-fusion models. Under 100ms, under 2W, fully offline. HAL abstracts ARM and x86 SoC families."},
 {k:"Compliance",v:"DPDP + GDPR by architecture. STQC-aligned. Consent-based data flows. Privacy by design, not by policy."}
 ];
-function CxFlywheel(){
-  var motion=useMotion();var a2=useState(0),act=a2[0];
-  useEffect(function(){if(!motion){a2[1](0);return}var id=setInterval(function(){a2[1](function(v){return (v+1)%4})},2600);return function(){clearInterval(id)}},[motion]);
-  var C=230,R=150,rad=function(d){return d*Math.PI/180};
-  var P=function(d){return [C+Math.cos(rad(d))*R,C+Math.sin(rad(d))*R]};
-  var nodes=[{a:-90,t:["More","deployments"]},{a:0,t:["More","real-world data"]},{a:90,t:["Smarter models","fleet learning · OTA"]},{a:180,t:["Better","outcomes"]}];
-  var arcs=[[-68,-22],[22,68],[112,158],[202,248]];
-  return (<svg viewBox="0 0 460 460" role="img" aria-label="The compounding flywheel" style={{width:"100%",height:"auto",display:"block",maxWidth:460,margin:"0 auto"}}>
-    <defs><marker id="fwarr" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3 L0,6 Z" fill={T} /></marker></defs>
-    {arcs.map(function(g,i){var s=P(g[0]),e=P(g[1]);return <path key={"a"+i} d={"M"+s[0].toFixed(1)+","+s[1].toFixed(1)+" A "+R+" "+R+" 0 0 1 "+e[0].toFixed(1)+","+e[1].toFixed(1)} fill="none" stroke={"rgba("+cR.ion+",.5)"} strokeWidth="2" markerEnd="url(#fwarr)" />})}
-    <text x={C} y={C-3} textAnchor="middle" fill={MG} fontSize="44" style={{...hd}}>∞</text>
-    <text x={C} y={C+24} textAnchor="middle" fill={MT} style={{...mono}} fontSize="10" letterSpacing="2">THE FLYWHEEL</text>
-    {nodes.map(function(n,i){var p=P(n.a);var on=act===i;return <g key={i}>
-      <circle cx={p[0]} cy={p[1]} r="48" fill={B2} stroke={on?CY:BD} strokeWidth={on?2.2:1.3} style={{filter:on?"drop-shadow(0 0 16px rgba("+cR.cy+",.3))":"none",transition:"all .5s"}} />
-      <circle cx={p[0]} cy={p[1]-28} r="3.5" fill={on?CY:MT} style={{transition:"fill .5s"}} />
-      {n.t.map(function(tt,k){return <text key={k} x={p[0]} y={p[1]-6+k*14} textAnchor="middle" fill={on?TX:N3} style={{...mono,transition:"fill .5s"}} fontSize={k===0?12:9.5} fontWeight={k===0?600:400}>{tt}</text>})}
-    </g>})}
-  </svg>);
-}
 function CortexPage(p){
   var go=p.go;var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
   useEffect(function(){document.title="Sevyn8 — Cortex · the Physical AI platform";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Cortex is Sevyn8's Physical AI platform — it senses, understands, decides, and acts on-device in under 100ms, fully offline, then learns across the whole fleet. Seven capabilities, enterprise governance, any silicon.")},[]);
@@ -158,11 +139,6 @@ function CortexPage(p){
       </div>
     </section>
     <SevenCapSection />
-    <section style={{borderTop:"1px solid "+BD,background:B2}}>
-      <div style={{maxWidth:MW,margin:"0 auto",padding:"92px 40px"}}>
-        <div className="cx-grid2"><div><Rv><Tg c={MG}>The compounding moat</Tg><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 18px",lineHeight:1.08}}>Every deployment makes<br/>the next one smarter.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:460,margin:"0 0 16px"}}>What one device learns, the whole fleet inherits over the air. Intelligence compounds with scale instead of plateauing.</p><p style={{fontSize:16,lineHeight:1.7,color:MT,maxWidth:460,margin:0}}>The 1st deployment ships smart. The 500th ships smarter — and improves the 1st too. A flywheel a competitor can't copy by shipping faster hardware.</p></Rv></div><Rv d={0.1}><CxFlywheel /></Rv></div>
-      </div>
-    </section>
     <section style={{borderTop:"1px solid "+BD,background:B2}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
         <Rv><Tg c={MG}>Enterprise & governance</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Easy governance, by architecture.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 40px"}}>The platform a security and compliance team can sign off on — MCP-native, cloud-agnostic, multi-tenant, and auditable end to end.</p></Rv>

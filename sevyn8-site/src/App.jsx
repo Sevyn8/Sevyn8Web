@@ -44,7 +44,7 @@ function AboutPg(){return <div style={{paddingTop:80}}>
 
   <Sc bg={B2} bt><Rv><div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:12,textTransform:"uppercase",letterSpacing:3,color:T,fontWeight:600,marginBottom:14}}>The brand truth</div><p style={{...hd,fontSize:28,fontWeight:600}}>Sevyn is the full stack. <span style={{color:T}}>8 is what makes it compound.</span></p></div></Rv></Sc>
 
-  <Sc bt><div style={{display:"flex",gap:48,flexWrap:"wrap",fontSize:16}}>{[{k:"Entity",v:"Sevyn8 Private Limited"},{k:"HQ",v:"New Delhi, India"},{k:"Status",v:"DPIIT Recognised Startup"}].map(function(i){return <div key={i.k}><div style={{fontSize:11,color:DM,textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>{i.k}</div><div style={{fontWeight:500}}>{i.v}</div></div>})}</div></Sc>
+  <Sc bt><div style={{display:"flex",gap:48,flexWrap:"wrap",fontSize:16}}>{[{k:"Entity",v:"Sevyn8 Private Limited"},{k:"HQ",v:"New Delhi, India"}].map(function(i){return <div key={i.k}><div style={{fontSize:11,color:DM,textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>{i.k}</div><div style={{fontWeight:500}}>{i.v}</div></div>})}</div></Sc>
 </div>}
 
 function ContactPg(){var t2=useState("enterprise"),ty=t2[0],is2={fontFamily:"inherit",fontSize:16,padding:"14px 18px",background:B2,border:"1px solid "+BD,borderRadius:7,color:TX,outline:"none",width:"100%"};
@@ -54,28 +54,19 @@ function ContactPg(){var t2=useState("enterprise"),ty=t2[0],is2={fontFamily:"inh
 var mono={fontFamily:"'IBM Plex Mono',monospace"};
 var cR={ion:"65,75,245",cy:"25,211,224",mg:"230,61,203",neu:"90,98,117"}; // canvas rgb forms
 var RMQ="(prefers-reduced-motion: reduce)";
-var TIERS=[
-{y:372,foundation:true,a:{name:"HAL",tag:"one API"},b:{name:"SoC-agnostic",tag:"ARM · x86"}},
-{y:296,name:"Universal data ingestion",tag:"any sensor, fused"},
-{y:220,name:"Quantised AI on endpoints",tag:"< 100ms · offline"},
-{y:144,name:"Industry vocabulary",tag:"speaks each domain"},
-{y:68,name:"Fleet learning",tag:"every device, OTA",fleet:true}
-];
-var CAPTIONS=[
-"Runs on any hardware — HAL abstracts the board, so ARM or x86 is a supply decision, not a rewrite.",
-"Every sensor in — cameras, thermal, IoT, RFID, ESL — fused on the device into one situation.",
-"Quantised models decide on the endpoint itself. Under 100ms, fully offline, no cloud round-trip.",
-"Industry vocabulary turns raw detections into domain meaning — shrinkage, cold-chain breach, PPE.",
-"Fleet learning sends every outcome back to every device over the air.",
-"Privacy and auth wrap all of it — nothing leaves the device. And the loop compounds: every deployment makes every other one smarter."
+var CAP7=[
+{n:"HAL",tag:"one API, any board",d:"A hardware abstraction layer normalises across boards — so new silicon is a supply decision, not an engineering rewrite."},
+{n:"SoC-agnostic",tag:"ARM · x86",d:"Runs across ARM and x86 NPU families — Jetson, Hailo, and beyond. Never locked to one vendor's roadmap or pricing."},
+{n:"Universal data ingestion",tag:"any sensor, fused",d:"Cameras, thermal, IoT, RFID, ESL — every feed flows into one pipeline and fuses into a single situation, on the device."},
+{n:"Quantised AI on endpoints",tag:"< 100ms · offline",d:"INT8-quantised vision and sensor-fusion models decide on the endpoint itself — under 100ms, low-power, and fully offline."},
+{n:"Industry vocabulary",tag:"speaks your domain",d:"The same platform understands shrinkage, cold-chain breach, PPE compliance, or a fall — each industry in its own language."},
+{n:"Fleet learning",tag:"every device, OTA",d:"Every deployment's outcomes feed back to every device over the air. The whole fleet gets smarter with scale."},
+{n:"Privacy & auth",tag:"by architecture",d:"Nothing leaves the device, and identity and access are built in. Privacy and authentication are the foundation, not add-ons."}
 ];
 function SevenCapSection(){
-  var s2=useState(0),step=s2[0];
-  useEffect(function(){
-    if(window.matchMedia(RMQ).matches){s2[1](5);return}
-    var id=setInterval(function(){s2[1](function(s){return (s+1)%6})},2600);return function(){clearInterval(id)};
-  },[]);
-  var loop=step===5;
+  var motion=useMotion();var s2=useState(0),step=s2[0];
+  useEffect(function(){if(!motion){s2[1](-1);return}var id=setInterval(function(){s2[1](function(s){return (s+1)%7})},2600);return function(){clearInterval(id)}},[motion]);
+  var cur=step<0?0:step;
   return (<section style={{borderTop:"1px solid "+BD,background:B2}}>
     <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
       <div className="cx-grid2">
@@ -83,37 +74,23 @@ function SevenCapSection(){
           <Tg>Seven capabilities · one system</Tg>
           <h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 16px"}}>Cortex runs all seven capabilities<br/>as one system, on the device.</h2>
           <p style={{fontSize:16.5,lineHeight:1.7,color:N3,maxWidth:440,margin:"0 0 26px"}}>Sensing, understanding, deciding, and learning — together, on the endpoint. That's what Cortex does, and it's what makes physical AI actually deliver.</p>
-          <div style={{borderLeft:"2px solid "+(loop?MG:CY),paddingLeft:16,minHeight:82,transition:"border-color .4s"}}>
-            <div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:loop?MG:CY,marginBottom:7}}>{loop?"The envelope + the loop":("0"+(step+1)+" · "+(TIERS[step].foundation?"Foundation":TIERS[step].name))}</div>
-            <p style={{fontSize:15,lineHeight:1.6,color:TX,margin:0}}>{CAPTIONS[step]}</p>
+          <div style={{borderLeft:"2px solid "+CY,paddingLeft:16,minHeight:92}}>
+            <div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:CY,marginBottom:7}}>{("0"+(cur+1))+" · "+CAP7[cur].n}</div>
+            <p style={{fontSize:15,lineHeight:1.6,color:TX,margin:0}}>{CAP7[cur].d}</p>
           </div>
         </div>
-        <svg viewBox="0 0 440 440" style={{width:"100%",height:"auto",display:"block"}}>
-          <rect x="18" y="26" width="404" height="392" rx="16" fill="none" stroke={"rgba("+cR.ion+","+(loop?0.55:0.28)+")"} strokeWidth="1.3" strokeDasharray="2 5" style={{transition:"stroke .4s"}} />
-          <g transform="translate(34,26)"><rect x="0" y="-9" width="190" height="18" rx="9" fill={B2} /><text x="8" y="4" fill={loop?T:MT} style={{...mono,transition:"fill .4s"}} fontSize="10" letterSpacing="1.5">PRIVACY &amp; AUTH · EMBEDDED</text></g>
-          <line x1="220" y1="372" x2="220" y2="68" stroke={B3} strokeWidth="1.4" />
-          <path d="M220,68 C402,96 402,344 220,372" fill="none" stroke={MG} strokeWidth="1.6" strokeDasharray="520" strokeDashoffset={loop?0:520} opacity={loop?0.9:0} style={{transition:loop?"stroke-dashoffset 1.6s ease, opacity .3s":"opacity .4s"}} />
-          <text x="392" y="226" fill={MG} fontSize="22" textAnchor="middle" opacity={loop?1:0.18} style={{transition:"opacity .4s"}}>∞</text>
-          {TIERS.map(function(t,i){
-            var lit=i===step,col=t.fleet&&loop?MG:CY;
-            var stroke=lit?("rgba("+(t.fleet&&loop?cR.mg:cR.cy)+",.55)"):BD;
-            var glow=lit?(loop?("0 0 18px rgba("+cR.ion+",.18)"):("0 0 16px rgba("+cR.cy+",.12)")):"none";
-            if(t.foundation)return (<g key={i} style={{transition:"all .5s"}}>
-              {[t.a,t.b].map(function(nd,k){return <g key={k} transform={"translate("+(k===0?86:232)+", "+(t.y-18)+")"}>
-                <rect width="122" height="36" rx="8" fill={B2} stroke={stroke} strokeWidth="1.3" style={{filter:glow!=="none"?("drop-shadow("+glow+")"):"none",transition:"stroke .4s"}} />
-                <text x="12" y="16" fill={lit?TX:N3} fontSize="12.5" fontWeight="600" style={{transition:"fill .4s"}}>{nd.name}</text>
-                <text x="12" y="29" fill={MT} style={{...mono}} fontSize="9">{nd.tag}</text>
-              </g>})}
-            </g>);
-            return (<g key={i} transform={"translate(80, "+(t.y-19)+")"} style={{transition:"all .5s"}}>
-              <rect width="280" height="38" rx="9" fill={B2} stroke={stroke} strokeWidth="1.3" style={{filter:glow!=="none"?("drop-shadow("+glow+")"):"none",transition:"stroke .4s"}} />
-              <circle cx="20" cy="19" r="4" fill={lit?col:B3} style={{transition:"fill .4s"}} />
-              <text x="38" y="17" fill={lit?TX:N3} fontSize="13.5" fontWeight="600" style={{transition:"fill .4s"}}>{t.name}</text>
-              <text x="38" y="30" fill={MT} style={{...mono}} fontSize="9.5">{t.tag}</text>
-            </g>);
-          })}
-        </svg>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {CAP7.map(function(c,i){var on=i===step;return <div key={c.n} style={{display:"flex",alignItems:"center",gap:14,padding:"13px 16px",borderRadius:10,background:on?"rgba("+cR.cy+",.07)":BG,border:"1px solid "+(on?"rgba("+cR.cy+",.5)":BD),boxShadow:on?"0 0 18px rgba("+cR.cy+",.12)":"none",transition:"all .5s"}}>
+            <span style={{...mono,fontSize:12,fontWeight:600,color:on?CY:MT,minWidth:20,transition:"color .4s"}}>{"0"+(i+1)}</span>
+            <span style={{fontSize:15,fontWeight:600,color:on?TX:N3,flex:1,transition:"color .4s"}}>{c.n}</span>
+            <span style={{...mono,fontSize:10.5,textTransform:"uppercase",letterSpacing:".06em",color:MT,whiteSpace:"nowrap"}}>{c.tag}</span>
+          </div>})}
+        </div>
       </div>
+      <Rv d={0.1}><div style={{marginTop:36,padding:"22px 26px",borderRadius:14,background:"rgba("+cR.mg+",.05)",border:"1px solid rgba("+cR.mg+",.22)",display:"flex",alignItems:"center",gap:20,flexWrap:"wrap"}}>
+        <span style={{...hd,fontSize:36,color:MG,fontWeight:600,lineHeight:1}}>∞</span>
+        <div style={{flex:1,minWidth:260}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:MG,marginBottom:5}}>The eighth — system-wide learning</div><span style={{fontSize:15.5,color:TX,lineHeight:1.6}}>Beyond the seven: every deployment teaches every other over the air. The fleet compounds — the part a competitor can't copy with faster hardware.</span></div>
+      </div></Rv>
     </div>
   </section>);
 }
@@ -143,9 +120,9 @@ function CxFlywheel(){
   useEffect(function(){if(!motion){a2[1](-1);return}var id=setInterval(function(){a2[1](function(v){return (v+1)%4})},2400);return function(){clearInterval(id)}},[motion]);
   var C=230,R=148;var P=function(d){var r=d*Math.PI/180;return [C+Math.cos(r)*R,C+Math.sin(r)*R]};
   var nodes=[{a:-90,t:["More","deployments"],c:T},{a:0,t:["More real-","world data"],c:CY},{a:90,t:["Smarter models","fleet learning · OTA"],c:CY},{a:180,t:["Better","outcomes"],c:T}];
-  return (<svg viewBox="0 0 460 460" role="img" aria-label="The compounding flywheel" style={{width:"100%",height:"auto",display:"block",maxWidth:440,margin:"0 auto"}}>
+  return (<svg viewBox="0 0 460 460" role="img" aria-label="The compounding flywheel" style={{width:"100%",height:"auto",display:"block",maxWidth:460,margin:"0 auto"}}>
     <circle cx={C} cy={C} r={R} fill="none" stroke={"rgba("+cR.neu+",.18)"} strokeWidth="1.4" />
-    {[-45,45,135,225].map(function(m,i){var pp=P(m);return <g key={"c"+i} transform={"translate("+pp[0].toFixed(1)+","+pp[1].toFixed(1)+") rotate("+(m+90)+")"}><path d="M-5,-5 L1,0 L-5,5" fill="none" stroke={"rgba("+cR.ion+",.55)"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></g>})}
+    {[-45,45,135,225].map(function(m,i){var pp=P(m);return <g key={"c"+i} transform={"translate("+pp[0].toFixed(1)+","+pp[1].toFixed(1)+") rotate("+(m+90)+")"}><path d="M-5,-5 L1,0 L-5,5" fill="none" stroke={"rgba("+cR.ion+",.7)"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></g>})}
     <text x={C} y={C-4} textAnchor="middle" fill={MG} fontSize="44" style={{...hd}}>∞</text>
     <text x={C} y={C+24} textAnchor="middle" fill={MT} style={{...mono}} fontSize="10" letterSpacing="2">THE FLYWHEEL</text>
     {nodes.map(function(n,i){var pp=P(n.a);var on=act===i;var rgb=(n.c===CY?cR.cy:cR.ion);return <g key={i}>
@@ -175,7 +152,7 @@ function CortexPage(p){
       <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
         <Rv><Tg c={CY}>How Cortex works</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Sense. Understand. Decide. Act. Learn.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 40px"}}>Every event runs the same loop on the device — from raw signal to decision in under 100ms, then back to the whole fleet as learning.</p></Rv>
         <Rv d={0.05}><div style={{marginBottom:36}}><CxPipe /></div></Rv>
-        <div style={{display:"flex",flexWrap:"wrap",gap:14}}>{CXHOW.map(function(s,i){return <Rv key={s.n} d={i*0.06}><div style={{flex:"1 1 180px",minWidth:180,padding:"22px",borderRadius:12,background:BG,border:"1px solid "+BD,borderTop:"2px solid "+s.c,height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".12em",color:s.c,marginBottom:10}}>{("0"+(i+1)).slice(-2)} · {s.n}</div><p style={{fontSize:14.5,lineHeight:1.65,color:N3,margin:0}}>{s.d}</p></div></Rv>})}</div>
+        <div className="cx-how">{CXHOW.map(function(s,i){return <Rv key={s.n} d={i*0.05}><div style={{padding:"22px 20px",borderRadius:12,background:BG,border:"1px solid "+BD,borderTop:"2px solid "+s.c,height:"100%"}}><div style={{...hd,fontSize:26,fontWeight:600,color:s.c,lineHeight:1,marginBottom:12}}>{("0"+(i+1)).slice(-2)}</div><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".12em",color:s.c,marginBottom:8}}>{s.n}</div><p style={{fontSize:13.5,lineHeight:1.6,color:N3,margin:0}}>{s.d}</p></div></Rv>})}</div>
       </div>
     </section>
     <SevenCapSection />
@@ -268,7 +245,7 @@ function Home2Page(p){
     </section>
     <section id="work" style={{maxWidth:MW,margin:"0 auto",padding:"44px 40px 92px"}}>
       <Rv><Tg c={MG}>Outcomes across four industries</Tg></Rv>
-      <Rv d={0.05}><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 14px",lineHeight:1.08}}>Sevyn8 lifts revenue and lowers<br/>your cost of operations.</h2></Rv>
+      <Rv d={0.05}><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 14px",lineHeight:1.08}}>Sevyn8 makes your physical<br/>operations think.</h2></Rv>
       <Rv d={0.1}><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 44px"}}>On-device intelligence across retail, cold chain, logistics, and the home — turning what your cameras and sensors already see into decisions that grow revenue and cut operating cost, in real time.</p></Rv>
       <Rv d={0.15}><HmWalkthrough /></Rv>
     </section>
@@ -281,7 +258,7 @@ function Home2Page(p){
     </section>
     <section style={{borderTop:"1px solid "+BD,background:BG}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"60px 40px",textAlign:"center"}}>
-        <Rv><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".18em",color:MT,marginBottom:22}}>Deployed with</div><div style={{display:"flex",justifyContent:"center",gap:40,flexWrap:"wrap",fontSize:15,color:N3}}>{["A global ESL leader","A premium fashion retailer","Cold-chain operators","DPIIT Recognised"].map(function(pp){return <span key={pp} style={{fontWeight:500}}>{pp}</span>})}</div></Rv>
+        <Rv><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".18em",color:MT,marginBottom:22}}>Deployed with</div><div style={{display:"flex",justifyContent:"center",gap:40,flexWrap:"wrap",fontSize:15,color:N3}}>{["A global ESL leader","A premium fashion retailer","Cold-chain operators"].map(function(pp){return <span key={pp} style={{fontWeight:500}}>{pp}</span>})}</div></Rv>
       </div>
     </section>
     <section id="cta" style={{borderTop:"1px solid "+BD,background:B2}}>
@@ -417,7 +394,7 @@ function Nav(p){
   </>;
 }
 
-function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} mark={34} gap={8} /><span>2026 Sevyn8 Private Limited &middot; New Delhi &middot; DPIIT Recognised</span></div></footer>}
+function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} mark={34} gap={8} /><span>2026 Sevyn8 Private Limited &middot; New Delhi</span></div></footer>}
 
 export default function App(){
   var p2=useState("home"),pg=p2[0];
@@ -427,7 +404,7 @@ export default function App(){
   var go=useCallback(function(p){p2[1](p);window.scrollTo({top:0,behavior:"instant"})},[]);
   var C;if(pg==="home")C=<Home2Page go={go}/>;else if(pg==="cortex2")C=<CortexPage go={go}/>;else if(pg==="hardware")C=<HardwarePage go={go}/>;else if(pg==="solutions")C=<SolutionsLanding go={go}/>;else if(pg.indexOf("soldet-")===0){var sd=SOLS[pg.slice(7)];C=sd?<SolutionsDetail sol={sd} go={go}/>:<SolutionsLanding go={go}/>;}else if(pg==="partners")C=<PartPg go={go}/>;else if(pg==="about")C=<AboutPg />;else if(pg==="contact")C=<ContactPg />;else if(pg.indexOf("sol-")===0){var smap={retail:"retail",home:"home",fleet:"logistics",coldchain:"cold"};var sd2=SOLS[smap[pg.slice(4)]||pg.slice(4)];C=sd2?<SolutionsDetail sol={sd2} go={go}/>:<SolutionsLanding go={go}/>;}else C=<Home2Page go={go}/>;
   return <div style={{minHeight:"100vh",background:BG,fontFamily:"'IBM Plex Sans',system-ui,sans-serif",WebkitFontSmoothing:"antialiased",color:TX,fontSize:16,lineHeight:1.65}}>
-    <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}.rw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@keyframes scdinf{0%,100%{opacity:.5}50%{opacity:1}}@keyframes feedin{from{opacity:0}to{opacity:1}}@keyframes livedot{0%,100%{opacity:.4}50%{opacity:1}}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:34px}.cx-hero-anim{height:340px !important}.rw-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.rw-grid{grid-template-columns:1fr}}.hm-spine{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.wk-tabs{display:flex;gap:14px;margin-bottom:28px}.wk-stage{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:center}@keyframes wkgrow{from{width:0}to{width:100%}}@keyframes wkscene{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}@keyframes wkfade{from{opacity:0}to{opacity:1}}@keyframes wkfovp{0%,100%{opacity:.3}50%{opacity:.6}}.wkfov{animation:wkfovp 2s ease-in-out infinite}.ee-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ee-env-row{display:grid;grid-template-columns:repeat(9,1fr);gap:12px}.sl-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-2col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.sl-ep{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.sl-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.hw-lineup{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media (max-width:880px){.hm-spine{grid-template-columns:1fr}.wk-stage{grid-template-columns:1fr;gap:28px}.wk-tabs{gap:8px}.ee-cards{grid-template-columns:repeat(2,1fr)}.ee-env-row{grid-template-columns:repeat(5,1fr)}}@media (max-width:820px){.sl-stats{grid-template-columns:repeat(2,1fr)}.sl-2col{grid-template-columns:1fr}.sl-ep{grid-template-columns:repeat(2,1fr)}.sl-3{grid-template-columns:1fr}.sl-cards{grid-template-columns:1fr}}@media (max-width:560px){.ee-cards{grid-template-columns:1fr}.ee-env-row{grid-template-columns:repeat(3,1fr)}}"}} />
+    <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}.rw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@keyframes scdinf{0%,100%{opacity:.5}50%{opacity:1}}@keyframes feedin{from{opacity:0}to{opacity:1}}@keyframes livedot{0%,100%{opacity:.4}50%{opacity:1}}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:34px}.cx-hero-anim{height:340px !important}.rw-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.rw-grid{grid-template-columns:1fr}}.hm-spine{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.wk-tabs{display:flex;gap:14px;margin-bottom:28px}.wk-stage{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:center}@keyframes wkgrow{from{width:0}to{width:100%}}@keyframes wkscene{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}@keyframes wkfade{from{opacity:0}to{opacity:1}}@keyframes wkfovp{0%,100%{opacity:.3}50%{opacity:.6}}.wkfov{animation:wkfovp 2s ease-in-out infinite}.ee-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ee-env-row{display:grid;grid-template-columns:repeat(9,1fr);gap:12px}.sl-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-2col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.sl-ep{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.sl-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.hw-lineup{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.cx-how{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}@media (max-width:980px){.cx-how{grid-template-columns:repeat(3,1fr)}}@media (max-width:560px){.cx-how{grid-template-columns:repeat(2,1fr)}}@media (max-width:880px){.hm-spine{grid-template-columns:1fr}.wk-stage{grid-template-columns:1fr;gap:28px}.wk-tabs{gap:8px}.ee-cards{grid-template-columns:repeat(2,1fr)}.ee-env-row{grid-template-columns:repeat(5,1fr)}}@media (max-width:820px){.sl-stats{grid-template-columns:repeat(2,1fr)}.sl-2col{grid-template-columns:1fr}.sl-ep{grid-template-columns:repeat(2,1fr)}.sl-3{grid-template-columns:1fr}.sl-cards{grid-template-columns:1fr}}@media (max-width:560px){.ee-cards{grid-template-columns:1fr}.ee-env-row{grid-template-columns:repeat(3,1fr)}}"}} />
     <Nav pg={pg} go={go}/><main key={pg}>{C}</main><Ft />
   </div>;
 }

@@ -248,7 +248,7 @@ function Home2Page(p){
     <section id="work" style={{maxWidth:MW,margin:"0 auto",padding:"44px 40px 92px"}}>
       <Rv><Tg c={MG}>Outcomes across four industries</Tg></Rv>
       <Rv d={0.05}><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 14px",lineHeight:1.08}}>Sevyn8 makes your physical<br/>operations think.</h2></Rv>
-      <Rv d={0.1}><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 44px"}}>On-device intelligence across retail, cold chain, logistics, and the home — turning what your cameras and sensors already see into decisions that grow revenue and cut operating cost, in real time.</p></Rv>
+      <Rv d={0.1}><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 44px"}}>Not just watching — understanding what's happening and acting on it, on the device, the moment it matters.</p></Rv>
       <Rv d={0.15}><HmWalkthrough /></Rv>
     </section>
     <section id="spine" style={{borderTop:"1px solid "+BD,background:B2}}>

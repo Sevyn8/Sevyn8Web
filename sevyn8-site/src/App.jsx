@@ -54,49 +54,6 @@ function ContactPg(){var t2=useState("enterprise"),ty=t2[0],is2={fontFamily:"inh
 var mono={fontFamily:"'IBM Plex Mono',monospace"};
 var cR={ion:"65,75,245",cy:"25,211,224",mg:"230,61,203",neu:"90,98,117"}; // canvas rgb forms
 var RMQ="(prefers-reduced-motion: reduce)";
-function HeroDevice(){
-  var ref=useRef(null);
-  useEffect(function(){
-    var c=ref.current;if(!c)return;var ctx=c.getContext("2d");
-    var reduced=window.matchMedia(RMQ).matches;
-    var W,H,dpr,raf,dev={x:0,y:0,w:96,h:120},inputs=[],outs=[],started=performance.now(),lastOut=-1e9;
-    var srcLabels=["cam","esl","iot","thermal"];
-    function roundRect(g,a,b,w,h,r){g.beginPath();g.moveTo(a+r,b);g.arcTo(a+w,b,a+w,b+h,r);g.arcTo(a+w,b+h,a,b+h,r);g.arcTo(a,b+h,a,b,r);g.arcTo(a,b,a+w,b,r);g.closePath()}
-    function layout(){dpr=Math.min(window.devicePixelRatio||1,2);W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);dev.x=W*0.46;dev.y=H*0.5}
-    layout();var onR=function(){layout()};window.addEventListener("resize",onR);
-    var srcY=function(i){return H*(0.24+i*0.17)};
-    function frame(now){
-      var t=now-started;ctx.clearRect(0,0,W,H);
-      for(var i=0;i<4;i++){var sy=srcY(i),sx=W*0.06;
-        ctx.strokeStyle="rgba("+cR.neu+",0.12)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dev.x-dev.w/2,dev.y);ctx.stroke();
-        ctx.fillStyle=MT;ctx.font="10px 'IBM Plex Mono',monospace";ctx.fillText(srcLabels[i],sx-4,sy-8);
-        ctx.beginPath();ctx.arc(sx,sy,3,0,7);ctx.fillStyle="rgba("+cR.neu+",.7)";ctx.fill();
-        if(!reduced&&Math.random()<0.04)inputs.push({i:i,p:0});
-      }
-      inputs=inputs.filter(function(d){return d.p<1});
-      inputs.forEach(function(d){d.p+=0.018;var sy=srcY(d.i),sx=W*0.06;var x=sx+(dev.x-dev.w/2-sx)*d.p,y=sy+(dev.y-sy)*d.p;ctx.beginPath();ctx.arc(x,y,2.4,0,7);ctx.fillStyle="rgba("+cR.cy+","+(0.85*(1-d.p*0.4))+")";ctx.fill()});
-      var pulse=(Math.sin(now*0.0023)+1)/2;
-      ctx.shadowColor="rgba("+cR.ion+",.35)";ctx.shadowBlur=30;roundRect(ctx,dev.x-dev.w/2,dev.y-dev.h/2,dev.w,dev.h,12);ctx.fillStyle=B2;ctx.fill();ctx.shadowBlur=0;
-      ctx.strokeStyle="rgba("+cR.cy+","+(0.4+pulse*0.3)+")";ctx.lineWidth=1.4;ctx.stroke();
-      ctx.fillStyle=TX;ctx.font="600 11px 'IBM Plex Sans',sans-serif";ctx.textAlign="center";ctx.fillText("CORTEX",dev.x,dev.y-dev.h/2+20);
-      ["HAL","AI","Decide"].forEach(function(l,k){var ly=dev.y-14+k*22;ctx.strokeStyle="rgba("+cR.ion+","+(k===2?.6:.3)+")";roundRect(ctx,dev.x-32,ly-8,64,16,4);ctx.stroke();ctx.fillStyle=k===2?T:MT;ctx.font="9px 'IBM Plex Mono',monospace";ctx.fillText(l,dev.x,ly+3)});
-      ctx.textAlign="left";
-      ctx.beginPath();ctx.arc(dev.x,dev.y,dev.h/2+10+pulse*6,0,7);ctx.strokeStyle="rgba("+cR.cy+","+(0.3*(1-pulse))+")";ctx.lineWidth=1.2;ctx.stroke();
-      if(!reduced&&t-lastOut>1900){lastOut=t;outs.push({p:0})}
-      outs=outs.filter(function(o){return o.p<1});
-      outs.forEach(function(o){o.p+=0.02;var x=dev.x+dev.w/2+(W*0.92-(dev.x+dev.w/2))*o.p;ctx.beginPath();ctx.arc(x,dev.y,3,0,7);ctx.fillStyle="rgba("+cR.ion+","+(0.9*(1-o.p*0.3))+")";ctx.fill()});
-      ctx.strokeStyle="rgba("+cR.neu+",.12)";ctx.beginPath();ctx.moveTo(dev.x+dev.w/2,dev.y);ctx.lineTo(W*0.92,dev.y);ctx.stroke();
-      ctx.fillStyle=T;ctx.font="10px 'IBM Plex Mono',monospace";ctx.fillText("decision",W*0.84,dev.y-8);
-      raf=requestAnimationFrame(frame);
-    }
-    if(reduced){layout();frame(performance.now());cancelAnimationFrame(raf)}else raf=requestAnimationFrame(frame);
-    return function(){cancelAnimationFrame(raf);window.removeEventListener("resize",onR)};
-  },[]);
-  return (<div style={{position:"relative",width:"100%",height:"100%"}}>
-    <canvas ref={ref} style={{width:"100%",height:"100%",display:"block"}} />
-    <div style={{position:"absolute",left:0,top:12,...mono,fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:MT}}><span style={{color:CY}}>●</span> on-device · &lt; 100ms</div>
-  </div>);
-}
 var TIERS=[
 {y:372,foundation:true,a:{name:"HAL",tag:"one API"},b:{name:"SoC-agnostic",tag:"ARM · x86"}},
 {y:296,name:"Universal data ingestion",tag:"any sensor, fused"},
@@ -166,97 +123,6 @@ function SevenCapSection(){
     </div>
   </section>);
 }
-var STORES=["STORE 04","STORE 09","STORE 12","STORE 18","STORE 23","STORE 27"];
-var EVENTS=[
-{k:"known",c:CY,label:"known · regular",figs:[96],box:0},
-{k:"footfall",c:CY,label:"footfall +1",figs:[70],box:0},
-{k:"staff",c:CY,label:"staff",figs:[110],box:0},
-{k:"dwell",c:MG,label:"dwell 4m+ · flag",figs:[92],box:0},
-{k:"conceal",c:MG,label:"concealment",figs:[88],box:0},
-{k:"queue",c:T,label:"queue>4 · open ctr 5",figs:[60,84,108,132],box:-2},
-{k:"shelf",c:T,label:"shelf gap",shelf:true}
-];
-var ecrgb=function(c){return c===CY?cR.cy:c===MG?cR.mg:cR.ion};
-function pick(a){return a[Math.floor(Math.random()*a.length)]}
-function pad2(n){return n<10?"0"+n:""+n}
-function Person(p){var col=p.bright?"#9AA3B5":MT;return <g><circle cx={p.x} cy={p.by-30} r="5" fill={col} /><path d={"M"+(p.x-6)+","+p.by+" L"+(p.x-5)+","+(p.by-20)+" Q"+p.x+","+(p.by-26)+" "+(p.x+5)+","+(p.by-20)+" L"+(p.x+6)+","+p.by} fill={col} /></g>}
-function Bracket(p){var x=p.x,y=p.y,w=p.w,h=p.h,c=p.c,L=7;
-  var pts=["M"+x+","+(y+L)+" L"+x+","+y+" L"+(x+L)+","+y,"M"+(x+w-L)+","+y+" L"+(x+w)+","+y+" L"+(x+w)+","+(y+L),"M"+(x+w)+","+(y+h-L)+" L"+(x+w)+","+(y+h)+" L"+(x+w-L)+","+(y+h),"M"+(x+L)+","+(y+h)+" L"+x+","+(y+h)+" L"+x+","+(y+h-L)];
-  return <g>{pts.map(function(d,i){return <path key={i} d={d} fill="none" stroke={c} strokeWidth="1.6" strokeLinecap="square" />})}</g>}
-function Feed(p){
-  var store=p.store,ev=p.ev,ver=p.ver,live=p.live,clock=p.clock;
-  var rm=window.matchMedia&&window.matchMedia(RMQ).matches;
-  var W=200,H=140,by=122;
-  return (<div style={{position:"relative",borderRadius:10,overflow:"hidden",border:"1px solid "+(live?("rgba("+cR.cy+",.3)"):BD),background:"#0E1119",transition:"border-color .5s"}}>
-    <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:"auto",display:"block"}}>
-      {[40,60,80,100].map(function(y){return <line key={y} x1="0" x2={W} y1={y} y2={y} stroke="rgba(255,255,255,0.012)" strokeWidth="2" />})}
-      <line x1="0" y1={by} x2={W} y2={by} stroke={B3} strokeWidth="1" />
-      <g key={ver} style={{animation:"feedin .5s ease"}}>
-        {ev.shelf?(<>
-          <rect x="50" y="58" width="100" height="40" rx="3" fill="none" stroke={DM} strokeWidth="1" />
-          {[58,74,106,122,138].map(function(sx){return <rect key={sx} x={sx} y="64" width="10" height="28" rx="2" fill={MT} opacity="0.6" />})}
-          <Bracket x={86} y={60} w={18} h={36} c={ev.c} />
-        </>):(<>
-          {ev.figs.map(function(fx,i){return <Person key={i} x={fx} by={by} bright={i===(ev.box<0?-1:ev.box)} />})}
-          {ev.box===-2?<Bracket x={ev.figs[0]-12} y={by-42} w={ev.figs[ev.figs.length-1]-ev.figs[0]+24} h={46} c={ev.c} />:<Bracket x={ev.figs[ev.box]-12} y={by-42} w={24} h={46} c={ev.c} />}
-        </>)}
-        <g transform={"translate("+(ev.shelf?60:Math.min(ev.figs[0]-12,116))+", "+(by-56)+")"}>
-          <rect width={ev.label.length*5.4+12} height="15" rx="3" fill="rgba(8,10,16,.85)" stroke={"rgba("+ecrgb(ev.c)+",.6)"} />
-          <text x="6" y="11" fill={ev.c} style={{...mono}} fontSize="9">{ev.label}</text>
-        </g>
-      </g>
-      <text x="8" y="16" fill={MT} style={{...mono}} fontSize="8.5" letterSpacing="1">{store}</text>
-      <text x={W-8} y="16" textAnchor="end" fill={MT} style={{...mono}} fontSize="8.5">{clock}</text>
-    </svg>
-    <div style={{position:"absolute",left:8,bottom:8,display:"flex",alignItems:"center",gap:5}}>
-      <span style={{width:6,height:6,borderRadius:"50%",background:live?CY:DM,animation:(live&&!rm)?"livedot 1.3s ease-in-out infinite":"none"}} />
-      <span style={{...mono,fontSize:8.5,letterSpacing:"1.5px",color:live?CY:MT}}>{live?"LIVE":"IDLE"}</span>
-    </div>
-  </div>);
-}
-function RetailWall(){
-  var init=STORES.map(function(s,i){return {store:s,ev:EVENTS[i%EVENTS.length],ver:i,live:i<3}});
-  var t2=useState(init),tiles=t2[0],l2=useState([{s:"STORE 12",e:EVENTS[4]}]),log=l2[0],c2=useState(1284),count=c2[0];
-  var verRef=useRef(STORES.length);
-  useEffect(function(){
-    if(window.matchMedia(RMQ).matches)return;
-    var id=setInterval(function(){
-      t2[1](function(prev){
-        var next=prev.map(function(t){return {...t,live:false}});
-        var idxs=[];while(idxs.length<2){var r=Math.floor(Math.random()*next.length);if(idxs.indexOf(r)<0)idxs.push(r)}
-        idxs.forEach(function(r){var ev=pick(EVENTS);next[r]={...next[r],ev:ev,ver:++verRef.current,live:true};l2[1](function(L){return [{s:next[r].store,e:ev}].concat(L).slice(0,6)})});
-        return next;
-      });
-      c2[1](function(c){return c+Math.floor(2+Math.random()*5)});
-    },1700);
-    return function(){clearInterval(id)};
-  },[]);
-  var sec=new Date().getSeconds();var clock=function(s){return "09:"+pad2((sec+s)%60)};
-  return (<section id="how" style={{borderTop:"1px solid "+BD,background:BG}}>
-    <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
-      <Rv><Tg c={CY}>Cortex in the wild · Retail</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Every camera, seeing.<br/>Every store, deciding.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 26px"}}>Cortex runs on the device in every store at once — recognising footfall, flagging concealment, catching shelf gaps, opening counters. Detections become decisions in under 100ms, and every store inherits what the others learn.</p></Rv>
-      <Rv d={0.08}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:12}}>
-          <div style={{...mono,fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:MT}}><span style={{color:CY}}>●</span> 6 stores live · 1 fleet</div>
-          <div style={{...mono,fontSize:11,color:MT}}>decisions today <span style={{...hd,fontSize:18,color:TX,marginLeft:6}}>{count.toLocaleString()}</span> <span style={{color:MG}}>↑</span></div>
-        </div>
-        <div className="rw-grid">
-          {tiles.map(function(t,i){return <Feed key={i} store={t.store} ev={t.ev} ver={t.ver} live={t.live} clock={clock(i*7)} />})}
-        </div>
-        <div style={{marginTop:22,paddingTop:18,borderTop:"1px solid "+BD}}>
-          <div style={{...mono,fontSize:10.5,textTransform:"uppercase",letterSpacing:".14em",color:MT,marginBottom:12}}>Decisions across the fleet</div>
-          <div style={{display:"flex",gap:22,flexWrap:"wrap"}}>
-            {log.map(function(e,i){return <div key={i} style={{display:"flex",alignItems:"center",gap:8,opacity:i===0?1:Math.max(0.2,0.45-i*0.05),transition:"opacity .5s"}}>
-              <span style={{width:7,height:7,borderRadius:"50%",background:e.e.c,flexShrink:0}} />
-              <span style={{...mono,fontSize:12,color:MT}}>{e.s}</span>
-              <span style={{fontSize:13,color:i===0?TX:MT}}>{e.e.label}</span>
-            </div>})}
-          </div>
-        </div>
-      </Rv>
-    </div>
-  </section>);
-}
 function CompoundCanvas(){
   var ref=useRef(null),c2=useState(1),count=c2[0];
   useEffect(function(){
@@ -322,51 +188,75 @@ function CompoundCurve(){
     </div>
   </div>);
 }
+/* ── Cortex AI page (cortex2) — salvaged Pipe/Ctx/arch reskinned v4 ── */
+function CxPipe(){var s2=useState(0),st=s2[0];useEffect(function(){var id=setInterval(function(){s2[1](function(s){return(s+1)%5})},2400);return function(){clearInterval(id)}},[]);
+  var S=[{l:"Raw feed",c:DM,d:"4K video, thermal, IoT, and sensor streams enter on the device."},{l:"HAL",c:T,d:"The Hardware Abstraction Layer normalises across ARM and x86 SoC families. SoC-agnostic by design."},{l:"AI Engine",c:CY,d:"Quantised vision + sensor-fusion models, on-device. Under 100ms, under 2W. Fully offline."},{l:"Decisioning",c:I7,d:"The context engine applies learned routines. A person at 3 AM differs from 3 PM."},{l:"Action",c:I3,d:"Alert sent. Compliance logged. Dashboard updated. OTA improvement queued fleet-wide."}];
+  return (<div><div style={{display:"flex",alignItems:"center",marginBottom:22}}>{S.map(function(s,i){return <div key={i} style={{flex:1,display:"flex",alignItems:"center",cursor:"pointer"}} onClick={function(){s2[1](i)}}><div style={{flex:"0 0 auto",width:80,padding:"12px 0",borderRadius:8,background:st===i?s.c+"15":"transparent",border:"1.5px solid "+(st>=i?s.c+"55":BD),textAlign:"center",transition:"all .4s",boxShadow:st===i?"0 0 16px "+s.c+"22":"none"}}><div style={{width:8,height:8,borderRadius:"50%",margin:"0 auto 6px",background:st>=i?s.c:DM,boxShadow:st===i?"0 0 12px "+s.c:"none"}} /><div style={{fontSize:11,fontWeight:600,color:st>=i?TX:DM}}>{s.l}</div></div>{i<4&&<div style={{flex:1,height:2,position:"relative",margin:"0 -1px"}}><div style={{position:"absolute",inset:0,background:BD}} /><div style={{position:"absolute",top:0,left:0,height:"100%",width:st>i?"100%":st===i?"50%":"0%",background:"linear-gradient(90deg,"+S[i].c+","+S[Math.min(i+1,4)].c+")",transition:"width .5s"}} /></div>}</div>})}</div><div style={{background:B2,border:"1px solid "+S[st].c+"25",borderRadius:10,padding:"20px 24px",borderLeft:"3px solid "+S[st].c}}><div style={{fontSize:16,fontWeight:600,color:S[st].c,marginBottom:6}}>{S[st].l}</div><div style={{fontSize:15.5,color:MT,lineHeight:1.75}}>{S[st].d}</div></div></div>)}
+function CxCtx(){var s2=useState(0),sc=s2[0];useEffect(function(){var id=setInterval(function(){s2[1](function(s){return(s+1)%6})},3000);return function(){clearInterval(id)}},[]);
+  var S=[{t:"Person at door — 3:17 AM",x:"Unknown face · Unusual hour",dc:"⚠ Alert homeowner",c:WN},{t:"Door open + motion + face match",x:"Known delivery · Package expected · Camera + door + IoT",dc:"✓ Log silently, no alert",c:T},{t:"Person near shelf 4+ min",x:"Repeated reach · No basket",dc:"⚠ Concealment alert",c:WN},{t:"Cold room: temp rising + door open 4 min",x:"Thermal + door sensor + no pick order",dc:"⚠ Breach in 15 min — alert ops",c:WN},{t:"Driver eyes closed 3+ sec",x:"Highway · Night shift · 6 hrs in",dc:"⚠ In-cab alert + fleet",c:WN},{t:"Forklift + BLE beacon + no hard hat",x:"Camera + proximity sensor + PPE check fused",dc:"⚠ Zone violation + PPE alert",c:WN}],s=S[sc];
+  return (<div style={{maxWidth:680}}><div style={{display:"flex",gap:4,marginBottom:18}}>{S.map(function(z,i){return <div key={i} onClick={function(){s2[1](i)}} style={{flex:1,height:4,borderRadius:2,cursor:"pointer",background:i===sc?CY:BD}} />})}</div>{[{l:"Detection",v:s.t},{l:"Context",v:s.x},{l:"Decision",v:s.dc}].map(function(r,i){return <div key={sc+"-"+i} style={{display:"flex",gap:18,alignItems:"center",padding:"16px 22px",marginBottom:6,background:i===2?s.c+"0D":B2,border:"1.5px solid "+(i===2?s.c+"44":BD),borderRadius:10}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:1.5,color:MT,minWidth:68,fontWeight:600}}>{r.l}</div><div style={{width:1,height:20,background:BD}} /><div style={{fontSize:16,color:i===0?MT:s.c,fontWeight:i===2?600:400}}>{r.v}</div></div>})}</div>)}
+var CXHOW=[
+{n:"Sense",c:CY,d:"Every camera, thermal, and sensor feed is ingested on the device — vision, heat, presence, sound, location — fused into one situation."},
+{n:"Understand",c:CY,d:"Quantised models read the scene in context: who, what, where, and whether it matters — against learned baselines, in under 100ms."},
+{n:"Decide",c:T,d:"Industry vocabulary turns detections into decisions — shrinkage, breach, proximity, fall — the call a human would make, made instantly."},
+{n:"Act",c:T,d:"Alert staff, open a counter, slow a forklift, log compliance — the right action fires on-device, with no cloud round-trip."},
+{n:"Learn",c:MG,d:"Every outcome feeds system-wide learning and returns to every device over the air. The fleet gets smarter with each deployment."}
+];
+var CXARCH=[
+{k:"MCP-native",v:"Three Model Context Protocol servers — Cortex Core, Edge, Admin/Ops — expose the platform to agents and external systems without custom glue."},
+{k:"Cloud-agnostic",v:"Deploys on GCP, AWS, or Azure — same platform, same guarantees. Managed SQL, warehouse, object store, and event bus on whichever cloud you standardise on."},
+{k:"Bi-temporal data model",v:"PostgreSQL 15+ with bi-temporal columns on every table. Every fact is queryable at any point in time — a complete, auditable history."},
+{k:"RBAC & multi-tenant",v:"Row-level security scopes every tenant; role-based access controls every action. Multi-tenant and white-label ready across the fleet."},
+{k:"Edge inference",v:"INT8-quantised vision and sensor-fusion models. Under 100ms, under 2W, fully offline. HAL abstracts ARM and x86 SoC families."},
+{k:"Compliance",v:"DPDP + GDPR by architecture. STQC-aligned. Consent-based data flows. Privacy by design, not by policy."}
+];
 function CortexPage(p){
-  var go=p.go;
-  var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
-  useEffect(function(){document.title="Sevyn8 | Cortex — intelligence on every device, on any hardware";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Cortex is the edge-AI platform behind every Sevyn8 deployment — on-device inference under 100ms, fully offline, on any silicon. One platform across retail, cold chain, logistics, and smart home; every deployment makes the fleet smarter.")},[]);
+  var go=p.go;var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
+  useEffect(function(){document.title="Sevyn8 — Cortex · the Physical AI platform";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Cortex is Sevyn8's Physical AI platform — it senses, understands, decides, and acts on-device in under 100ms, fully offline, then learns across the whole fleet. Seven capabilities, enterprise governance, any silicon.")},[]);
   return (<div style={{paddingTop:80}}>
     <section style={{maxWidth:MW,margin:"0 auto",padding:"56px 40px 92px"}}>
       <div className="cx-grid2">
         <div>
-          <Tg>The edge-AI platform</Tg>
-          <h1 style={{...hd,fontSize:56,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}>Intelligence on<br/>every device.<br/><span style={{color:T}}>On any hardware.</span></h1>
-          <p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>Cortex is the edge-AI platform behind every Sevyn8 deployment. It turns cameras, sensors, and devices into on-device intelligence — deciding in under 100ms, fully offline, on whatever silicon you already run.</p>
-          <p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>One platform across retail, cold chain, logistics, and smart home. Privacy by architecture — nothing leaves the device.</p>
-          <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-            <button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button>
-            <button style={b2} onClick={function(){scrollTo("how")}}>See it in action</button>
-          </div>
+          <Tg>The Physical AI platform</Tg>
+          <h1 style={{...hd,fontSize:56,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}><span style={{color:T}}>Cortex.</span><br/>The Physical AI platform.</h1>
+          <p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>The on-device intelligence behind every Sevyn8 deployment. It senses, understands, decides, and acts in under 100ms — fully offline — then learns across the whole fleet.</p>
+          <p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>One platform across retail, cold chain, logistics, and the home. Seven capabilities no competitor holds, on any silicon.</p>
+          <div style={{display:"flex",gap:12,flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("how")}}>See how it works</button></div>
         </div>
-        <div className="cx-hero-anim" style={{height:420,position:"relative"}}><HeroDevice /></div>
+        <div><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:MT,marginBottom:14}}>The intelligence loop</div><CxPipe /></div>
+      </div>
+    </section>
+    <section id="how" style={{borderTop:"1px solid "+BD,background:B2}}>
+      <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
+        <Rv><Tg c={CY}>How Cortex works</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Sense. Understand. Decide. Act. Learn.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 40px"}}>Every event runs the same loop on the device — from raw signal to decision in under 100ms, then back to the whole fleet as learning.</p></Rv>
+        <div style={{display:"flex",flexWrap:"wrap",gap:14}}>{CXHOW.map(function(s,i){return <Rv key={s.n} d={i*0.06}><div style={{flex:"1 1 180px",minWidth:180,padding:"22px",borderRadius:12,background:BG,border:"1px solid "+BD,borderTop:"2px solid "+s.c,height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".12em",color:s.c,marginBottom:10}}>{("0"+(i+1)).slice(-2)} · {s.n}</div><p style={{fontSize:14.5,lineHeight:1.65,color:N3,margin:0}}>{s.d}</p></div></Rv>})}</div>
       </div>
     </section>
     <SevenCapSection />
-    <RetailWall />
+    <section style={{borderTop:"1px solid "+BD,background:BG}}>
+      <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
+        <Rv><Tg c={CY}>Contextual decisioning</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Same event. Different context.<br/>Different decision.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 40px"}}>A detection is not a decision. Cortex fuses every signal against learned routines — so a person at 3 AM is treated differently from the same person at 3 PM.</p></Rv>
+        <Rv d={0.1}><CxCtx /></Rv>
+      </div>
+    </section>
     <section style={{borderTop:"1px solid "+BD,background:B2}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"92px 40px"}}>
-        <div className="cx-grid2">
-          <div><Rv><Tg c={MG}>The compounding effect</Tg><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 18px",lineHeight:1.08}}>Every deployment makes<br/>the next one smarter.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:460,margin:"0 0 16px"}}>What one device learns, the whole fleet inherits over the air. Intelligence compounds with scale instead of plateauing.</p><p style={{fontSize:16,lineHeight:1.7,color:MT,maxWidth:460,margin:0}}>The 1st deployment ships smart. The 500th ships smarter — and improves the 1st too. The part a competitor can't copy by shipping faster hardware.</p></Rv></div>
-          <Rv d={0.1}><div className="cx-hero-anim" style={{height:360,position:"relative"}}><CompoundCanvas /></div></Rv>
-        </div>
+        <div className="cx-grid2"><div><Rv><Tg c={MG}>The compounding moat</Tg><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 18px",lineHeight:1.08}}>Every deployment makes<br/>the next one smarter.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:460,margin:"0 0 16px"}}>What one device learns, the whole fleet inherits over the air. Intelligence compounds with scale instead of plateauing.</p><p style={{fontSize:16,lineHeight:1.7,color:MT,maxWidth:460,margin:0}}>The 1st deployment ships smart. The 500th ships smarter — and improves the 1st too. The part a competitor can't copy by shipping faster hardware.</p></Rv></div><Rv d={0.1}><div className="cx-hero-anim" style={{height:360,position:"relative"}}><CompoundCanvas /></div></Rv></div>
         <Rv d={0.15}><div style={{marginTop:40,padding:24,borderRadius:14,background:BG,border:"1px solid "+BD}}><CompoundCurve /></div></Rv>
       </div>
     </section>
     <section style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:40}}>
-        {[["< 100ms","On-device inference","Decisions happen where the data is — no latency, no cloud round-trip."],["0","Frames to the cloud","Fully offline by architecture. Privacy isn't a setting; it's the design."],["1 API","Across all silicon","HAL abstracts the hardware. Switch SoC without rewriting the platform."]].map(function(row,i){return <Rv key={row[1]} d={i*0.08}>
-          <div style={{...hd,fontSize:46,fontWeight:600,color:TX,marginBottom:6}}>{row[0]}</div>
-          <div style={{...mono,fontSize:12,textTransform:"uppercase",letterSpacing:".12em",color:T,marginBottom:12}}>{row[1]}</div>
-          <p style={{fontSize:15,lineHeight:1.7,color:MT,margin:0,maxWidth:300}}>{row[2]}</p>
-        </Rv>})}
+      <Rv><Tg>Built for the edge</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 40px"}}>Decisions where the data is.</h2></Rv>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:32}}>{[["< 100ms","On-device inference","Decisions happen where the data is — no latency, no cloud round-trip."],["0","Frames to the cloud","Fully offline by architecture. Privacy isn't a setting; it's the design."],["1 API","Across all silicon","HAL abstracts the hardware. Switch SoC without rewriting the platform."],["E2E","Privacy by design","Nothing leaves the device; identity and access are built in, not bolted on."]].map(function(row,i){return <Rv key={row[1]} d={i*0.07}><div style={{...hd,fontSize:42,fontWeight:600,color:TX,marginBottom:6}}>{row[0]}</div><div style={{...mono,fontSize:12,textTransform:"uppercase",letterSpacing:".12em",color:T,marginBottom:12}}>{row[1]}</div><p style={{fontSize:14.5,lineHeight:1.7,color:MT,margin:0}}>{row[2]}</p></Rv>})}</div>
+    </section>
+    <section style={{borderTop:"1px solid "+BD,background:B2}}>
+      <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
+        <Rv><Tg c={MG}>Enterprise & governance</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Easy governance, by architecture.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 40px"}}>The platform a security and compliance team can sign off on — MCP-native, cloud-agnostic, multi-tenant, and auditable end to end.</p></Rv>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>{CXARCH.map(function(a,i){return <Rv key={a.k} d={(i%3)*0.06}><div style={{padding:"22px 24px",borderRadius:12,border:"1px solid "+BD,background:BG,height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".1em",color:T,marginBottom:10}}>{a.k}</div><p style={{fontSize:14.5,lineHeight:1.7,color:N3,margin:0}}>{a.v}</p></div></Rv>})}</div>
       </div>
     </section>
-    <section id="cta" style={{borderTop:"1px solid "+BD,background:B2}}>
-      <div style={{maxWidth:MW,margin:"0 auto",padding:"100px 40px",textAlign:"center"}}>
-        <Rv><h2 style={{...hd,fontSize:46,fontWeight:600,lineHeight:1.05,margin:"0 0 18px"}}>See Cortex run on your hardware.</h2><p style={{fontSize:18,lineHeight:1.6,color:N3,maxWidth:560,margin:"0 auto 36px"}}>New devices or existing infrastructure — same platform, same AI. Measurable results in 60 days.</p>
-        <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){go("contact")}}>Talk to the team</button></div></Rv>
-      </div>
+    <section id="cta" style={{borderTop:"1px solid "+BD,background:BG}}>
+      <div style={{maxWidth:MW,margin:"0 auto",padding:"100px 40px",textAlign:"center"}}><Rv><h2 style={{...hd,fontSize:46,fontWeight:600,lineHeight:1.05,margin:"0 0 18px"}}>See Cortex run on your hardware.</h2><p style={{fontSize:18,lineHeight:1.6,color:N3,maxWidth:560,margin:"0 auto 36px"}}>New devices or existing infrastructure — same platform, same AI. Measurable results in 60 days.</p><div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){go("contact")}}>Talk to the team</button></div></Rv></div>
     </section>
   </div>);
 }
@@ -423,15 +313,23 @@ var hmSPINE=[
 {eb:"Hardware",c:CY,h:"Edge endpoints — the bodies.",d:"Cameras, thermal, sensors, presence, tags — nine endpoint classes on any silicon, certified with ODM partners. No lock-in.",cta:"See the endpoints",to:"hardware"},
 {eb:"Solutions",c:MG,h:"By industry — the proof.",d:"Retail, cold chain, logistics, and the home. Same platform, shaped to each operation's outcomes and KPIs.",cta:"See solutions",to:"solutions"}
 ];
+function CapGlyph(p){var k=p.k,s={width:18,height:18,viewBox:"0 0 24 24",fill:"none",stroke:T,strokeWidth:1.6,strokeLinecap:"round",strokeLinejoin:"round",style:{display:"block",flexShrink:0}};
+  if(k==="endpoints")return <svg {...s}><rect x="3" y="4" width="8" height="6" rx="1"/><rect x="13" y="14" width="8" height="6" rx="1"/><path d="M7 10v4h10"/></svg>;
+  if(k==="chipsets")return <svg {...s}><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg>;
+  if(k==="edge")return <svg {...s}><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>;
+  if(k==="privacy")return <svg {...s}><path d="M12 3l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V6z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>;
+  return <svg {...s}><path d="M4 7h16M4 12h13M4 17h9"/><circle cx="18" cy="17" r="3.2"/><path d="M16.7 17l1 1 1.5-1.7"/></svg>;
+}
 function Home2Page(p){
   var go=p.go;var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
   useEffect(function(){document.title="Sevyn8 — AI that runs where the world happens";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Sevyn8 puts on-device edge AI across retail, cold chain, logistics, and the home — every camera, sensor, and device deciding in real time, fully offline, and getting smarter together.")},[]);
   return (<div style={{paddingTop:80}}>
     <section style={{maxWidth:980,margin:"0 auto",padding:"70px 40px 40px",textAlign:"center"}}>
-      <Rv><Tg>Edge AI for the physical world</Tg></Rv>
-      <Rv d={0.05}><h1 style={{...hd,fontSize:60,fontWeight:600,lineHeight:1.05,margin:"0 0 24px",letterSpacing:"-.035em"}}>AI that runs where<br/>the world actually <span style={{color:T}}>happens.</span></h1></Rv>
-      <Rv d={0.1}><p style={{fontSize:20,lineHeight:1.6,color:N3,maxWidth:640,margin:"0 auto 34px"}}>Sevyn8 puts on-device intelligence across retail, cold chain, logistics, and the home — every camera, sensor, and device deciding in real time, fully offline, and getting smarter together.</p></Rv>
-      <Rv d={0.15}><div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("work")}}>See how it works</button></div></Rv>
+      <Rv><Tg>The Physical AI platform</Tg></Rv>
+      <Rv d={0.05}><h1 style={{...hd,fontSize:58,fontWeight:600,lineHeight:1.06,margin:"0 0 22px",letterSpacing:"-.035em"}}><span style={{color:T}}>Physical AI</span> for retail, cold chain, logistics, and the home.</h1></Rv>
+      <Rv d={0.1}><p style={{fontSize:20,lineHeight:1.6,color:N3,maxWidth:660,margin:"0 auto 26px"}}>On-device intelligence for every camera, sensor, and device — deciding in real time, fully offline, and getting smarter together.</p></Rv>
+      <Rv d={0.13}><div style={{display:"flex",flexWrap:"wrap",gap:10,justifyContent:"center",margin:"0 0 30px"}}>{[["endpoints","Intelligent Endpoints"],["chipsets","Multiple Chipsets"],["edge","AI @ Edge"],["privacy","Built for Privacy"],["governance","Easy Governance"]].map(function(c){return <div key={c[1]} style={{display:"inline-flex",alignItems:"center",gap:8,padding:"9px 16px",borderRadius:999,border:"1px solid "+BD,background:"rgba(255,255,255,0.02)"}}><CapGlyph k={c[0]} /><span style={{fontSize:13.5,fontWeight:500,color:N3}}>{c[1]}</span></div>})}</div></Rv>
+      <Rv d={0.16}><div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("work")}}>See how it works</button></div></Rv>
     </section>
     <section id="work" style={{maxWidth:MW,margin:"0 auto",padding:"44px 40px 92px"}}>
       <Rv><Tg c={MG}>See it decide · four industries</Tg></Rv>
@@ -471,10 +369,8 @@ var eeENDPOINTS=[
 {id:"acoustic",name:"Acoustic sensors",senses:"Sound events",delivers:["Glass-break & aggression","Equipment anomalies","Leak signatures"]},
 {id:"tag",name:"Channel-Sounding tags",senses:"Location · proximity",delivers:["Asset & tote tracking","Dwell & flow","Loss prevention"]}
 ];
-function HeroHub(){
-  var motion=useMotion();var cx=280,cy=240,n=9,rx=215,ry=178;
-  var pts=Array.from({length:n},function(_,i){var an=-Math.PI/2+(i/n)*6.283;return [cx+Math.cos(an)*rx,cy+Math.sin(an)*ry]});
-  return (<svg viewBox="0 0 560 500" style={{width:"100%",height:"auto",display:"block"}}>{pts.map(function(pp,i){return <g key={i}><line x1={pp[0]} y1={pp[1]} x2={cx} y2={cy} stroke={"rgba("+cR.neu+",.13)"} strokeWidth="1" />{motion&&<circle r="3" fill={CY}><animateMotion dur="2.6s" begin={(i*0.29)+"s"} repeatCount="indefinite" path={"M"+pp[0]+","+pp[1]+" L"+cx+","+cy} /><animate attributeName="opacity" values="0;1;1;0" dur="2.6s" begin={(i*0.29)+"s"} repeatCount="indefinite" /></circle>}</g>})}{motion&&<circle cx={cx} cy={cy} r="52" fill="none" stroke={T}><animate attributeName="r" values="46;64" dur="2.8s" repeatCount="indefinite" /><animate attributeName="opacity" values=".45;0" dur="2.8s" repeatCount="indefinite" /></circle>}<circle cx={cx} cy={cy} r="44" fill={B2} stroke={"rgba("+cR.ion+",.6)"} strokeWidth="1.4" /><text x={cx} y={cy-2} textAnchor="middle" fill={TX} style={{...hd}} fontSize="16" fontWeight="600">CORTEX</text><text x={cx} y={cy+15} textAnchor="middle" fill={T} style={{...mono}} fontSize="9" letterSpacing="2">HAL</text>{pts.map(function(pp,i){return <g key={i}><circle cx={pp[0]} cy={pp[1]} r="30" fill={B2} stroke={BD} strokeWidth="1.2" /><g transform={"translate("+(pp[0]-21)+","+(pp[1]-21)+") scale(0.44)"}><DevicePaths type={eeENDPOINTS[i].id} /></g></g>})}</svg>);
+function DeviceLineup(){
+  return (<div className="hw-lineup">{eeENDPOINTS.map(function(ep){return <div key={ep.id} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10,padding:"18px 8px",borderRadius:14,background:B2,border:"1px solid "+(ep.id==="box"?"rgba("+cR.ion+",.4)":ep.id==="thermal"?"rgba("+cR.mg+",.4)":"rgba("+cR.cy+",.3)")}}><Device type={ep.id} size={74} /><span style={{...mono,fontSize:9.5,letterSpacing:".03em",color:N3,textAlign:"center",lineHeight:1.25}}>{ep.name}</span></div>})}</div>);
 }
 function EndpointCards(){
   return (<div className="ee-cards">{eeENDPOINTS.map(function(ep,i){return <Rv key={ep.id} d={(i%3)*0.05}><div style={{padding:"24px",borderRadius:12,background:BG,border:"1px solid "+BD,borderTop:"2px solid "+(ep.id==="box"?T:ep.id==="thermal"?MG:"rgba("+cR.cy+",.5)"),height:"100%"}}><div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}><div style={{width:64,height:64,borderRadius:12,background:B2,border:"1px solid "+BD,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Device type={ep.id} size={56} /></div><div><div style={{fontSize:16.5,fontWeight:600,color:TX,lineHeight:1.2}}>{ep.name}</div><div style={{...mono,fontSize:10.5,textTransform:"uppercase",letterSpacing:".1em",color:ACC[ep.id],marginTop:3}}>{ep.senses}</div></div></div><div style={{...mono,fontSize:10,textTransform:"uppercase",letterSpacing:".12em",color:MT,marginBottom:10}}>Delivers</div><div style={{display:"flex",flexDirection:"column",gap:8}}>{ep.delivers.map(function(d){return <div key={d} style={{display:"flex",alignItems:"center",gap:9}}><span style={{width:5,height:5,borderRadius:"50%",background:ACC[ep.id],flexShrink:0}} /><span style={{fontSize:13.5,color:N3}}>{d}</span></div>})}</div></div></Rv>})}</div>);
@@ -496,7 +392,7 @@ function HardwarePage(p){
   useEffect(function(){document.title="Sevyn8 — Edge endpoints · every endpoint, any silicon";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Nine Sevyn8 edge endpoint classes — cameras, thermal, Edge Box, shelf labels, environmental, air-quality, presence, acoustic, and asset tags — every body running the same Cortex brain on any silicon, certified with ODM partners.")},[]);
   return (<div style={{paddingTop:80}}>
     <section style={{maxWidth:MW,margin:"0 auto",padding:"48px 40px 88px"}}>
-      <div className="cx-grid2"><div><Tg>Edge endpoints</Tg><h1 style={{...hd,fontSize:54,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}>One platform.<br/>Every endpoint.<br/><span style={{color:T}}>Any silicon.</span></h1><p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>Cameras, thermal, the Edge Box, shelf labels, environmental, air-quality, presence, acoustic, and asset tags — every Sevyn8 endpoint is a different body running the same brain. All speak HAL; all run Cortex.</p><p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>We don't lock you to a chip. We certify the right endpoint for the job with our ODM partners — so hardware is a supply decision, never a rewrite.</p><div style={{display:"flex",gap:12,flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("endpoints")}}>See the endpoints</button></div></div><div className="cx-hero-anim" style={{height:460,position:"relative"}}><HeroHub /></div></div>
+      <div className="cx-grid2"><div><Tg>Edge endpoints</Tg><h1 style={{...hd,fontSize:54,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}>One platform.<br/>Every endpoint.<br/><span style={{color:T}}>Any silicon.</span></h1><p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>Cameras, thermal, the Edge Box, shelf labels, environmental, air-quality, presence, acoustic, and asset tags — every Sevyn8 endpoint is a different body running the same brain. All speak HAL; all run Cortex.</p><p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>We don't lock you to a chip. We certify the right endpoint for the job with our ODM partners — so hardware is a supply decision, never a rewrite.</p><div style={{display:"flex",gap:12,flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("endpoints")}}>See the endpoints</button></div></div><div><DeviceLineup /></div></div>
     </section>
     <section id="endpoints" style={{borderTop:"1px solid "+BD,background:B2}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}><Rv><Tg c={CY}>The endpoint family</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,margin:"0 0 14px",lineHeight:1.1}}>Nine endpoint classes.<br/>One intelligence layer.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 40px"}}>We don't sell spec sheets — there are many SKUs across our ODM partners. We sell what each endpoint <em>delivers</em>. Pick the bodies your environment needs; Cortex makes them one system.</p></Rv><EndpointCards /></div>
@@ -535,7 +431,7 @@ function SoDetail(p){var sol=p.sol,go=p.go;return (<>
   <SoSc bt><Rv><Tg c={MG}>A day without vs. with</Tg><h2 style={{...hd,fontSize:34,fontWeight:600,margin:"0 0 30px"}}>Same moment. Different outcome.</h2></Rv><Rv d={0.1}><SoScenarios sol={sol} /></Rv></SoSc>
   <SoSc alt bt><Rv><Tg>The endpoint mix</Tg><h2 style={{...hd,fontSize:34,fontWeight:600,margin:"0 0 12px"}}>What {sol.n.toLowerCase()} runs on.</h2><p style={{fontSize:16.5,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 34px"}}>The endpoints this environment uses — the same family, composed for {sol.n.toLowerCase()}. All speak HAL; all run Cortex.</p></Rv><div className="sl-ep">{sol.endpoints.map(function(ep,i){return <Rv key={ep.id} d={i*0.06}><div style={{padding:"22px",borderRadius:12,border:"1px solid "+BD,borderTop:"2px solid "+epStroke(ep.id),background:BG,height:"100%"}}><div style={{width:56,height:56,borderRadius:11,background:B2,border:"1px solid "+BD,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14}}><Device type={ep.id} size={48} /></div><div style={{fontSize:15.5,fontWeight:600,color:TX,marginBottom:6}}>{ep.name}</div><div style={{fontSize:13.5,lineHeight:1.6,color:MT}}>{ep.role}</div></div></Rv>})}</div></SoSc>
   <SoSc bt><Rv><Tg c={sol.accent}>What changes with Sevyn8</Tg></Rv>{sol.changes.map(function(c,i){var pp=c.split(" — ");return <Rv key={i} d={i*0.05}><div style={{display:"flex",gap:16,padding:"18px 0",borderBottom:"1px solid "+BD}}><div style={{width:7,height:7,borderRadius:"50%",background:T,marginTop:9,flexShrink:0}} /><div style={{fontSize:16.5,lineHeight:1.6}}><span style={{fontWeight:600,color:TX}}>{pp[0]}</span>{pp[1]&&<span style={{color:N3}}> — {pp[1]}</span>}</div></div></Rv>})}</SoSc>
-  <SoSc alt bt><Rv><Tg>Two ways in</Tg><h2 style={{...hd,fontSize:34,fontWeight:600,margin:"0 0 30px"}}>New intelligent endpoints, or the ones you have.</h2></Rv><div className="sl-2col"><Rv><div style={{padding:26,borderRadius:14,border:"1.5px solid rgba("+cR.cy+",.32)",background:"rgba("+cR.cy+",.04)",height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:CY,marginBottom:10}}>Greenfield</div><h4 style={{fontSize:18,fontWeight:600,margin:"0 0 8px"}}>Deploy new endpoints with AI built in</h4><p style={{fontSize:14.5,lineHeight:1.7,color:N3,margin:0}}>Purpose-built endpoints with on-board NPU run Cortex natively — inference on the device itself, no separate box required.</p></div></Rv><Rv d={0.08}><div style={{padding:26,borderRadius:14,border:"1.5px solid rgba("+cR.ion+",.32)",background:"rgba("+cR.ion+",.04)",height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:T,marginBottom:10}}>Brownfield</div><h4 style={{fontSize:18,fontWeight:600,margin:"0 0 8px"}}>Add intelligence to what you already run</h4><p style={{fontSize:14.5,lineHeight:1.7,color:N3,margin:0}}>Connect existing cameras and sensors to one Edge Box. It ingests every feed and runs Cortex locally — no rip-and-replace.</p></div></Rv></div></SoSc>
+  <SoSc alt bt><Rv><Tg>Two ways in</Tg><h2 style={{...hd,fontSize:34,fontWeight:600,margin:"0 0 30px"}}>New intelligent endpoints, or the ones you have.</h2></Rv><div className="sl-2col"><Rv><div style={{padding:26,borderRadius:14,border:"1.5px solid rgba("+cR.cy+",.32)",background:"rgba("+cR.cy+",.04)",height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:CY,marginBottom:10}}>Greenfield</div><h4 style={{fontSize:18,fontWeight:600,margin:"0 0 8px"}}>Intelligent endpoints with AI built in</h4><p style={{fontSize:14.5,lineHeight:1.7,color:N3,margin:"0 0 16px"}}>Purpose-built cameras, sensors, and gateways with on-board NPU. The Cortex platform is embedded at the factory — AI runs natively on the endpoint, no separate box needed.</p><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{["On-board NPU/CPU","AI at the endpoint","OEM white-label","Factory embedded"].map(function(t){return <span key={t} style={{...mono,fontSize:10.5,padding:"4px 10px",borderRadius:5,border:"1px solid rgba("+cR.cy+",.3)",color:CY}}>{t}</span>})}</div></div></Rv><Rv d={0.08}><div style={{padding:26,borderRadius:14,border:"1.5px solid rgba("+cR.ion+",.32)",background:"rgba("+cR.ion+",.04)",height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:T,marginBottom:10}}>Brownfield</div><h4 style={{fontSize:18,fontWeight:600,margin:"0 0 8px"}}>Make your dumb devices intelligent</h4><p style={{fontSize:14.5,lineHeight:1.7,color:N3,margin:"0 0 16px"}}>Already have cameras, thermal sensors, IoT nodes, RFID readers installed? Add one Sevyn8 Hub or Edge AI Box to your network — it ingests feeds from every endpoint and runs Cortex locally.</p><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{["Any existing device","One box per site","No rip-and-replace","60-day results"].map(function(t){return <span key={t} style={{...mono,fontSize:10.5,padding:"4px 10px",borderRadius:5,border:"1px solid rgba("+cR.ion+",.3)",color:T}}>{t}</span>})}</div></div></Rv></div></SoSc>
   <SoSc bt><Rv><Tg>Your path to results</Tg></Rv><div className="sl-3">{["Start","Scale","Compound"].map(function(l,i){return <Rv key={l} d={i*0.08}><div style={{padding:26,borderRadius:12,border:"1px solid "+BD,background:BG,height:"100%"}}><div style={{display:"flex",alignItems:"center",gap:11,marginBottom:14}}><div style={{width:28,height:28,borderRadius:"50%",background:"rgba("+cR.ion+",.14)",border:"1.5px solid rgba("+cR.ion+",.4)",display:"flex",alignItems:"center",justifyContent:"center",...mono,fontSize:13,fontWeight:600,color:T}}>{i+1}</div><span style={{...mono,fontSize:12,textTransform:"uppercase",letterSpacing:".14em",color:T,fontWeight:600}}>{l}</span></div><p style={{fontSize:15,lineHeight:1.7,color:N3,margin:0}}>{sol.ladder[i]}</p></div></Rv>})}</div></SoSc>
   <section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:MW,margin:"0 auto",padding:"96px 40px",textAlign:"center"}}><Rv><h2 style={{...hd,fontSize:42,fontWeight:600,margin:"0 0 16px"}}>See it work in your {sol.n.toLowerCase()} operation.</h2><p style={{fontSize:18,lineHeight:1.6,color:N3,maxWidth:560,margin:"0 auto 34px"}}>60-day POC on your real site and your real data. New endpoints or the infrastructure you already run.</p><div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){go("solutions")}}>Back to Solutions</button></div></Rv></div></section>
 </>);}
@@ -595,7 +491,7 @@ export default function App(){
   var go=useCallback(function(p){p2[1](p);window.scrollTo({top:0,behavior:"instant"})},[]);
   var C;if(pg==="home")C=<Home2Page go={go}/>;else if(pg==="cortex2")C=<CortexPage go={go}/>;else if(pg==="hardware")C=<HardwarePage go={go}/>;else if(pg==="solutions")C=<SolutionsLanding go={go}/>;else if(pg.indexOf("soldet-")===0){var sd=SOLS[pg.slice(7)];C=sd?<SolutionsDetail sol={sd} go={go}/>:<SolutionsLanding go={go}/>;}else if(pg==="partners")C=<PartPg go={go}/>;else if(pg==="about")C=<AboutPg />;else if(pg==="contact")C=<ContactPg />;else if(pg.indexOf("sol-")===0){var smap={retail:"retail",home:"home",fleet:"logistics",coldchain:"cold"};var sd2=SOLS[smap[pg.slice(4)]||pg.slice(4)];C=sd2?<SolutionsDetail sol={sd2} go={go}/>:<SolutionsLanding go={go}/>;}else C=<Home2Page go={go}/>;
   return <div style={{minHeight:"100vh",background:BG,fontFamily:"'IBM Plex Sans',system-ui,sans-serif",WebkitFontSmoothing:"antialiased",color:TX,fontSize:16,lineHeight:1.65}}>
-    <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}.rw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@keyframes scdinf{0%,100%{opacity:.5}50%{opacity:1}}@keyframes feedin{from{opacity:0}to{opacity:1}}@keyframes livedot{0%,100%{opacity:.4}50%{opacity:1}}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:34px}.cx-hero-anim{height:340px !important}.rw-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.rw-grid{grid-template-columns:1fr}}.hm-spine{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.wk-tabs{display:flex;gap:14px;margin-bottom:28px}.wk-stage{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:center}@keyframes wkgrow{from{width:0}to{width:100%}}@keyframes wkscene{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}@keyframes wkfade{from{opacity:0}to{opacity:1}}@keyframes wkfovp{0%,100%{opacity:.3}50%{opacity:.6}}.wkfov{animation:wkfovp 2s ease-in-out infinite}.ee-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ee-env-row{display:grid;grid-template-columns:repeat(9,1fr);gap:12px}.sl-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-2col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.sl-ep{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.sl-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}@media (max-width:880px){.hm-spine{grid-template-columns:1fr}.wk-stage{grid-template-columns:1fr;gap:28px}.wk-tabs{gap:8px}.ee-cards{grid-template-columns:repeat(2,1fr)}.ee-env-row{grid-template-columns:repeat(5,1fr)}}@media (max-width:820px){.sl-stats{grid-template-columns:repeat(2,1fr)}.sl-2col{grid-template-columns:1fr}.sl-ep{grid-template-columns:repeat(2,1fr)}.sl-3{grid-template-columns:1fr}.sl-cards{grid-template-columns:1fr}}@media (max-width:560px){.ee-cards{grid-template-columns:1fr}.ee-env-row{grid-template-columns:repeat(3,1fr)}}"}} />
+    <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}.rw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@keyframes scdinf{0%,100%{opacity:.5}50%{opacity:1}}@keyframes feedin{from{opacity:0}to{opacity:1}}@keyframes livedot{0%,100%{opacity:.4}50%{opacity:1}}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:34px}.cx-hero-anim{height:340px !important}.rw-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.rw-grid{grid-template-columns:1fr}}.hm-spine{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.wk-tabs{display:flex;gap:14px;margin-bottom:28px}.wk-stage{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:center}@keyframes wkgrow{from{width:0}to{width:100%}}@keyframes wkscene{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}@keyframes wkfade{from{opacity:0}to{opacity:1}}@keyframes wkfovp{0%,100%{opacity:.3}50%{opacity:.6}}.wkfov{animation:wkfovp 2s ease-in-out infinite}.ee-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ee-env-row{display:grid;grid-template-columns:repeat(9,1fr);gap:12px}.sl-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-2col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.sl-ep{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.sl-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.hw-lineup{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media (max-width:880px){.hm-spine{grid-template-columns:1fr}.wk-stage{grid-template-columns:1fr;gap:28px}.wk-tabs{gap:8px}.ee-cards{grid-template-columns:repeat(2,1fr)}.ee-env-row{grid-template-columns:repeat(5,1fr)}}@media (max-width:820px){.sl-stats{grid-template-columns:repeat(2,1fr)}.sl-2col{grid-template-columns:1fr}.sl-ep{grid-template-columns:repeat(2,1fr)}.sl-3{grid-template-columns:1fr}.sl-cards{grid-template-columns:1fr}}@media (max-width:560px){.ee-cards{grid-template-columns:1fr}.ee-env-row{grid-template-columns:repeat(3,1fr)}}"}} />
     <Nav pg={pg} go={go}/><main key={pg}>{C}</main><Ft />
   </div>;
 }

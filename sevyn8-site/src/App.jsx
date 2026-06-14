@@ -73,17 +73,16 @@ function SevenCapSection(){
   var s2=useState(0),step=s2[0];
   useEffect(function(){
     if(window.matchMedia(RMQ).matches){s2[1](5);return}
-    var id=setInterval(function(){s2[1](function(s){return (s+1)%6})},950);return function(){clearInterval(id)};
+    var id=setInterval(function(){s2[1](function(s){return (s+1)%6})},2600);return function(){clearInterval(id)};
   },[]);
-  var rm=window.matchMedia&&window.matchMedia(RMQ).matches;
-  var loop=step===5,litThru=loop?4:step,pulseY=TIERS[Math.min(step,4)].y;
+  var loop=step===5;
   return (<section style={{borderTop:"1px solid "+BD,background:B2}}>
     <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
       <div className="cx-grid2">
         <div>
           <Tg>Seven capabilities · one system</Tg>
-          <h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 16px"}}>Seven capabilities.<br/>No competitor holds<br/>all of them.</h2>
-          <p style={{fontSize:16.5,lineHeight:1.7,color:N3,maxWidth:440,margin:"0 0 26px"}}>Edge AI needs every one of these at once, wired together. Chip firms own silicon, ODMs own manufacturing, software shops own models — Cortex holds the whole stack, and an eighth that makes it compound.</p>
+          <h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 16px"}}>Cortex runs all seven capabilities<br/>as one system, on the device.</h2>
+          <p style={{fontSize:16.5,lineHeight:1.7,color:N3,maxWidth:440,margin:"0 0 26px"}}>Sensing, understanding, deciding, and learning — together, on the endpoint. That's what Cortex does, and it's what makes physical AI actually deliver.</p>
           <div style={{borderLeft:"2px solid "+(loop?MG:CY),paddingLeft:16,minHeight:82,transition:"border-color .4s"}}>
             <div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:loop?MG:CY,marginBottom:7}}>{loop?"The envelope + the loop":("0"+(step+1)+" · "+(TIERS[step].foundation?"Foundation":TIERS[step].name))}</div>
             <p style={{fontSize:15,lineHeight:1.6,color:TX,margin:0}}>{CAPTIONS[step]}</p>
@@ -93,11 +92,10 @@ function SevenCapSection(){
           <rect x="18" y="26" width="404" height="392" rx="16" fill="none" stroke={"rgba("+cR.ion+","+(loop?0.55:0.28)+")"} strokeWidth="1.3" strokeDasharray="2 5" style={{transition:"stroke .4s"}} />
           <g transform="translate(34,26)"><rect x="0" y="-9" width="190" height="18" rx="9" fill={B2} /><text x="8" y="4" fill={loop?T:MT} style={{...mono,transition:"fill .4s"}} fontSize="10" letterSpacing="1.5">PRIVACY &amp; AUTH · EMBEDDED</text></g>
           <line x1="220" y1="372" x2="220" y2="68" stroke={B3} strokeWidth="1.4" />
-          <line x1="220" y1="372" x2="220" y2={pulseY} stroke={"rgba("+cR.cy+",.5)"} strokeWidth="1.6" style={{transition:"all .6s"}} />
           <path d="M220,68 C402,96 402,344 220,372" fill="none" stroke={MG} strokeWidth="1.6" strokeDasharray="520" strokeDashoffset={loop?0:520} opacity={loop?0.9:0} style={{transition:loop?"stroke-dashoffset 1.6s ease, opacity .3s":"opacity .4s"}} />
-          <text x="392" y="226" fill={MG} fontSize="22" textAnchor="middle" opacity={loop?1:0.18} style={{transition:"opacity .4s",animation:(loop&&!rm)?"scdinf 1.6s ease-in-out infinite":"none"}}>∞</text>
+          <text x="392" y="226" fill={MG} fontSize="22" textAnchor="middle" opacity={loop?1:0.18} style={{transition:"opacity .4s"}}>∞</text>
           {TIERS.map(function(t,i){
-            var lit=i<=litThru,col=t.fleet&&loop?MG:CY;
+            var lit=i===step,col=t.fleet&&loop?MG:CY;
             var stroke=lit?("rgba("+(t.fleet&&loop?cR.mg:cR.cy)+",.55)"):BD;
             var glow=lit?(loop?("0 0 18px rgba("+cR.ion+",.18)"):("0 0 16px rgba("+cR.cy+",.12)")):"none";
             if(t.foundation)return (<g key={i} style={{transition:"all .5s"}}>
@@ -114,81 +112,11 @@ function SevenCapSection(){
               <text x="38" y="30" fill={MT} style={{...mono}} fontSize="9.5">{t.tag}</text>
             </g>);
           })}
-          {!loop&&<g style={{transform:"translateY("+pulseY+"px)",transition:"transform .6s cubic-bezier(.4,0,.2,1)"}}>
-            <circle cx="220" cy="0" r="5" fill={CY} />
-            <circle cx="220" cy="0" r="5" fill="none" stroke={CY}><animate attributeName="r" from="5" to="13" dur="1.2s" repeatCount="indefinite" /><animate attributeName="opacity" from=".7" to="0" dur="1.2s" repeatCount="indefinite" /></circle>
-          </g>}
         </svg>
       </div>
     </div>
   </section>);
 }
-function CompoundCanvas(){
-  var ref=useRef(null),c2=useState(1),count=c2[0];
-  useEffect(function(){
-    var c=ref.current;if(!c)return;var ctx=c.getContext("2d");
-    var reduced=window.matchMedia(RMQ).matches;
-    var W,H,dpr,raf,origin={x:0,y:0},fleet=[],waves=[],last=-1e9,started=performance.now();
-    function layout(){dpr=Math.min(window.devicePixelRatio||1,2);W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);origin={x:W*0.5,y:H*0.5};fleet=[];
-      var base=Math.min(W,H),rings=[{r:base*0.26,n:6,ph:0.2},{r:base*0.4,n:9,ph:0.55}];
-      rings.forEach(function(rd){for(var i=0;i<rd.n;i++){var a=(i/rd.n)*Math.PI*2+rd.ph,sx=W>H?1.35:1;fleet.push({x:origin.x+Math.cos(a)*rd.r*sx,y:origin.y+Math.sin(a)*rd.r,dist:0,bright:0})}});
-      fleet.forEach(function(f){f.dist=Math.hypot(f.x-origin.x,f.y-origin.y)});
-    }
-    layout();var onR=function(){layout()};window.addEventListener("resize",onR);
-    function node(x,y,r,rgb,a){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle="rgba("+rgb+","+a+")";ctx.fill()}
-    function frame(now){var t=now-started;ctx.clearRect(0,0,W,H);
-      fleet.forEach(function(f){ctx.strokeStyle="rgba("+cR.neu+",0.10)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(f.x,f.y);ctx.stroke()});
-      if(t-last>2700){last=t;waves.push({t0:now,dur:1700});c2[1](function(k){return k+7})}
-      var maxD=Math.max.apply(null,fleet.map(function(f){return f.dist}));
-      waves=waves.filter(function(w){return now-w.t0<w.dur+400});
-      waves.forEach(function(w){var p=(now-w.t0)/w.dur,rad=p*(maxD+30);if(p<=1){ctx.beginPath();ctx.arc(origin.x,origin.y,rad,0,7);ctx.strokeStyle="rgba("+cR.mg+","+((1-p)*0.5)+")";ctx.lineWidth=1.4;ctx.stroke()}fleet.forEach(function(f){if(rad>=f.dist&&rad<f.dist+24)f.bright=Math.min(1,f.bright+0.14)})});
-      fleet.forEach(function(f){f.bright*=0.965;var lit=f.bright;if(lit>0.02)node(f.x,f.y,9+lit*5,cR.ion,0.1+lit*0.18);node(f.x,f.y,3.4,cR.neu,0.5);node(f.x,f.y,3.4,cR.ion,lit*0.95)});
-      var pulse=(Math.sin(now*0.0022)+1)/2;
-      ctx.beginPath();ctx.arc(origin.x,origin.y,30+pulse*9,0,7);ctx.strokeStyle="rgba("+cR.cy+","+(0.35+pulse*0.3)+")";ctx.lineWidth=1.4;ctx.stroke();
-      ctx.shadowColor="rgba("+cR.ion+",0.5)";ctx.shadowBlur=26;node(origin.x,origin.y,15,cR.ion,1);ctx.shadowBlur=0;
-      var oa=now*0.0016;node(origin.x+Math.cos(oa)*30,origin.y+Math.sin(oa)*30,2.4,cR.cy,0.9);
-      raf=requestAnimationFrame(frame);
-    }
-    if(reduced){ctx.clearRect(0,0,W,H);fleet.forEach(function(f){ctx.strokeStyle="rgba("+cR.neu+",0.10)";ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(f.x,f.y);ctx.stroke();node(f.x,f.y,3.4,cR.ion,0.6)});node(origin.x,origin.y,15,cR.ion,1)}
-    else raf=requestAnimationFrame(frame);
-    return function(){cancelAnimationFrame(raf);window.removeEventListener("resize",onR)};
-  },[]);
-  return (<div style={{position:"relative",width:"100%",height:"100%"}}>
-    <canvas ref={ref} style={{width:"100%",height:"100%",display:"block"}} />
-    <div style={{position:"absolute",left:0,top:12,...mono,fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:MT}}><span style={{color:CY}}>●</span> one device · live</div>
-    <div style={{position:"absolute",right:0,bottom:10,textAlign:"right"}}>
-      <div style={{...mono,fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:MT}}>fleet intelligence</div>
-      <div style={{...hd,fontSize:28,fontWeight:600,color:TX}}>{count.toLocaleString()}<span style={{fontSize:14,color:MG,marginLeft:6}}>↑</span></div>
-    </div>
-  </div>);
-}
-function CompoundCurve(){
-  var n2=useState(40),n=n2[0],h2=useState(false),hover=h2[0];var W=640,H=210,pad=8;
-  useEffect(function(){
-    if(hover)return;
-    if(window.matchMedia(RMQ).matches){n2[1](500);return}
-    var id=setInterval(function(){n2[1](function(v){return v>=500?1:v+4})},40);return function(){clearInterval(id)};
-  },[hover]);
-  var acc=function(d){return 84+14*(1-Math.exp(-d/150))+Math.log10(d+1)*0.4};
-  var x=function(d){return pad+(d/500)*(W-pad*2)};
-  var y=function(v){return H-pad-((v-83)/(100-83))*(H-pad*2-18)};
-  var path="";for(var d=1;d<=n;d+=4)path+=(d===1?"M":"L")+x(d).toFixed(1)+" "+y(acc(d)).toFixed(1)+" ";
-  var cx=x(n),cyv=y(acc(n)),val=acc(n);
-  var onMove=function(e){var r=e.currentTarget.getBoundingClientRect();var px=(e.clientX-r.left)/r.width*W;n2[1](Math.max(1,Math.min(500,Math.round((px-pad)/(W-pad*2)*500))))};
-  return (<div style={{width:"100%"}}>
-    <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:"auto",display:"block",cursor:"crosshair"}} onMouseEnter={function(){h2[1](true)}} onMouseLeave={function(){h2[1](false)}} onMouseMove={function(e){if(hover)onMove(e)}}>
-      {[88,92,96,100].map(function(g){return <g key={g}><line x1={pad} x2={W-pad} y1={y(g)} y2={y(g)} stroke={BD} strokeWidth="1" /><text x={pad} y={y(g)-4} fill={MT} style={{...mono}} fontSize="9">{g}%</text></g>})}
-      <path d={path} fill="none" stroke={MG} strokeWidth="2" strokeLinecap="round" />
-      <line x1={cx} x2={cx} y1={y(val)} y2={H-pad} stroke={"rgba("+cR.mg+",0.25)"} strokeWidth="1" />
-      <circle cx={cx} cy={cyv} r="5" fill={MG} /><circle cx={cx} cy={cyv} r="10" fill="none" stroke={"rgba("+cR.mg+",0.4)"} strokeWidth="1" />
-    </svg>
-    <div style={{display:"flex",justifyContent:"space-between",marginTop:10}}>
-      <span style={{...mono,fontSize:12,color:MT}}>deployment <span style={{color:TX}}>#{n}</span></span>
-      <span style={{...mono,fontSize:12,color:MT}}>fleet accuracy <span style={{color:MG,fontWeight:500}}>{val.toFixed(1)}%</span></span>
-    </div>
-  </div>);
-}
-/* ── Cortex AI page (cortex2) — salvaged Pipe/Ctx/arch reskinned v4 ── */
 function CxPipe(){var s2=useState(0),st=s2[0];useEffect(function(){var id=setInterval(function(){s2[1](function(s){return(s+1)%5})},2400);return function(){clearInterval(id)}},[]);
   var S=[{l:"Raw feed",c:DM,d:"4K video, thermal, IoT, and sensor streams enter on the device."},{l:"HAL",c:T,d:"The Hardware Abstraction Layer normalises across ARM and x86 SoC families. SoC-agnostic by design."},{l:"AI Engine",c:CY,d:"Quantised vision + sensor-fusion models, on-device. Under 100ms, under 2W. Fully offline."},{l:"Decisioning",c:I7,d:"The context engine applies learned routines. A person at 3 AM differs from 3 PM."},{l:"Action",c:I3,d:"Alert sent. Compliance logged. Dashboard updated. OTA improvement queued fleet-wide."}];
   return (<div><div style={{display:"flex",alignItems:"center",marginBottom:22}}>{S.map(function(s,i){return <div key={i} style={{flex:1,display:"flex",alignItems:"center",cursor:"pointer"}} onClick={function(){s2[1](i)}}><div style={{flex:"0 0 auto",width:80,padding:"12px 0",borderRadius:8,background:st===i?s.c+"15":"transparent",border:"1.5px solid "+(st>=i?s.c+"55":BD),textAlign:"center",transition:"all .4s",boxShadow:st===i?"0 0 16px "+s.c+"22":"none"}}><div style={{width:8,height:8,borderRadius:"50%",margin:"0 auto 6px",background:st>=i?s.c:DM,boxShadow:st===i?"0 0 12px "+s.c:"none"}} /><div style={{fontSize:11,fontWeight:600,color:st>=i?TX:DM}}>{s.l}</div></div>{i<4&&<div style={{flex:1,height:2,position:"relative",margin:"0 -1px"}}><div style={{position:"absolute",inset:0,background:BD}} /><div style={{position:"absolute",top:0,left:0,height:"100%",width:st>i?"100%":st===i?"50%":"0%",background:"linear-gradient(90deg,"+S[i].c+","+S[Math.min(i+1,4)].c+")",transition:"width .5s"}} /></div>}</div>})}</div><div style={{background:B2,border:"1px solid "+S[st].c+"25",borderRadius:10,padding:"20px 24px",borderLeft:"3px solid "+S[st].c}}><div style={{fontSize:16,fontWeight:600,color:S[st].c,marginBottom:6}}>{S[st].l}</div><div style={{fontSize:15.5,color:MT,lineHeight:1.75}}>{S[st].d}</div></div></div>)}
@@ -210,6 +138,23 @@ var CXARCH=[
 {k:"Edge inference",v:"INT8-quantised vision and sensor-fusion models. Under 100ms, under 2W, fully offline. HAL abstracts ARM and x86 SoC families."},
 {k:"Compliance",v:"DPDP + GDPR by architecture. STQC-aligned. Consent-based data flows. Privacy by design, not by policy."}
 ];
+function CxFlywheel(){
+  var motion=useMotion();var a2=useState(0),act=a2[0];
+  useEffect(function(){if(!motion){a2[1](-1);return}var id=setInterval(function(){a2[1](function(v){return (v+1)%4})},2400);return function(){clearInterval(id)}},[motion]);
+  var C=230,R=148;var P=function(d){var r=d*Math.PI/180;return [C+Math.cos(r)*R,C+Math.sin(r)*R]};
+  var nodes=[{a:-90,t:["More","deployments"],c:T},{a:0,t:["More real-","world data"],c:CY},{a:90,t:["Smarter models","fleet learning · OTA"],c:CY},{a:180,t:["Better","outcomes"],c:T}];
+  return (<svg viewBox="0 0 460 460" role="img" aria-label="The compounding flywheel" style={{width:"100%",height:"auto",display:"block",maxWidth:440,margin:"0 auto"}}>
+    <circle cx={C} cy={C} r={R} fill="none" stroke={"rgba("+cR.neu+",.18)"} strokeWidth="1.4" />
+    {[-45,45,135,225].map(function(m,i){var pp=P(m);return <g key={"c"+i} transform={"translate("+pp[0].toFixed(1)+","+pp[1].toFixed(1)+") rotate("+(m+90)+")"}><path d="M-5,-5 L1,0 L-5,5" fill="none" stroke={"rgba("+cR.ion+",.55)"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></g>})}
+    <text x={C} y={C-4} textAnchor="middle" fill={MG} fontSize="44" style={{...hd}}>∞</text>
+    <text x={C} y={C+24} textAnchor="middle" fill={MT} style={{...mono}} fontSize="10" letterSpacing="2">THE FLYWHEEL</text>
+    {nodes.map(function(n,i){var pp=P(n.a);var on=act===i;var rgb=(n.c===CY?cR.cy:cR.ion);return <g key={i}>
+      <circle cx={pp[0]} cy={pp[1]} r="50" fill={B2} stroke={on?n.c:BD} strokeWidth={on?2:1.3} style={{filter:on?"drop-shadow(0 0 16px rgba("+rgb+",.3))":"none",transition:"all .5s"}} />
+      <circle cx={pp[0]} cy={pp[1]-30} r="3.5" fill={on?n.c:MT} style={{transition:"fill .5s"}} />
+      {n.t.map(function(tt,k){return <text key={k} x={pp[0]} y={pp[1]-4+k*14} textAnchor="middle" fill={on?TX:N3} style={{...mono,transition:"fill .5s"}} fontSize={k===0?12:9.5}>{tt}</text>})}
+    </g>})}
+  </svg>);
+}
 function CortexPage(p){
   var go=p.go;var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
   useEffect(function(){document.title="Sevyn8 — Cortex · the Physical AI platform";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Cortex is Sevyn8's Physical AI platform — it senses, understands, decides, and acts on-device in under 100ms, fully offline, then learns across the whole fleet. Seven capabilities, enterprise governance, any silicon.")},[]);
@@ -220,34 +165,24 @@ function CortexPage(p){
           <Tg>The Physical AI platform</Tg>
           <h1 style={{...hd,fontSize:56,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}><span style={{color:T}}>Cortex.</span><br/>The Physical AI platform.</h1>
           <p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>The on-device intelligence behind every Sevyn8 deployment. It senses, understands, decides, and acts in under 100ms — fully offline — then learns across the whole fleet.</p>
-          <p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>One platform across retail, cold chain, logistics, and the home. Seven capabilities no competitor holds, on any silicon.</p>
+          <p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>One platform across retail, cold chain, logistics, and the home. Seven capabilities run as one system on the device, on any silicon.</p>
           <div style={{display:"flex",gap:12,flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("how")}}>See how it works</button></div>
         </div>
-        <div><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:MT,marginBottom:14}}>The intelligence loop</div><CxPipe /></div>
+        <div><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".14em",color:MT,marginBottom:14}}>Same event · different decision</div><CxCtx /></div>
       </div>
     </section>
     <section id="how" style={{borderTop:"1px solid "+BD,background:B2}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
         <Rv><Tg c={CY}>How Cortex works</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Sense. Understand. Decide. Act. Learn.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 40px"}}>Every event runs the same loop on the device — from raw signal to decision in under 100ms, then back to the whole fleet as learning.</p></Rv>
+        <Rv d={0.05}><div style={{marginBottom:36}}><CxPipe /></div></Rv>
         <div style={{display:"flex",flexWrap:"wrap",gap:14}}>{CXHOW.map(function(s,i){return <Rv key={s.n} d={i*0.06}><div style={{flex:"1 1 180px",minWidth:180,padding:"22px",borderRadius:12,background:BG,border:"1px solid "+BD,borderTop:"2px solid "+s.c,height:"100%"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".12em",color:s.c,marginBottom:10}}>{("0"+(i+1)).slice(-2)} · {s.n}</div><p style={{fontSize:14.5,lineHeight:1.65,color:N3,margin:0}}>{s.d}</p></div></Rv>})}</div>
       </div>
     </section>
     <SevenCapSection />
-    <section style={{borderTop:"1px solid "+BD,background:BG}}>
-      <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
-        <Rv><Tg c={CY}>Contextual decisioning</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 14px"}}>Same event. Different context.<br/>Different decision.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:640,margin:"0 0 40px"}}>A detection is not a decision. Cortex fuses every signal against learned routines — so a person at 3 AM is treated differently from the same person at 3 PM.</p></Rv>
-        <Rv d={0.1}><CxCtx /></Rv>
-      </div>
-    </section>
     <section style={{borderTop:"1px solid "+BD,background:B2}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"92px 40px"}}>
-        <div className="cx-grid2"><div><Rv><Tg c={MG}>The compounding moat</Tg><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 18px",lineHeight:1.08}}>Every deployment makes<br/>the next one smarter.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:460,margin:"0 0 16px"}}>What one device learns, the whole fleet inherits over the air. Intelligence compounds with scale instead of plateauing.</p><p style={{fontSize:16,lineHeight:1.7,color:MT,maxWidth:460,margin:0}}>The 1st deployment ships smart. The 500th ships smarter — and improves the 1st too. The part a competitor can't copy by shipping faster hardware.</p></Rv></div><Rv d={0.1}><div className="cx-hero-anim" style={{height:360,position:"relative"}}><CompoundCanvas /></div></Rv></div>
-        <Rv d={0.15}><div style={{marginTop:40,padding:24,borderRadius:14,background:BG,border:"1px solid "+BD}}><CompoundCurve /></div></Rv>
+        <div className="cx-grid2"><div><Rv><Tg c={MG}>The compounding moat</Tg><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 18px",lineHeight:1.08}}>Every deployment makes<br/>the next one smarter.</h2><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:460,margin:"0 0 16px"}}>What one device learns, the whole fleet inherits over the air. Intelligence compounds with scale instead of plateauing.</p><p style={{fontSize:16,lineHeight:1.7,color:MT,maxWidth:460,margin:0}}>The 1st deployment ships smart. The 500th ships smarter — and improves the 1st too. A flywheel a competitor can't copy by shipping faster hardware.</p></Rv></div><Rv d={0.1}><CxFlywheel /></Rv></div>
       </div>
-    </section>
-    <section style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
-      <Rv><Tg>Built for the edge</Tg><h2 style={{...hd,fontSize:38,fontWeight:600,lineHeight:1.1,margin:"0 0 40px"}}>Decisions where the data is.</h2></Rv>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:32}}>{[["< 100ms","On-device inference","Decisions happen where the data is — no latency, no cloud round-trip."],["0","Frames to the cloud","Fully offline by architecture. Privacy isn't a setting; it's the design."],["1 API","Across all silicon","HAL abstracts the hardware. Switch SoC without rewriting the platform."],["E2E","Privacy by design","Nothing leaves the device; identity and access are built in, not bolted on."]].map(function(row,i){return <Rv key={row[1]} d={i*0.07}><div style={{...hd,fontSize:42,fontWeight:600,color:TX,marginBottom:6}}>{row[0]}</div><div style={{...mono,fontSize:12,textTransform:"uppercase",letterSpacing:".12em",color:T,marginBottom:12}}>{row[1]}</div><p style={{fontSize:14.5,lineHeight:1.7,color:MT,margin:0}}>{row[2]}</p></Rv>})}</div>
     </section>
     <section style={{borderTop:"1px solid "+BD,background:B2}}>
       <div style={{maxWidth:MW,margin:"0 auto",padding:"88px 40px"}}>
@@ -294,7 +229,7 @@ function HmHomeScene(p){var step=p.step;var fallen=step>=1;return (<><rect x="0"
 var hmSCENES=[HmRetailScene,HmColdScene,HmLogiScene,HmHomeScene];
 var hmDUR=3600;
 var hmBEATS=[
-{ind:"Retail",env:"Self-checkout",accent:CY,title:"Shrinkage, caught in the act.",stat:"Retail shrink hit ~$132B globally in 2024 — much of it quiet: non-scans, tag-swaps, the under-ring. Old cameras only record it for later.",steps:[["Situation","An item slips past the scanner into the bag — no beep, no barcode."],["Cortex sees","On the device, camera and scan-data fuse: bagged, never scanned. Flagged in milliseconds."],["Outcome","A discreet nudge reaches staff before the exit. Intervention, not a CCTV review."]]},
+{ind:"Retail",env:"Store floor",accent:CY,title:"Fuller shelves, smarter layouts — more revenue per visit.",stat:"Out-of-stocks and planogram drift quietly cost retailers billions in lost sales, and a manual shelf-walk catches them hours too late.",steps:[["Situation","A best-seller sells out and a planogram slips out of compliance on a busy afternoon."],["Cortex sees","Shelf cameras read planogram compliance continuously and map shopper dwell into a live heat map."],["Outcome","Staff restock before sales are lost and slow zones get re-merchandised — revenue per visit climbs."]]},
 {ind:"Cold chain",env:"Cold store · reefer",accent:MG,title:"The breach, predicted before the loss.",stat:"~20% of vaccines and 14% of food are lost to cold-chain failures — and data loggers only tell you after it's spoiled.",steps:[["Situation","A reefer's temperature edges up; the compressor shows the first hint of wear."],["Cortex sees","On-device sensor fusion projects the curve past the safe limit — about 25 minutes early."],["Outcome","Service the part, reroute the load. An $800 fix instead of a $50k write-off. Compliance auto-logged."]]},
 {ind:"Logistics",env:"Warehouse · yard",accent:T,title:"The collision that never happens.",stat:"Forklifts cause ~101 deaths and 95,000 injuries a year — and most cameras only capture the aftermath.",steps:[["Situation","A forklift rounds the aisle as a worker steps into its path."],["Cortex sees","On existing cameras — even with the network down — it reads the proximity breach in real time."],["Outcome","Alert and slowdown fire instantly. The near-miss stays a near-miss."]]},
 {ind:"Smart home",env:"Aging in place",accent:CY,title:"Safety without the camera.",stat:"Falls are the leading cause of injury death over 65 — but cameras feel invasive and wearables come off.",steps:[["Situation","Late at night, alone, an elderly resident falls in the bathroom."],["Cortex sees","mmWave senses the fall through the dark — on the device, with no image ever captured."],["Outcome","A caregiver is alerted in seconds. Safety kept, dignity intact."]]}
@@ -309,7 +244,7 @@ function HmWalkthrough(){
     <div style={{display:"flex",flexDirection:"column"}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".16em",color:B.accent,marginBottom:10}}>{B.ind} · {B.env}</div><h3 style={{...hd,fontSize:30,fontWeight:600,lineHeight:1.05,margin:"0 0 14px",letterSpacing:"-.02em"}}>{B.title}</h3><p style={{fontSize:14,lineHeight:1.6,color:MT,margin:"0 0 26px",borderLeft:"2px solid rgba(140,160,200,.18)",paddingLeft:14}}>{B.stat}</p><div style={{display:"flex",flexDirection:"column",gap:4}}>{B.steps.map(function(s,i){var active=i===pos.step,past=i<pos.step;return <div key={i} style={{display:"flex",gap:14,padding:"13px 0",opacity:active?1:past?0.5:0.32,transition:"opacity .4s",borderBottom:i<2?"1px solid "+BD:"none"}}><div style={{width:26,height:26,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",...mono,fontSize:12,fontWeight:600,color:active?"#fff":MT,background:active?B.accent:"transparent",border:"1.5px solid "+(active?B.accent:"rgba(140,160,200,.2)"),transition:"all .4s"}}>{i+1}</div><div><div style={{...mono,fontSize:10.5,textTransform:"uppercase",letterSpacing:".12em",color:active?B.accent:MT,marginBottom:4,transition:"color .4s"}}>{s[0]}</div><div style={{fontSize:15,lineHeight:1.55,color:active?TX:N3,transition:"color .4s"}}>{s[1]}</div></div></div>})}</div></div></div></div>);
 }
 var hmSPINE=[
-{eb:"Platform",c:T,h:"Cortex — the brain.",d:"On-device intelligence with seven capabilities no competitor holds, wired into one system. Decides in under 100ms, fully offline.",cta:"Explore the platform",to:"cortex2"},
+{eb:"Platform",c:T,h:"Cortex — the brain.",d:"On-device intelligence with seven capabilities, run as one system on the device. Decides in under 100ms, fully offline.",cta:"Explore the platform",to:"cortex2"},
 {eb:"Hardware",c:CY,h:"Edge endpoints — the bodies.",d:"Cameras, thermal, sensors, presence, tags — nine endpoint classes on any silicon, certified with ODM partners. No lock-in.",cta:"See the endpoints",to:"hardware"},
 {eb:"Solutions",c:MG,h:"By industry — the proof.",d:"Retail, cold chain, logistics, and the home. Same platform, shaped to each operation's outcomes and KPIs.",cta:"See solutions",to:"solutions"}
 ];
@@ -332,9 +267,9 @@ function Home2Page(p){
       <Rv d={0.16}><div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("work")}}>See how it works</button></div></Rv>
     </section>
     <section id="work" style={{maxWidth:MW,margin:"0 auto",padding:"44px 40px 92px"}}>
-      <Rv><Tg c={MG}>See it decide · four industries</Tg></Rv>
-      <Rv d={0.05}><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 14px",lineHeight:1.08}}>One platform. Four worlds.<br/>Watch it work.</h2></Rv>
-      <Rv d={0.1}><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 44px"}}>The same on-device intelligence, in four very different places — each catching the moment that matters and turning it into a decision, in real time.</p></Rv>
+      <Rv><Tg c={MG}>Outcomes across four industries</Tg></Rv>
+      <Rv d={0.05}><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 14px",lineHeight:1.08}}>Sevyn8 lifts revenue and lowers<br/>your cost of operations.</h2></Rv>
+      <Rv d={0.1}><p style={{fontSize:17,lineHeight:1.7,color:N3,maxWidth:620,margin:"0 0 44px"}}>On-device intelligence across retail, cold chain, logistics, and the home — turning what your cameras and sensors already see into decisions that grow revenue and cut operating cost, in real time.</p></Rv>
       <Rv d={0.15}><HmWalkthrough /></Rv>
     </section>
     <section id="spine" style={{borderTop:"1px solid "+BD,background:B2}}>
@@ -411,7 +346,7 @@ function HardwarePage(p){
 
 /* ── Solutions (solutions + soldet-*) ── */
 var SOLS={
-  retail:{n:"Retail",accent:CY,lead:"Stop shrink in the act.",h:"Stop shrink in the act. Understand every shopper.",d:"Most retail shrink is quiet — non-scans, tag-swaps, the under-ring — and traditional cameras only record it for the nightly review. Cortex turns the cameras and shelf-edge you already have into real-time decisions: catch loss before the exit, keep shelves honest, and move queues before customers walk.",stats:[["$132B","global retail shrink, 2024"],["~40%","shrink cut potential (IDC, by 2028)"],["< 100ms","decisions, on the device"],["0","frames sent to the cloud"]],scenarios:[{t:"Self-checkout · a non-scan",wo:"An item goes into the bag unscanned. Nobody notices until the inventory count doesn't add up weeks later.",w:"Camera and scan-data fuse on the device — bagged, never scanned. A discreet nudge reaches staff before the shopper reaches the door."},{t:"The aisle · a shelf gap",wo:"A planogram gap or a wrong price sits unseen until the evening walk — lost sales the whole day.",w:"ESL and camera disagree on a shelf; the gap and the price mismatch reach staff in minutes, not at close."},{t:"Front-of-store · a queue",wo:"A queue builds at the tills. By the time a manager notices, customers have abandoned baskets and left.",w:"Checkout dwell crosses threshold and Cortex calls a new counter — before anyone walks out."}],endpoints:[{id:"cam",name:"NPU-led cameras",role:"Footfall, concealment, queues, planogram"},{id:"esl",name:"Electronic shelf labels",role:"Price integrity and the camera–ESL cross-check"},{id:"box",name:"Edge Box",role:"Runs Cortex in-store; decides fully offline"},{id:"acoustic",name:"Acoustic sensors",role:"After-hours glass-break and intrusion"}],changes:["Loss prevention shifts from documenting theft to interrupting it — in real time, without confrontation.","Footfall and conversion become exact counts, not estimates from a doorway sensor.","Shelf and price integrity are checked continuously, not on a manual walk.","Every store inherits what the others learn — the 40th store opens knowing what the 1st caught."],ladder:["Start with one store. Connect the cameras and ESLs you already run to a single Edge Box; prove the outcomes on your real floor in 60 days.","Scale across the estate. The same platform rolls to every store — new endpoints are a supply decision, not a re-integration.","Compound. Fleet learning pushes every store's improvements to all the others over the air."]},
+  retail:{n:"Retail",accent:CY,lead:"Fuller shelves. Smarter layouts. More revenue.",h:"More revenue per visit — from planogram compliance to live heat maps.",d:"Out-of-stocks, planogram drift, and weak store layouts quietly bleed sales — and a manual shelf-walk finds them hours too late. Cortex turns the cameras you already run into continuous planogram compliance and live footfall heat maps, so shelves stay full, layouts get smarter, and every visit is worth more. Loss prevention comes along for the ride.",stats:[["$1T+","lost yearly to out-of-stocks (IHL est.)"],["3-4%","sales lift from better on-shelf availability"],["live","footfall & dwell heat maps"],["< 100ms","decisions on the device"]],scenarios:[{t:"The shelf · a gap",wo:"A top-seller sells out mid-afternoon; the gap sits until the evening shelf-walk — hours of lost sales.",w:"Shelf cameras read on-shelf availability continuously; staff restock within minutes, before the sales are gone."},{t:"The floor · a cold zone",wo:"A whole section underperforms and nobody knows why until the monthly sales review.",w:"Live heat maps show where shoppers go and stall; slow zones get re-merchandised while it still matters."},{t:"The planogram · drift",wo:"Promo and planogram compliance is checked by occasional store visits; most drift goes unseen.",w:"Cortex checks planogram and promo compliance on every camera, continuously — compliance becomes measurable."}],endpoints:[{id:"cam",name:"NPU-led cameras",role:"Planogram compliance, footfall heat maps, queues"},{id:"esl",name:"Electronic shelf labels",role:"Price integrity and the camera–ESL cross-check"},{id:"box",name:"Edge Box",role:"Runs Cortex in-store; decides fully offline"},{id:"acoustic",name:"Acoustic sensors",role:"After-hours intrusion and glass-break"}],changes:["Merchandising shifts from monthly reviews to real time — gaps and cold zones are fixed while they still cost sales.","On-shelf availability and planogram compliance become continuous measurements, not occasional audits.","Footfall and dwell become live heat maps that drive layout and staffing.","Every store inherits what the others learn about layout and demand."],ladder:["Start with one store. Connect the cameras and ESLs you already run to a single Edge Box; prove the outcomes on your real floor in 60 days.","Scale across the estate. The same platform rolls to every store — new endpoints are a supply decision, not a re-integration.","Compound. Fleet learning pushes every store's improvements to all the others over the air."]},
   cold:{n:"Cold chain",accent:MG,lead:"Predict the breach before the loss.",h:"Predict the breach before the product is lost.",d:"Traditional cold-chain monitoring is reactive — data loggers and manual checks only tell you after spoilage. Cortex fuses temperature, humidity, and equipment signals on the device to forecast excursions before product crosses the threshold, and uses thermal vision to confirm equipment health.",stats:[["~20%","of vaccines lost to temp control"],["14%","of food lost post-harvest"],["~25 min","early breach warning"],["$50k","load saved by an $800 fix"]],scenarios:[{t:"The reefer · a drift",wo:"A reefer's temperature edges up in transit. The logger records it; the team finds out when the load is rejected at the dock.",w:"On-device sensor fusion projects the curve past the limit about 25 minutes early — reroute or cool before anything spoils."},{t:"The compressor · early wear",wo:"A compressor degrades silently until it fails overnight, and a freezer of product is gone by morning.",w:"Cortex reads the vibration signature and flags the failing part — an $800 fix instead of a $50k write-off."},{t:"The audit · compliance",wo:"Temperature logs are reconstructed by hand for the audit, hoping nothing was missed or mis-keyed.",w:"Every reading is logged continuously and tamper-evident on the device — the audit trail builds itself."}],endpoints:[{id:"env",name:"Environmental sensors",role:"Temperature, humidity, breach prediction"},{id:"thermal",name:"Thermal cameras",role:"Equipment health and cold-load integrity"},{id:"airq",name:"Air-quality & gas sensors",role:"Refrigerant-leak and air-quality detection"},{id:"box",name:"Edge Box",role:"Runs Cortex on-site; decides fully offline"}],changes:["Monitoring shifts from reactive logging to predictive intervention — you act before product is lost.","Equipment failures are forecast from their signatures, not discovered after a breakdown.","Compliance logging is continuous and tamper-evident, not reconstructed for the audit.","Every site inherits the failure patterns the others have already seen."],ladder:["Start with one cold store or fleet. Place environmental and thermal endpoints on a single Edge Box; prove early-warning on your real loads in 60 days.","Scale across sites and reefers. Same platform, same guarantees, wherever the cold chain runs.","Compound. Every breach and failure pattern learned anywhere is pushed to every site over the air."]},
   logistics:{n:"Logistics",accent:T,lead:"The collision that never happens.",h:"The collision that never happens. The asset never lost.",d:"Yards and warehouses are dangerous and opaque — forklifts cause thousands of injuries a year, and assets vanish into the floor. Cortex runs on the cameras you already have, even when the network drops, to prevent incidents in real time — and on Channel-Sounding tags to keep every asset located.",stats:[["~101","forklift deaths a year (US)"],["95,000","forklift injuries a year (US)"],["< 100ms","proximity alerts"],["offline","keeps working, network or not"]],scenarios:[{t:"The aisle · a near-miss",wo:"A forklift rounds a blind corner as a worker steps in. The camera records the collision — for the incident report.",w:"Cortex reads the proximity breach in real time and triggers an alert and slowdown. The near-miss stays a near-miss."},{t:"The dock · a missing tote",wo:"A tote of high-value stock is misplaced in the yard; hours are lost searching, and it's eventually written off.",w:"Channel-Sounding tags keep every asset located, and flag dwell and loss the moment they happen."},{t:"The floor · PPE & zones",wo:"PPE and one-way zones are spot-checked occasionally; violations go unseen until an inspection.",w:"Cortex flags missing PPE and zone breaches continuously on existing cameras — even with the network down."}],endpoints:[{id:"cam",name:"NPU-led cameras",role:"Forklift-pedestrian safety, PPE, zones"},{id:"tag",name:"Channel-Sounding tags",role:"Asset and tote tracking, dwell, loss"},{id:"thermal",name:"Thermal cameras",role:"Cold-load integrity in transit"},{id:"box",name:"Edge Box",role:"Runs Cortex on-site; offline-safe"}],changes:["Safety shifts from incident reports to incident prevention — alerts fire before the collision.","Assets are located continuously instead of searched for and written off.","PPE and zone compliance are enforced in real time, on the cameras you already run.","Detection keeps working when the network doesn't — inference is on the device."],ladder:["Start with one yard or DC. Connect existing cameras to an Edge Box and add tags to high-value assets; prove safety and location in 60 days.","Scale across facilities. The same platform deploys to every site without replacing hardware.","Compound. Every near-miss pattern and loss signature is shared across the network over the air."]},
   home:{n:"Smart home",accent:CY,lead:"Safety without the camera.",h:"Safety without the camera. Dignity by design.",d:"Falls are the leading cause of injury death over 65, but cameras feel invasive and wearables come off. Cortex uses mmWave presence to sense falls and anomalies through the dark — on the device, with no image ever captured — so safety never costs privacy.",stats:[["#1","cause of injury death over 65 (falls)"],["0","images ever captured"],["~4s","to caregiver alert"],["GDPR","& HIPAA-friendly by design"]],scenarios:[{t:"Night · a fall",wo:"An elderly resident falls in the bathroom at 2am, alone. A camera is too invasive to install; the pendant came off hours ago.",w:"mmWave senses the fall through the dark — no image, no wearable — and a caregiver is alerted in seconds."},{t:"Routine · an anomaly",wo:"A gradual change — less movement, more time in bed — goes unnoticed until it becomes a crisis.",w:"Cortex learns the household's normal and flags the drift early, privately, on the device."},{t:"Comfort · the environment",wo:"Air quality and temperature are managed reactively, one room and one complaint at a time.",w:"Environmental sensing keeps comfort and air quality right automatically — quietly, in the background."}],endpoints:[{id:"mmwave",name:"mmWave presence",role:"Presence and fall detection, no camera"},{id:"env",name:"Environmental sensors",role:"Temperature, humidity, comfort"},{id:"airq",name:"Air-quality & gas sensors",role:"Air quality and gas safety"},{id:"acoustic",name:"Acoustic sensors",role:"Distress and anomaly sounds"}],changes:["Safety no longer costs privacy — sensing captures motion, never images.","Care shifts from reacting to crises to noticing the drift that precedes them.","No wearables to charge, forget, or refuse — the room itself is the sensor.","Every home benefits from patterns learned across the fleet, privately."],ladder:["Start with one residence or ward. Place mmWave and environmental endpoints on an Edge Box; prove fall detection and privacy in 60 days.","Scale across units. The same platform fits homes, wards, and assisted-living rooms alike.","Compound. Anonymous motion patterns improve detection everywhere, over the air."]}

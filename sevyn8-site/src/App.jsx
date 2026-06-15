@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from "react";
-import {useNavigate, useLocation, Outlet} from "react-router-dom";
+import {useNavigate, useLocation, Outlet, Link} from "react-router-dom";
 import {Head} from "vite-react-ssg";
 
 // values mirror brand-assets/tokens.json (v4); tokens.css is canonical
@@ -380,7 +380,7 @@ function Nav(p){
   </>;
 }
 
-function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} mark={34} gap={8} /><span>2026 Sevyn8 Private Limited &middot; New Delhi</span></div></footer>}
+function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} mark={34} gap={8} /><div style={{display:"flex",alignItems:"center",gap:18,flexWrap:"wrap"}}><Link to="/privacy" style={{color:DM,textDecoration:"none"}}>Privacy</Link><span>2026 Sevyn8 Private Limited &middot; New Delhi</span></div></div></footer>}
 
 /* ── SSG: routes + per-route head (react-router + vite-react-ssg) ── */
 var SITE="https://sevyn8.com";
@@ -391,21 +391,47 @@ var META={
   solutions:{p:"/industries",t:"Sevyn8 — Industries · one platform, shaped to your floor",d:"Sevyn8 Cortex shaped to your industry — retail, cold chain, logistics, and the home. The same platform and endpoint family, composed for the outcomes each operation cares about."},
   about:{p:"/company/our-story",t:"Sevyn8 — Our Story",d:"Seven platform capabilities, an eighth that compounds, and the Motorola-forged team behind Sevyn8's Physical AI platform."},
   partners:{p:"/company/partners",t:"Sevyn8 — Partners",d:"Sevyn8's silicon, sensor, and design partners — the intelligence infrastructure behind the Physical AI platform, plus the OEM licensing model."},
-  contact:{p:"/contact",t:"Sevyn8 — Contact",d:"Start the conversation — enterprise deployment, OEM integration, or a 60-day proof of concept on your real site and data."}
+  contact:{p:"/contact",t:"Sevyn8 — Contact",d:"Start the conversation — enterprise deployment, OEM integration, or a 60-day proof of concept on your real site and data."},
+  privacy:{p:"/privacy",t:"Sevyn8 — Privacy Policy",d:"How Sevyn8 handles data — consent-gated analytics, contact-form submissions, and your rights under India's DPDP Act 2023 and the GDPR."}
 };
-var KEYPATH={home:"/",cortex2:"/cortex-ai",hardware:"/ai-hardware",solutions:"/industries","soldet-retail":"/industries/retail","soldet-cold":"/industries/cold-chain","soldet-logistics":"/industries/logistics","soldet-home":"/industries/smart-home",about:"/company/our-story",partners:"/company/partners",contact:"/contact"};
+var KEYPATH={home:"/",cortex2:"/cortex-ai",hardware:"/ai-hardware",solutions:"/industries","soldet-retail":"/industries/retail","soldet-cold":"/industries/cold-chain","soldet-logistics":"/industries/logistics","soldet-home":"/industries/smart-home",about:"/company/our-story",partners:"/company/partners",contact:"/contact",privacy:"/privacy"};
 var PATHKEY={};Object.keys(KEYPATH).forEach(function(k){PATHKEY[KEYPATH[k]]=k});
 function pathFor(key){if(KEYPATH[key])return KEYPATH[key];if(key&&key.indexOf("sol-")===0){var m={retail:"retail",home:"smart-home",fleet:"logistics",coldchain:"cold-chain"};var id=key.slice(4);return "/industries/"+(m[id]||id)}return "/"}
 function useGo(){var nav=useNavigate();return function(key){nav(pathFor(key));if(typeof window!=="undefined")window.scrollTo({top:0,behavior:"instant"})}}
 var OGIMG=SITE+"/og-image.png";
 var LD_ORG={"@context":"https://schema.org","@type":"Organization",name:"Sevyn8",url:SITE,logo:SITE+"/sevyn8-mark.svg",description:"Sevyn8 builds on-device Physical AI — edge AI across retail, cold chain, logistics, and the home that senses, decides, and acts in real time, fully offline, and learns across the whole fleet.",address:{"@type":"PostalAddress",addressLocality:"New Delhi",addressCountry:"IN"}};
 var LD_CORTEX={"@context":"https://schema.org","@type":"SoftwareApplication",name:"Sevyn8 Cortex",applicationCategory:"BusinessApplication",operatingSystem:"On-device / edge",url:SITE+"/cortex-ai",description:"Cortex is Sevyn8's Physical AI platform — it senses, understands, decides, and acts on-device in under 100ms, fully offline, then learns across the whole fleet.",publisher:{"@type":"Organization",name:"Sevyn8",url:SITE}};
+var GA_ID="G-NLE0C6SFFJ";
+var TITLE_BY_PATH={};Object.keys(META).forEach(function(k){TITLE_BY_PATH[META[k].p]=META[k].t});["soldet-retail","soldet-cold","soldet-logistics","soldet-home"].forEach(function(k){var s=SOLS[k.slice(7)];TITLE_BY_PATH[KEYPATH[k]]="Sevyn8 — "+s.n+" · Physical AI"});
+function titleFor(path){return TITLE_BY_PATH[path]||(typeof document!=="undefined"?document.title:"Sevyn8")}
+function gtagPush(){window.dataLayer.push(arguments)}
+function bootGtag(){if(window.__sv8boot)return;window.__sv8boot=true;window.dataLayer=window.dataLayer||[];gtagPush("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});gtagPush("js",new Date());var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s)}
+function activateGA(){if(window.__sv8ga)return;window.__sv8ga=true;gtagPush("consent","update",{analytics_storage:"granted"});gtagPush("config",GA_ID,{send_page_view:false})}
+function ConsentBanner(p){return <div role="dialog" aria-label="Cookie consent" style={{position:"fixed",left:0,right:0,bottom:0,zIndex:1000,background:"rgba(24,28,40,.97)",backdropFilter:"blur(12px)",borderTop:"1px solid "+BD,padding:"16px 20px"}}>
+  <div style={{maxWidth:MW,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",gap:20,flexWrap:"wrap"}}>
+    <p style={{fontSize:13.5,lineHeight:1.6,color:N3,margin:0,flex:1,minWidth:240,maxWidth:680}}>We use privacy-first analytics to understand how this site is used. Nothing is collected until you accept. Read our <Link to="/privacy" style={{color:CY,textDecoration:"underline"}}>Privacy Policy</Link>.</p>
+    <div style={{display:"flex",gap:10,flexShrink:0}}>
+      <button onClick={p.reject} style={{padding:"10px 20px",background:"transparent",color:N3,fontWeight:500,fontSize:14,border:"1px solid "+BD,borderRadius:6,cursor:"pointer",fontFamily:"inherit"}}>Reject</button>
+      <button onClick={p.accept} style={{...bn,padding:"10px 22px"}}>Accept</button>
+    </div>
+  </div>
+</div>}
+function Analytics(){
+  var loc=useLocation();var st=useState(false),mounted=st[0];var c2=useState(null),consent=c2[0];var a2=useState(false),active=a2[0];
+  useEffect(function(){st[1](true);bootGtag();var v=null;try{v=localStorage.getItem("sv8-consent")}catch(e){}c2[1](v);if(v==="granted"){activateGA();a2[1](true)}},[]);
+  useEffect(function(){if(!active)return;gtagPush("event","page_view",{page_path:loc.pathname,page_title:titleFor(loc.pathname),page_location:SITE+loc.pathname})},[loc.pathname,active]);
+  function accept(){try{localStorage.setItem("sv8-consent","granted")}catch(e){}activateGA();a2[1](true);c2[1]("granted")}
+  function reject(){try{localStorage.setItem("sv8-consent","denied")}catch(e){}c2[1]("denied")}
+  if(!mounted||consent!==null)return null;
+  return <ConsentBanner accept={accept} reject={reject} />;
+}
 function PageHead(p){var m=p.m;return <Head><title>{m.t}</title><meta name="description" content={m.d} /><link rel="canonical" href={SITE+m.p} /><meta property="og:title" content={m.t} /><meta property="og:description" content={m.d} /><meta property="og:type" content="website" /><meta property="og:url" content={SITE+m.p} /><meta property="og:site_name" content="Sevyn8" /><meta property="og:image" content={OGIMG} /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={m.t} /><meta name="twitter:description" content={m.d} /><meta name="twitter:image" content={OGIMG} /></Head>}
 function Shell(){
   var loc=useLocation();var go=useGo();var pg=PATHKEY[loc.pathname]||"home";
   useEffect(function(){if(typeof window!=="undefined")window.scrollTo({top:0,behavior:"instant"})},[loc.pathname]);
   return <div style={{minHeight:"100vh",background:BG,fontFamily:"'IBM Plex Sans',system-ui,sans-serif",WebkitFontSmoothing:"antialiased",color:TX,fontSize:16,lineHeight:1.65}}>
     <Head><script type="application/ld+json">{JSON.stringify(LD_ORG)}</script></Head>
+    <Analytics />
     <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}.rw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@keyframes scdinf{0%,100%{opacity:.5}50%{opacity:1}}@keyframes feedin{from{opacity:0}to{opacity:1}}@keyframes livedot{0%,100%{opacity:.4}50%{opacity:1}}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:34px}.cx-hero-anim{height:340px !important}.rw-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.rw-grid{grid-template-columns:1fr}}.hm-spine{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.wk-tabs{display:flex;gap:14px;margin-bottom:28px}.wk-stage{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:center}@keyframes wkgrow{from{width:0}to{width:100%}}@keyframes wkscene{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}@keyframes wkfade{from{opacity:0}to{opacity:1}}@keyframes wkfovp{0%,100%{opacity:.3}50%{opacity:.6}}.wkfov{animation:wkfovp 2s ease-in-out infinite}.ee-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ee-env-row{display:grid;grid-template-columns:repeat(9,1fr);gap:12px}.sl-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-2col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.sl-ep{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.sl-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.hw-lineup{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.cx-how{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}@media (max-width:980px){.cx-how{grid-template-columns:repeat(3,1fr)}}@media (max-width:560px){.cx-how{grid-template-columns:repeat(2,1fr)}}@media (max-width:880px){.hm-spine{grid-template-columns:1fr}.wk-stage{grid-template-columns:1fr;gap:28px}.wk-tabs{gap:8px}.ee-cards{grid-template-columns:repeat(2,1fr)}.ee-env-row{grid-template-columns:repeat(5,1fr)}}@media (max-width:820px){.sl-stats{grid-template-columns:repeat(2,1fr)}.sl-2col{grid-template-columns:1fr}.sl-ep{grid-template-columns:repeat(2,1fr)}.sl-3{grid-template-columns:1fr}.sl-cards{grid-template-columns:1fr}}@media (max-width:560px){.ee-cards{grid-template-columns:1fr}.ee-env-row{grid-template-columns:repeat(3,1fr)}}"}} />
     <Nav pg={pg} go={go}/><main key={loc.pathname}><Outlet /></main><Ft />
   </div>;
@@ -418,6 +444,49 @@ function PgDetail(p){var go=useGo();var sol=SOLS[p.k];var m={p:"/industries/"+p.
 function PgAbout(){return <><PageHead m={META.about} /><AboutPg /></>}
 function PgPartners(){var go=useGo();return <><PageHead m={META.partners} /><PartPg go={go} /></>}
 function PgContact(){return <><PageHead m={META.contact} /><ContactPg /></>}
+function PrivacyPage(){var pp={fontSize:16,lineHeight:1.8,color:N3,margin:"0 0 14px",maxWidth:680};var h2={...hd,fontSize:24,fontWeight:600,margin:"0 0 14px"};var li={fontSize:16,lineHeight:1.8,color:N3,marginBottom:8};return <div style={{paddingTop:80}}>
+  <Sc><Rv><Tg>Legal</Tg><h1 style={{...hd,fontSize:42,fontWeight:600,lineHeight:1.08,marginBottom:14,maxWidth:560}}>Privacy Policy</h1><p style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:13,color:MT,margin:"0 0 18px"}}>Last updated 15 June 2026</p><p style={pp}>Sevyn8 builds Physical AI that runs on the device — privacy is a design principle, not an afterthought. This policy explains the limited data this website collects, why, and the choices you have. It applies to sevyn8.com; it does not cover the on-device behaviour of deployed Sevyn8 products, which is governed separately by each deployment's agreement.</p></Rv></Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>What we collect</Tg><h2 style={h2}>Two things, both minimal.</h2></Rv>
+    <Rv d={0.1}><p style={pp}><strong style={{color:TX}}>Analytics (only with your consent).</strong> If you accept analytics in the cookie banner, we use Google Analytics 4 to understand aggregate usage — pages viewed, approximate region, device and browser type. Analytics storage is denied by default and nothing is sent until you accept. If you reject or ignore the banner, no analytics cookies are set and no analytics data is collected.</p></Rv>
+    <Rv d={0.15}><p style={pp}><strong style={{color:TX}}>Contact submissions.</strong> If you send us a message through the contact page, we receive the details you choose to provide (such as your name, email, organisation, and message) so we can respond.</p></Rv>
+    <Rv d={0.2}><p style={pp}>We do not sell personal data, and we do not use it for advertising. Ad-related storage is denied at all times.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>How we use it</Tg><h2 style={h2}>Purpose.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Analytics data is used in aggregate to measure how the site performs and improve it. Contact details are used solely to reply to your enquiry and progress any conversation you start. We process this data on the basis of your consent (analytics) and our legitimate interest in responding to enquiries you initiate (contact).</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Cookies &amp; consent</Tg><h2 style={h2}>Denied by default.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>We load analytics under Google Consent Mode v2 with <code style={{fontFamily:"'IBM Plex Mono',monospace",color:CY}}>analytics_storage</code> and <code style={{fontFamily:"'IBM Plex Mono',monospace",color:CY}}>ad_storage</code> set to <em>denied</em> until you choose otherwise. Your choice is stored locally in your browser so you are not asked again. You can change your mind at any time by clearing this site's storage in your browser, which will bring the banner back.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Processors</Tg><h2 style={h2}>Google as a processor.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>When analytics is enabled, Google LLC processes analytics data on our behalf as a data processor, subject to Google's terms and its own privacy practices. Data may be processed on infrastructure outside your country.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Retention</Tg><h2 style={h2}>How long we keep it.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Analytics data is retained for the period configured in Google Analytics (by default up to 14 months) and then deleted or anonymised. Contact correspondence is kept only as long as needed to handle your enquiry and any resulting relationship, after which it is deleted.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Your rights</Tg><h2 style={h2}>You're in control.</h2></Rv>
+    <Rv d={0.1}><div style={{maxWidth:680}}>
+      <p style={li}>• <strong style={{color:TX}}>Access</strong> — ask what personal data we hold about you.</p>
+      <p style={li}>• <strong style={{color:TX}}>Correction</strong> — ask us to correct inaccurate data.</p>
+      <p style={li}>• <strong style={{color:TX}}>Deletion</strong> — ask us to delete your data.</p>
+      <p style={li}>• <strong style={{color:TX}}>Withdraw consent</strong> — turn off analytics any time, with no effect on prior lawful processing.</p>
+    </div></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Legal framework</Tg><h2 style={h2}>DPDP Act 2023 &amp; GDPR.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>We aim to handle personal data in line with India's Digital Personal Data Protection Act, 2023 (DPDP Act) and, for visitors in the European Economic Area and the UK, the General Data Protection Regulation (GDPR). Where these frameworks grant you rights beyond those listed above, we honour them.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Contact</Tg><h2 style={h2}>Reach the privacy contact.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Questions about this policy or your data? Email <a href="mailto:amit@sevyn8.com" style={{color:CY,textDecoration:"underline"}}>amit@sevyn8.com</a>. We may update this policy from time to time; the "last updated" date above reflects the current version.</p></Rv>
+  </Sc>
+</div>}
+function PgPrivacy(){return <><PageHead m={META.privacy} /><PrivacyPage /></>}
 export var routes=[{path:"/",element:<Shell />,children:[
   {index:true,element:<PgHome />},
   {path:"cortex-ai",element:<PgCortex />},
@@ -431,5 +500,6 @@ export var routes=[{path:"/",element:<Shell />,children:[
   ]},
   {path:"company/our-story",element:<PgAbout />},
   {path:"company/partners",element:<PgPartners />},
-  {path:"contact",element:<PgContact />}
+  {path:"contact",element:<PgContact />},
+  {path:"privacy",element:<PgPrivacy />}
 ]}];

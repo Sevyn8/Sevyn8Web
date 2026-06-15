@@ -380,7 +380,7 @@ function Nav(p){
   </>;
 }
 
-function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} mark={34} gap={8} /><div style={{display:"flex",alignItems:"center",gap:18,flexWrap:"wrap"}}><Link to="/privacy" style={{color:DM,textDecoration:"none"}}>Privacy</Link><span>2026 Sevyn8 Private Limited &middot; New Delhi</span></div></div></footer>}
+function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} mark={34} gap={8} /><div style={{display:"flex",alignItems:"center",gap:18,flexWrap:"wrap"}}><Link to="/privacy" style={{color:DM,textDecoration:"none"}}>Privacy</Link><Link to="/terms" style={{color:DM,textDecoration:"none"}}>Terms</Link><span>2026 Sevyn8 Private Limited &middot; New Delhi</span></div></div></footer>}
 
 /* ── SSG: routes + per-route head (react-router + vite-react-ssg) ── */
 var SITE="https://sevyn8.com";
@@ -392,9 +392,10 @@ var META={
   about:{p:"/company/our-story",t:"Sevyn8 — Our Story",d:"Seven platform capabilities, an eighth that compounds, and the Motorola-forged team behind Sevyn8's Physical AI platform."},
   partners:{p:"/company/partners",t:"Sevyn8 — Partners",d:"Sevyn8's silicon, sensor, and design partners — the intelligence infrastructure behind the Physical AI platform, plus the OEM licensing model."},
   contact:{p:"/contact",t:"Sevyn8 — Contact",d:"Start the conversation — enterprise deployment, OEM integration, or a 60-day proof of concept on your real site and data."},
-  privacy:{p:"/privacy",t:"Sevyn8 — Privacy Policy",d:"How Sevyn8 handles data — consent-gated analytics, contact-form submissions, and your rights under India's DPDP Act 2023 and the GDPR."}
+  privacy:{p:"/privacy",t:"Sevyn8 — Privacy Policy",d:"How Sevyn8 handles data — consent-gated analytics, contact-form submissions, and your rights under India's DPDP Act 2023 and the GDPR."},
+  terms:{p:"/terms",t:"Sevyn8 — Terms of Use",d:"Terms governing use of the Sevyn8 marketing website — informational only; commercial engagements are covered by separate signed agreements. Governing law: India."}
 };
-var KEYPATH={home:"/",cortex2:"/cortex-ai",hardware:"/ai-hardware",solutions:"/industries","soldet-retail":"/industries/retail","soldet-cold":"/industries/cold-chain","soldet-logistics":"/industries/logistics","soldet-home":"/industries/smart-home",about:"/company/our-story",partners:"/company/partners",contact:"/contact",privacy:"/privacy"};
+var KEYPATH={home:"/",cortex2:"/cortex-ai",hardware:"/ai-hardware",solutions:"/industries","soldet-retail":"/industries/retail","soldet-cold":"/industries/cold-chain","soldet-logistics":"/industries/logistics","soldet-home":"/industries/smart-home",about:"/company/our-story",partners:"/company/partners",contact:"/contact",privacy:"/privacy",terms:"/terms"};
 var PATHKEY={};Object.keys(KEYPATH).forEach(function(k){PATHKEY[KEYPATH[k]]=k});
 function pathFor(key){if(KEYPATH[key])return KEYPATH[key];if(key&&key.indexOf("sol-")===0){var m={retail:"retail",home:"smart-home",fleet:"logistics",coldchain:"cold-chain"};var id=key.slice(4);return "/industries/"+(m[id]||id)}return "/"}
 function useGo(){var nav=useNavigate();return function(key){nav(pathFor(key));if(typeof window!=="undefined")window.scrollTo({top:0,behavior:"instant"})}}
@@ -444,49 +445,124 @@ function PgDetail(p){var go=useGo();var sol=SOLS[p.k];var m={p:"/industries/"+p.
 function PgAbout(){return <><PageHead m={META.about} /><AboutPg /></>}
 function PgPartners(){var go=useGo();return <><PageHead m={META.partners} /><PartPg go={go} /></>}
 function PgContact(){return <><PageHead m={META.contact} /><ContactPg /></>}
-function PrivacyPage(){var pp={fontSize:16,lineHeight:1.8,color:N3,margin:"0 0 14px",maxWidth:680};var h2={...hd,fontSize:24,fontWeight:600,margin:"0 0 14px"};var li={fontSize:16,lineHeight:1.8,color:N3,marginBottom:8};return <div style={{paddingTop:80}}>
-  <Sc><Rv><Tg>Legal</Tg><h1 style={{...hd,fontSize:42,fontWeight:600,lineHeight:1.08,marginBottom:14,maxWidth:560}}>Privacy Policy</h1><p style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:13,color:MT,margin:"0 0 18px"}}>Last updated 15 June 2026</p><p style={pp}>Sevyn8 builds Physical AI that runs on the device — privacy is a design principle, not an afterthought. This policy explains the limited data this website collects, why, and the choices you have. It applies to sevyn8.com; it does not cover the on-device behaviour of deployed Sevyn8 products, which is governed separately by each deployment's agreement.</p></Rv></Sc>
+function PrivacyPage(){var pp={fontSize:16,lineHeight:1.8,color:N3,margin:"0 0 14px",maxWidth:680};var h2={...hd,fontSize:24,fontWeight:600,margin:"0 0 14px"};var li={fontSize:16,lineHeight:1.8,color:N3,marginBottom:8};var em=function(c){return {fontFamily:"'IBM Plex Mono',monospace",color:c||CY,textDecoration:"underline"}};return <div style={{paddingTop:80}}>
+  <Sc><Rv><Tg>Legal</Tg><h1 style={{...hd,fontSize:42,fontWeight:600,lineHeight:1.08,marginBottom:14,maxWidth:560}}>Privacy Policy</h1><p style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:13,color:MT,margin:"0 0 18px"}}>Last updated 15 June 2026</p><p style={pp}>This policy explains what limited data the Sevyn8 website (sevyn8.com) collects, why, and the choices you have. Privacy is a design principle for us, not an afterthought.</p></Rv></Sc>
 
-  <Sc bg={B2} bt><Rv><Tg c={CY}>What we collect</Tg><h2 style={h2}>Two things, both minimal.</h2></Rv>
-    <Rv d={0.1}><p style={pp}><strong style={{color:TX}}>Analytics (only with your consent).</strong> If you accept analytics in the cookie banner, we use Google Analytics 4 to understand aggregate usage — pages viewed, approximate region, device and browser type. Analytics storage is denied by default and nothing is sent until you accept. If you reject or ignore the banner, no analytics cookies are set and no analytics data is collected.</p></Rv>
-    <Rv d={0.15}><p style={pp}><strong style={{color:TX}}>Contact submissions.</strong> If you send us a message through the contact page, we receive the details you choose to provide (such as your name, email, organisation, and message) so we can respond.</p></Rv>
-    <Rv d={0.2}><p style={pp}>We do not sell personal data, and we do not use it for advertising. Ad-related storage is denied at all times.</p></Rv>
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Who we are</Tg><h2 style={h2}>The data controller.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>This website is operated by <strong style={{color:TX}}>Sevyn8 Private Limited</strong>, New Delhi, India ("Sevyn8", "we", "us"). For any privacy question, contact <a href="mailto:rahul@sevyn8.com" style={em()}>rahul@sevyn8.com</a>.</p></Rv>
   </Sc>
 
-  <Sc bt><Rv><Tg>How we use it</Tg><h2 style={h2}>Purpose.</h2></Rv>
-    <Rv d={0.1}><p style={pp}>Analytics data is used in aggregate to measure how the site performs and improve it. Contact details are used solely to reply to your enquiry and progress any conversation you start. We process this data on the basis of your consent (analytics) and our legitimate interest in responding to enquiries you initiate (contact).</p></Rv>
+  <Sc bt><Rv><Tg c={MG}>Important scope</Tg><h2 style={h2}>This policy covers the website — not the product.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Sevyn8 Cortex runs <strong style={{color:TX}}>on-device, at the edge</strong>. Any data captured or processed by deployed Sevyn8 products stays on customer infrastructure and is governed by the <strong style={{color:TX}}>separate commercial agreement</strong> for that deployment — not by this website policy. This document is solely about your use of sevyn8.com.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>What we collect</Tg><h2 style={h2}>Two things, both minimal.</h2></Rv>
+    <Rv d={0.1}><p style={pp}><strong style={{color:TX}}>Analytics — only with your consent.</strong> If you accept analytics in the cookie banner, we use Google Analytics 4 to understand aggregate usage: pages viewed, approximate region, and device/browser type. Storage is denied by default and nothing is sent until you accept. If you reject or ignore the banner, no analytics cookies are set and no analytics data is collected.</p></Rv>
+    <Rv d={0.15}><p style={pp}><strong style={{color:TX}}>Contact-form submissions.</strong> If you send a message via the contact page, the details you provide (such as name, email, organisation, and message) <strong style={{color:TX}}>trigger an email to us only</strong>. They are not stored in any CRM, database, or third-party system — we simply receive the email and reply.</p></Rv>
+    <Rv d={0.2}><p style={pp}>We do not sell personal data and do not use it for advertising. Ad-related storage is denied at all times.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>How &amp; why</Tg><h2 style={h2}>Purpose and legal bases.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Analytics data is used in aggregate to measure how the site performs and to improve it. Contact details are used only to reply to your enquiry and progress any conversation you start.</p></Rv>
+    <Rv d={0.15}><p style={pp}>Our legal bases are your <strong style={{color:TX}}>consent</strong> for analytics, and our <strong style={{color:TX}}>legitimate interest</strong> (and taking steps at your request prior to any agreement) in responding to enquiries you initiate.</p></Rv>
   </Sc>
 
   <Sc bg={B2} bt><Rv><Tg c={CY}>Cookies &amp; consent</Tg><h2 style={h2}>Denied by default.</h2></Rv>
-    <Rv d={0.1}><p style={pp}>We load analytics under Google Consent Mode v2 with <code style={{fontFamily:"'IBM Plex Mono',monospace",color:CY}}>analytics_storage</code> and <code style={{fontFamily:"'IBM Plex Mono',monospace",color:CY}}>ad_storage</code> set to <em>denied</em> until you choose otherwise. Your choice is stored locally in your browser so you are not asked again. You can change your mind at any time by clearing this site's storage in your browser, which will bring the banner back.</p></Rv>
+    <Rv d={0.1}><p style={pp}>We load analytics under Google Consent Mode v2 with <code style={em()}>analytics_storage</code> and <code style={em()}>ad_storage</code> set to <em>denied</em> until you choose otherwise. Your choice is stored locally in your browser so you are not asked again. You can change it any time by clearing this site's storage, which brings the banner back.</p></Rv>
   </Sc>
 
-  <Sc bt><Rv><Tg>Processors</Tg><h2 style={h2}>Google as a processor.</h2></Rv>
-    <Rv d={0.1}><p style={pp}>When analytics is enabled, Google LLC processes analytics data on our behalf as a data processor, subject to Google's terms and its own privacy practices. Data may be processed on infrastructure outside your country.</p></Rv>
-  </Sc>
-
-  <Sc bg={B2} bt><Rv><Tg c={CY}>Retention</Tg><h2 style={h2}>How long we keep it.</h2></Rv>
-    <Rv d={0.1}><p style={pp}>Analytics data is retained for the period configured in Google Analytics (by default up to 14 months) and then deleted or anonymised. Contact correspondence is kept only as long as needed to handle your enquiry and any resulting relationship, after which it is deleted.</p></Rv>
-  </Sc>
-
-  <Sc bt><Rv><Tg>Your rights</Tg><h2 style={h2}>You're in control.</h2></Rv>
+  <Sc bt><Rv><Tg>Processors</Tg><h2 style={h2}>Who processes data for us.</h2></Rv>
     <Rv d={0.1}><div style={{maxWidth:680}}>
-      <p style={li}>• <strong style={{color:TX}}>Access</strong> — ask what personal data we hold about you.</p>
-      <p style={li}>• <strong style={{color:TX}}>Correction</strong> — ask us to correct inaccurate data.</p>
-      <p style={li}>• <strong style={{color:TX}}>Deletion</strong> — ask us to delete your data.</p>
-      <p style={li}>• <strong style={{color:TX}}>Withdraw consent</strong> — turn off analytics any time, with no effect on prior lawful processing.</p>
+      <p style={li}>• <strong style={{color:TX}}>Google</strong> (Google Analytics) — processes analytics data on our behalf when you consent, subject to Google's terms and privacy practices.</p>
+      <p style={li}>• <strong style={{color:TX}}>Vercel</strong> — hosts the website and processes the standard request/server logs needed to serve and secure it.</p>
     </div></Rv>
   </Sc>
 
-  <Sc bg={B2} bt><Rv><Tg c={CY}>Legal framework</Tg><h2 style={h2}>DPDP Act 2023 &amp; GDPR.</h2></Rv>
-    <Rv d={0.1}><p style={pp}>We aim to handle personal data in line with India's Digital Personal Data Protection Act, 2023 (DPDP Act) and, for visitors in the European Economic Area and the UK, the General Data Protection Regulation (GDPR). Where these frameworks grant you rights beyond those listed above, we honour them.</p></Rv>
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Retention</Tg><h2 style={h2}>How long we keep it.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Analytics data is retained for the period configured in Google Analytics (by default up to 14 months), then deleted or anonymised. Contact emails are kept only as long as needed to handle your enquiry and any resulting relationship, after which they are deleted.</p></Rv>
   </Sc>
 
-  <Sc bt><Rv><Tg>Contact</Tg><h2 style={h2}>Reach the privacy contact.</h2></Rv>
-    <Rv d={0.1}><p style={pp}>Questions about this policy or your data? Email <a href="mailto:amit@sevyn8.com" style={{color:CY,textDecoration:"underline"}}>amit@sevyn8.com</a>. We may update this policy from time to time; the "last updated" date above reflects the current version.</p></Rv>
+  <Sc bt><Rv><Tg>International transfers</Tg><h2 style={h2}>Where data may go.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Our processors (Google, Vercel) may process data on infrastructure outside India or your country. Where data is transferred internationally, it remains subject to appropriate safeguards and the processor's commitments.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Your rights</Tg><h2 style={h2}>You're in control.</h2></Rv>
+    <Rv d={0.1}><div style={{maxWidth:680}}>
+      <p style={li}>• <strong style={{color:TX}}>Access</strong> — ask what personal data we hold about you.</p>
+      <p style={li}>• <strong style={{color:TX}}>Correction</strong> — ask us to correct inaccurate data.</p>
+      <p style={li}>• <strong style={{color:TX}}>Erasure</strong> — ask us to delete your data.</p>
+      <p style={li}>• <strong style={{color:TX}}>Withdraw consent</strong> — turn off analytics any time, with no effect on prior lawful processing.</p>
+    </div></Rv>
+    <Rv d={0.15}><p style={pp}>These rights reflect India's <strong style={{color:TX}}>Digital Personal Data Protection Act, 2023</strong> and, for visitors in the EU/EEA and the UK, the <strong style={{color:TX}}>GDPR</strong>. To exercise any of them, email <a href="mailto:rahul@sevyn8.com" style={em()}>rahul@sevyn8.com</a>.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Children</Tg><h2 style={h2}>Not directed at children.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>This website is intended for businesses and professional audiences. We do not knowingly collect personal data from children. If you believe a child has provided data, contact us and we will delete it.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Security</Tg><h2 style={h2}>How we protect it.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>We apply reasonable technical and organisational measures appropriate to a marketing website and the limited data it handles. No method of transmission or storage is perfectly secure, but we minimise what we collect in the first place.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Changes &amp; contact</Tg><h2 style={h2}>Staying current.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>We may update this policy from time to time; the "last updated" date above reflects the current version. Questions about this policy or your data? Email <a href="mailto:rahul@sevyn8.com" style={em()}>rahul@sevyn8.com</a>.</p></Rv>
   </Sc>
 </div>}
 function PgPrivacy(){return <><PageHead m={META.privacy} /><PrivacyPage /></>}
+function TermsPage(){var pp={fontSize:16,lineHeight:1.8,color:N3,margin:"0 0 14px",maxWidth:680};var h2={...hd,fontSize:24,fontWeight:600,margin:"0 0 14px"};var li={fontSize:16,lineHeight:1.8,color:N3,marginBottom:8};var em=function(c){return {fontFamily:"'IBM Plex Mono',monospace",color:c||CY,textDecoration:"underline"}};return <div style={{paddingTop:80}}>
+  <Sc><Rv><Tg>Legal</Tg><h1 style={{...hd,fontSize:42,fontWeight:600,lineHeight:1.08,marginBottom:14,maxWidth:560}}>Terms of Use</h1><p style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:13,color:MT,margin:"0 0 18px"}}>Last updated 15 June 2026</p><p style={pp}>These terms govern your use of the Sevyn8 website at sevyn8.com, operated by <strong style={{color:TX}}>Sevyn8 Private Limited</strong>, New Delhi, India ("Sevyn8", "we", "us").</p></Rv></Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Acceptance</Tg><h2 style={h2}>By using the site, you agree.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>By accessing or using this website, you agree to these Terms of Use. If you do not agree, please do not use the site.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg c={MG}>What this site is</Tg><h2 style={h2}>An informational marketing site — not the product.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>This website is an informational and marketing resource about Sevyn8 and its Cortex platform. It is <strong style={{color:TX}}>not the product itself</strong> and provides no access to deployed Sevyn8 systems. Information here is general and may change without notice.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Acceptable use</Tg><h2 style={h2}>Permitted and prohibited.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>You may view and share this site for lawful, informational purposes. You must not:</p></Rv>
+    <Rv d={0.15}><div style={{maxWidth:680}}>
+      <p style={li}>• attempt to disrupt, attack, or gain unauthorised access to the site or its infrastructure;</p>
+      <p style={li}>• scrape, copy, or reuse content other than as permitted by law or with our written consent;</p>
+      <p style={li}>• misrepresent your affiliation with Sevyn8 or use the site to mislead others;</p>
+      <p style={li}>• use the site in violation of any applicable law.</p>
+    </div></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Intellectual property</Tg><h2 style={h2}>All rights reserved.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>The content of this site, the <strong style={{color:TX}}>Sevyn8</strong> name and marks, and <strong style={{color:TX}}>Cortex</strong> are the property of Sevyn8 Private Limited and are protected by applicable intellectual-property laws. All rights reserved. No licence to any trademark, logo, or content is granted except as expressly stated in writing.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Disclaimer</Tg><h2 style={h2}>Provided "as is".</h2></Rv>
+    <Rv d={0.1}><p style={pp}>This website and its content are provided <strong style={{color:TX}}>"as is" and "as available"</strong>, without warranties of any kind, express or implied, including fitness for a particular purpose, accuracy, or non-infringement. We do not warrant that the site will be uninterrupted or error-free.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Liability</Tg><h2 style={h2}>Limitation of liability.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>To the maximum extent permitted by law, Sevyn8 is not liable for any indirect, incidental, special, or consequential damages, or any loss arising from your use of (or inability to use) this website.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Third-party links</Tg><h2 style={h2}>We don't control them.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>The site may link to third-party websites or services. We are not responsible for their content, practices, or availability, and links do not imply endorsement.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg c={MG}>Commercial engagements</Tg><h2 style={h2}>Governed by separate agreements.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Any proof of concept, pilot, evaluation, licensing, or other commercial engagement with Sevyn8 is governed by a <strong style={{color:TX}}>separate signed agreement</strong> between the parties — not by these Terms. Nothing on this website constitutes an offer, warranty, or contractual commitment.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Changes</Tg><h2 style={h2}>We may update these terms.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>We may revise these Terms from time to time. Continued use of the site after changes take effect constitutes acceptance of the revised Terms. The "last updated" date above reflects the current version.</p></Rv>
+  </Sc>
+
+  <Sc bt><Rv><Tg>Governing law</Tg><h2 style={h2}>India · courts of New Delhi.</h2></Rv>
+    <Rv d={0.1}><p style={pp}>These Terms are governed by the laws of India, and the courts of New Delhi have exclusive jurisdiction over any dispute arising from them or from your use of this website.</p></Rv>
+  </Sc>
+
+  <Sc bg={B2} bt><Rv><Tg c={CY}>Contact</Tg><h2 style={h2}>Questions?</h2></Rv>
+    <Rv d={0.1}><p style={pp}>Questions about these Terms? Email <a href="mailto:rahul@sevyn8.com" style={em()}>rahul@sevyn8.com</a>.</p></Rv>
+  </Sc>
+</div>}
+function PgTerms(){return <><PageHead m={META.terms} /><TermsPage /></>}
 export var routes=[{path:"/",element:<Shell />,children:[
   {index:true,element:<PgHome />},
   {path:"cortex-ai",element:<PgCortex />},
@@ -501,5 +577,6 @@ export var routes=[{path:"/",element:<Shell />,children:[
   {path:"company/our-story",element:<PgAbout />},
   {path:"company/partners",element:<PgPartners />},
   {path:"contact",element:<PgContact />},
-  {path:"privacy",element:<PgPrivacy />}
+  {path:"privacy",element:<PgPrivacy />},
+  {path:"terms",element:<PgTerms />}
 ]}];

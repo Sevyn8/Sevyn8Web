@@ -1,4 +1,6 @@
-import {useState, useEffect, useRef, useCallback} from "react";
+import {useState, useEffect, useRef} from "react";
+import {useNavigate, useLocation, Outlet} from "react-router-dom";
+import {Head} from "vite-react-ssg";
 
 // values mirror brand-assets/tokens.json (v4); tokens.css is canonical
 var T="#414BF5", ION_H="#2F38D6", CY="#19D3E0", MG="#E63DCB", I3="#8E97F8", I7="#232BAA", SL="#5A6275", WN="#FFB020";
@@ -117,7 +119,7 @@ var CXARCH=[
 ];
 function CortexPage(p){
   var go=p.go;var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
-  useEffect(function(){document.title="Sevyn8 — Cortex · the Physical AI platform";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Cortex is Sevyn8's Physical AI platform — it senses, understands, decides, and acts on-device in under 100ms, fully offline, then learns across the whole fleet. Seven capabilities, enterprise governance, any silicon.")},[]);
+  
   return (<div style={{paddingTop:80}}>
     <section style={{maxWidth:MW,margin:"0 auto",padding:"56px 40px 92px"}}>
       <div className="cx-grid2">
@@ -212,7 +214,7 @@ function CapGlyph(p){var k=p.k,s={width:18,height:18,viewBox:"0 0 24 24",fill:"n
 }
 function Home2Page(p){
   var go=p.go;var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
-  useEffect(function(){document.title="Sevyn8 — Physical AI for retail, cold chain, logistics & the home";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Sevyn8 puts on-device edge AI across retail, cold chain, logistics, and the home — every camera, sensor, and device deciding in real time, fully offline, and getting smarter together.")},[]);
+  
   return (<div style={{paddingTop:80}}>
     <section style={{maxWidth:980,margin:"0 auto",padding:"70px 40px 40px",textAlign:"center"}}>
       <Rv><Tg>The Physical AI platform</Tg></Rv>
@@ -285,7 +287,7 @@ function EnvComposer(){
 }
 function HardwarePage(p){
   var go=p.go;var scrollTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"})};
-  useEffect(function(){document.title="Sevyn8 — AI Hardware · every endpoint, any silicon";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Nine Sevyn8 edge endpoint classes — cameras, thermal, Edge Box, shelf labels, environmental, air-quality, presence, acoustic, and asset tags — every body running the same Cortex brain on any silicon, certified with ODM partners.")},[]);
+  
   return (<div style={{paddingTop:80}}>
     <section style={{maxWidth:MW,margin:"0 auto",padding:"48px 40px 88px"}}>
       <div className="cx-grid2"><div><Tg>Edge endpoints</Tg><h1 style={{...hd,fontSize:54,fontWeight:600,lineHeight:1.05,margin:"0 0 24px"}}>One platform.<br/>Every endpoint.<br/><span style={{color:T}}>Any silicon.</span></h1><p style={{fontSize:19,lineHeight:1.6,color:N3,maxWidth:480,margin:"0 0 18px"}}>Cameras, thermal, the Edge Box, shelf labels, environmental, air-quality, presence, acoustic, and asset tags — every Sevyn8 endpoint is a different body running the same brain. All speak HAL; all run Cortex.</p><p style={{fontSize:16,lineHeight:1.65,color:MT,maxWidth:480,margin:"0 0 34px"}}>We don't lock you to a chip. We certify the right endpoint for the job with our ODM partners — so hardware is a supply decision, never a rewrite.</p><div style={{display:"flex",gap:12,flexWrap:"wrap"}}><button style={bn} onClick={function(){go("contact")}}>Book a 60-day POC</button><button style={b2} onClick={function(){scrollTo("endpoints")}}>See the endpoints</button></div></div><div><DeviceLineup /></div></div>
@@ -336,8 +338,8 @@ function SoLanding(p){var go=p.go;return (<>
   <SoSc bt><div className="sl-cards">{soORDER.map(function(k,i){var s=SOLS[k];return <Rv key={k} d={i*0.07}><div onClick={function(){go("soldet-"+k)}} style={{padding:"30px 28px",borderRadius:16,border:"1px solid "+BD,borderTop:"2px solid "+s.accent,background:BG,cursor:"pointer",height:"100%",display:"flex",flexDirection:"column",transition:"border-color .25s, transform .25s"}} onMouseEnter={function(e){e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.borderColor="rgba(140,160,200,.28)"}} onMouseLeave={function(e){e.currentTarget.style.transform="none";e.currentTarget.style.borderColor=BD}}><div style={{...mono,fontSize:11,textTransform:"uppercase",letterSpacing:".16em",color:s.accent,marginBottom:12}}>{s.n}</div><h3 style={{...hd,fontSize:25,fontWeight:600,margin:"0 0 18px",letterSpacing:"-.015em"}}>{s.lead}</h3><div style={{display:"flex",gap:8,marginBottom:22}}>{s.endpoints.map(function(ep){return <div key={ep.id} style={{width:40,height:40,borderRadius:9,background:B2,border:"1px solid "+BD,display:"flex",alignItems:"center",justifyContent:"center"}}><Device type={ep.id} size={32} /></div>})}</div><span style={{fontSize:14.5,fontWeight:600,color:s.accent,marginTop:"auto"}}>Explore {s.n} →</span></div></Rv>})}</div></SoSc>
   <section style={{borderTop:"1px solid "+BD,background:B2}}><div style={{maxWidth:MW,margin:"0 auto",padding:"90px 40px",textAlign:"center"}}><Rv><h2 style={{...hd,fontSize:40,fontWeight:600,margin:"0 0 16px"}}>Not sure where you fit?</h2><p style={{fontSize:18,lineHeight:1.6,color:N3,maxWidth:540,margin:"0 auto 32px"}}>Tell us your environment and the outcomes you need. We'll spec the endpoint mix and prove it in 60 days.</p><button style={bn} onClick={function(){go("contact")}}>Talk to the team</button></Rv></div></section>
 </>);}
-function SolutionsLanding(p){useEffect(function(){document.title="Sevyn8 — Industries · one platform, shaped to your floor";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content","Sevyn8 Cortex shaped to your industry — retail, cold chain, logistics, and the home. The same platform and endpoint family, composed for the outcomes each operation cares about.")},[]);return <div style={{paddingTop:80}}><SoLanding go={p.go} /></div>}
-function SolutionsDetail(p){useEffect(function(){document.title="Sevyn8 — "+p.sol.n+" solutions";var m=document.querySelector('meta[name="description"]');if(m)m.setAttribute("content",p.sol.d)},[p.sol]);return <div style={{paddingTop:80}}><SoDetail sol={p.sol} go={p.go} /></div>}
+function SolutionsLanding(p){return <div style={{paddingTop:80}}><SoLanding go={p.go} /></div>}
+function SolutionsDetail(p){return <div style={{paddingTop:80}}><SoDetail sol={p.sol} go={p.go} /></div>}
 
 function Nav(p){
   var pg=p.pg,go=p.go,s2=useState(false),d2=useState(null),mo=useState(false);
@@ -380,15 +382,50 @@ function Nav(p){
 
 function Ft(){return <footer style={{borderTop:"1px solid "+BD,background:B2,padding:"36px 40px"}}><div style={{maxWidth:MW,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:DM,flexWrap:"wrap",gap:12}}><Brand size={26} mark={34} gap={8} /><span>2026 Sevyn8 Private Limited &middot; New Delhi</span></div></footer>}
 
-export default function App(){
-  var p2=useState("home"),pg=p2[0];
-  useEffect(function(){var id="G-XXXXXXXXXX";var s=document.createElement("script");s.src="https://www.googletagmanager.com/gtag/js?id="+id;s.async=true;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments)}window.gtag=gtag;gtag("js",new Date());gtag("config",id)},[]);
-  useEffect(function(){if(window.gtag)window.gtag("event","page_view",{page_title:pg,page_path:"/"+pg})},[pg]);
-  useEffect(function(){document.title="Sevyn8 — Physical AI for the physical world";[{name:"description",content:"Sevyn8 is the Physical AI platform — on-device intelligence for retail, cold chain, logistics, and the home. Decides in under 100ms, fully offline, and gets smarter across the fleet."},{name:"keywords",content:"Cortex, Sevyn8, edge AI, AI platform, edge computing, SoC agnostic, HAL, on-device AI, computer vision, IoT, fleet intelligence, OEM licensing, cold chain, food safety, smart home, retail analytics, reinsurance, MCP"},{property:"og:title",content:"Sevyn8 | Cortex — one edge AI platform, every industry"},{property:"og:description",content:"Cortex: the industry-agnostic edge AI platform. Hardware-agnostic. Compounding across every deployment."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"},{name:"robots",content:"index, follow"}].forEach(function(m){var el=document.createElement("meta");if(m.name)el.name=m.name;if(m.property)el.setAttribute("property",m.property);el.content=m.content;document.head.appendChild(el)})},[]);
-  var go=useCallback(function(p){p2[1](p);window.scrollTo({top:0,behavior:"instant"})},[]);
-  var C;if(pg==="home")C=<Home2Page go={go}/>;else if(pg==="cortex2")C=<CortexPage go={go}/>;else if(pg==="hardware")C=<HardwarePage go={go}/>;else if(pg==="solutions")C=<SolutionsLanding go={go}/>;else if(pg.indexOf("soldet-")===0){var sd=SOLS[pg.slice(7)];C=sd?<SolutionsDetail sol={sd} go={go}/>:<SolutionsLanding go={go}/>;}else if(pg==="partners")C=<PartPg go={go}/>;else if(pg==="about")C=<AboutPg />;else if(pg==="contact")C=<ContactPg />;else if(pg.indexOf("sol-")===0){var smap={retail:"retail",home:"home",fleet:"logistics",coldchain:"cold"};var sd2=SOLS[smap[pg.slice(4)]||pg.slice(4)];C=sd2?<SolutionsDetail sol={sd2} go={go}/>:<SolutionsLanding go={go}/>;}else C=<Home2Page go={go}/>;
+/* ── SSG: routes + per-route head (react-router + vite-react-ssg) ── */
+var SITE="https://sevyn8.com";
+var META={
+  home:{p:"/",t:"Sevyn8 — Physical AI for retail, cold chain, logistics & the home",d:"Sevyn8 puts on-device edge AI across retail, cold chain, logistics, and the home — every camera, sensor, and device deciding in real time, fully offline, and getting smarter together."},
+  cortex2:{p:"/cortex-ai",t:"Sevyn8 — Cortex · the Physical AI platform",d:"Cortex is Sevyn8's Physical AI platform — it senses, understands, decides, and acts on-device in under 100ms, fully offline, then learns across the whole fleet. Seven capabilities, enterprise governance, any silicon."},
+  hardware:{p:"/ai-hardware",t:"Sevyn8 — AI Hardware · every endpoint, any silicon",d:"Nine Sevyn8 edge endpoint classes — cameras, thermal, Edge Box, shelf labels, environmental, air-quality, presence, acoustic, and asset tags — every body running the same Cortex brain on any silicon, certified with ODM partners."},
+  solutions:{p:"/industries",t:"Sevyn8 — Industries · one platform, shaped to your floor",d:"Sevyn8 Cortex shaped to your industry — retail, cold chain, logistics, and the home. The same platform and endpoint family, composed for the outcomes each operation cares about."},
+  about:{p:"/company/our-story",t:"Sevyn8 — Our Story",d:"Seven platform capabilities, an eighth that compounds, and the Motorola-forged team behind Sevyn8's Physical AI platform."},
+  partners:{p:"/company/partners",t:"Sevyn8 — Partners",d:"Sevyn8's silicon, sensor, and design partners — the intelligence infrastructure behind the Physical AI platform, plus the OEM licensing model."},
+  contact:{p:"/contact",t:"Sevyn8 — Contact",d:"Start the conversation — enterprise deployment, OEM integration, or a 60-day proof of concept on your real site and data."}
+};
+var KEYPATH={home:"/",cortex2:"/cortex-ai",hardware:"/ai-hardware",solutions:"/industries","soldet-retail":"/industries/retail","soldet-cold":"/industries/cold-chain","soldet-logistics":"/industries/logistics","soldet-home":"/industries/smart-home",about:"/company/our-story",partners:"/company/partners",contact:"/contact"};
+var PATHKEY={};Object.keys(KEYPATH).forEach(function(k){PATHKEY[KEYPATH[k]]=k});
+function pathFor(key){if(KEYPATH[key])return KEYPATH[key];if(key&&key.indexOf("sol-")===0){var m={retail:"retail",home:"smart-home",fleet:"logistics",coldchain:"cold-chain"};var id=key.slice(4);return "/industries/"+(m[id]||id)}return "/"}
+function useGo(){var nav=useNavigate();return function(key){nav(pathFor(key));if(typeof window!=="undefined")window.scrollTo({top:0,behavior:"instant"})}}
+function PageHead(p){var m=p.m;return <Head><title>{m.t}</title><meta name="description" content={m.d} /><link rel="canonical" href={SITE+m.p} /><meta property="og:title" content={m.t} /><meta property="og:description" content={m.d} /><meta property="og:type" content="website" /><meta property="og:url" content={SITE+m.p} /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={m.t} /><meta name="twitter:description" content={m.d} /></Head>}
+function Shell(){
+  var loc=useLocation();var go=useGo();var pg=PATHKEY[loc.pathname]||"home";
+  useEffect(function(){if(typeof window!=="undefined")window.scrollTo({top:0,behavior:"instant"})},[loc.pathname]);
   return <div style={{minHeight:"100vh",background:BG,fontFamily:"'IBM Plex Sans',system-ui,sans-serif",WebkitFontSmoothing:"antialiased",color:TX,fontSize:16,lineHeight:1.65}}>
     <style dangerouslySetInnerHTML={{__html:"@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}::selection{background:#414BF5;color:#0B0D14}html{scroll-behavior:smooth}img,canvas,svg{max-width:100%}@media (max-width:768px){[style*=\"1fr 1fr\"]{grid-template-columns:1fr !important}[style*=\"repeat(3,\"],[style*=\"repeat(3, \"]{grid-template-columns:1fr !important}[style*=\"repeat(4,\"],[style*=\"repeat(4, \"]{grid-template-columns:repeat(2,1fr) !important}main section[style*=\"100vh\"]{min-height:auto !important;padding:84px 20px 32px !important}main section[style*=\"100vh\"] > div{gap:32px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:320px !important}section > div{padding-left:20px !important;padding-right:20px !important;padding-top:48px !important;padding-bottom:48px !important}h1{font-size:32px !important;line-height:1.1 !important}h2{font-size:24px !important;line-height:1.2 !important}h3{font-size:18px !important}nav > div{padding:0 14px !important}nav > div > div:last-child{gap:8px !important}nav > div > div:last-child > span,nav > div > div:last-child > div{display:none !important}nav > div > div:last-child > button{display:inline-flex !important;padding:7px 14px !important;font-size:12px !important}nav button.nav-burger{display:inline-flex !important;width:40px !important;height:40px !important;padding:0 !important}}@media (max-width:480px){h1{font-size:28px !important}h2{font-size:22px !important}main section[style*=\"100vh\"] > div > div[style*=\"height:480\"],main section[style*=\"100vh\"] > div > div[style*=\"height: 480\"]{height:260px !important}}.cx-grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}.rw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@keyframes scdinf{0%,100%{opacity:.5}50%{opacity:1}}@keyframes feedin{from{opacity:0}to{opacity:1}}@keyframes livedot{0%,100%{opacity:.4}50%{opacity:1}}@media (max-width:880px){.cx-grid2{grid-template-columns:1fr;gap:34px}.cx-hero-anim{height:340px !important}.rw-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.rw-grid{grid-template-columns:1fr}}.hm-spine{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.wk-tabs{display:flex;gap:14px;margin-bottom:28px}.wk-stage{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:center}@keyframes wkgrow{from{width:0}to{width:100%}}@keyframes wkscene{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}@keyframes wkfade{from{opacity:0}to{opacity:1}}@keyframes wkfovp{0%,100%{opacity:.3}50%{opacity:.6}}.wkfov{animation:wkfovp 2s ease-in-out infinite}.ee-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ee-env-row{display:grid;grid-template-columns:repeat(9,1fr);gap:12px}.sl-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-2col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.sl-ep{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.sl-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.sl-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.hw-lineup{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.cx-how{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}@media (max-width:980px){.cx-how{grid-template-columns:repeat(3,1fr)}}@media (max-width:560px){.cx-how{grid-template-columns:repeat(2,1fr)}}@media (max-width:880px){.hm-spine{grid-template-columns:1fr}.wk-stage{grid-template-columns:1fr;gap:28px}.wk-tabs{gap:8px}.ee-cards{grid-template-columns:repeat(2,1fr)}.ee-env-row{grid-template-columns:repeat(5,1fr)}}@media (max-width:820px){.sl-stats{grid-template-columns:repeat(2,1fr)}.sl-2col{grid-template-columns:1fr}.sl-ep{grid-template-columns:repeat(2,1fr)}.sl-3{grid-template-columns:1fr}.sl-cards{grid-template-columns:1fr}}@media (max-width:560px){.ee-cards{grid-template-columns:1fr}.ee-env-row{grid-template-columns:repeat(3,1fr)}}"}} />
-    <Nav pg={pg} go={go}/><main key={pg}>{C}</main><Ft />
+    <Nav pg={pg} go={go}/><main key={loc.pathname}><Outlet /></main><Ft />
   </div>;
 }
+function PgHome(){var go=useGo();return <><PageHead m={META.home} /><Home2Page go={go} /></>}
+function PgCortex(){var go=useGo();return <><PageHead m={META.cortex2} /><CortexPage go={go} /></>}
+function PgHardware(){var go=useGo();return <><PageHead m={META.hardware} /><HardwarePage go={go} /></>}
+function PgIndustries(){var go=useGo();return <><PageHead m={META.solutions} /><SolutionsLanding go={go} /></>}
+function PgDetail(p){var go=useGo();var sol=SOLS[p.k];var m={p:"/industries/"+p.slug,t:"Sevyn8 — "+sol.n+" · Physical AI",d:sol.d};return <><PageHead m={m} /><SolutionsDetail sol={sol} go={go} /></>}
+function PgAbout(){return <><PageHead m={META.about} /><AboutPg /></>}
+function PgPartners(){var go=useGo();return <><PageHead m={META.partners} /><PartPg go={go} /></>}
+function PgContact(){return <><PageHead m={META.contact} /><ContactPg /></>}
+export var routes=[{path:"/",element:<Shell />,children:[
+  {index:true,element:<PgHome />},
+  {path:"cortex-ai",element:<PgCortex />},
+  {path:"ai-hardware",element:<PgHardware />},
+  {path:"industries",children:[
+    {index:true,element:<PgIndustries />},
+    {path:"retail",element:<PgDetail k="retail" slug="retail" />},
+    {path:"cold-chain",element:<PgDetail k="cold" slug="cold-chain" />},
+    {path:"logistics",element:<PgDetail k="logistics" slug="logistics" />},
+    {path:"smart-home",element:<PgDetail k="home" slug="smart-home" />}
+  ]},
+  {path:"company/our-story",element:<PgAbout />},
+  {path:"company/partners",element:<PgPartners />},
+  {path:"contact",element:<PgContact />}
+]}];
